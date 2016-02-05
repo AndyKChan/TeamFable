@@ -1,9 +1,12 @@
 extends layout
 
 block content
-    h1.
-        User List
-    ul
-        each user, i in userlist
-            li
-                a(href="mailto:#{user.email}")= user.username
+    h1= title
+    p Sign up here!
+    form#formAddUser(name="adduser",method="post",action="/adduser")
+        input#inputUserName(type="text", placeholder="username", name="username")
+        br
+        input#inputUserEmail(type="text", placeholder="password", name="useremail")
+        br
+        input#inputUserPassword(type="text", placeholder="email", password="passowrd")
+        button#btnSubmit(type="submit") submit
