@@ -15,6 +15,21 @@ router.get('/helloworld', function(req, res) {
   res.render('helloworld', { title: 'Hello, World!' });
 });
 
+/* GET signup page. */
+router.get('/signup', function(req, res) {
+  res.render('signup', { title: 'Sign Up Here!' });
+});
+
+/* GET profile page. */
+router.get('/profile', function(req, res) {
+  res.render('profile', { title: 'My Profile!' });
+});
+
+/* GET my works page. */
+router.get('/myworks', function(req, res) {
+  res.render('myworks', { title: 'My Works!' });
+});
+
 /* GET Userlist page. */
 router.get('/userlist', function(req, res) {
     var db = req.db;
@@ -39,6 +54,7 @@ router.post('/adduser', function(req, res) {
 
     // Get our form values. These rely on the "name" attributes
     var userName = req.body.username;
+    var userPassword = req.body.password;
     var userEmail = req.body.useremail;
 
     // Set our collection
@@ -47,6 +63,7 @@ router.post('/adduser', function(req, res) {
     // Submit to the DB
     collection.insert({
         "username" : userName,
+        "password" : userPassword,
         "email" : userEmail
     }, function (err, doc) {
         if (err) {
