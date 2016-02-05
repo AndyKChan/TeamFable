@@ -10,6 +10,10 @@ router.get('/', function (req, res, next) {
 router.get('/helloworld', function (req, res) {
     res.render('helloworld', { title: 'Hello, World!' });
 });
+/*GET hello page*/
+router.get('/hello', function (req, res) {
+    res.send('The time is ' + new Date().toString());
+});
 /* GET Userlist page. */
 router.get('/userlist', function (req, res) {
     var db = req.db;

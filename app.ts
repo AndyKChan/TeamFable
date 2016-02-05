@@ -21,11 +21,11 @@ var bodyParser = require('body-parser');
 // New Code
 var mongo = require('mongodb');
 var monk = require('monk');
-var db = monk(mongodb://admin:admin@ds059135.mongolab.com:59135/fable310');
+var db = monk('mongodb://admin:admin@ds059135.mongolab.com:59135/fable310');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-
+var hello = require('./routes/hello');
 var app = express();
 
 // view engine setup
@@ -48,6 +48,11 @@ app.use(function(req,res,next){
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/hello', hello);
+// new code 
+//app.get('/', routes.index);
+//app.get('/u/:user', routes.user);
+
 
 /// catch 404 and forwarding to error handler
 app.use(function(req, res, next) {
