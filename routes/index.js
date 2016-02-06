@@ -10,6 +10,14 @@ router.get('/', function (req, res, next) {
 router.get('/helloworld', function (req, res) {
     res.render('helloworld', { title: 'Hello, World!' });
 });
+/* GET profile page. */
+router.get('/profile', function (req, res) {
+    res.render('profile', { title: 'My Profile!' });
+});
+/* GET my works page. */
+router.get('/myworks', function (req, res) {
+    res.render('myworks', { title: 'My Works!' });
+});
 /* GET Userlist page. */
 router.get('/userlist', function (req, res) {
     var db = req.db;
@@ -24,18 +32,25 @@ router.get('/userlist', function (req, res) {
 router.get('/newuser', function (req, res) {
     res.render('newuser', { title: 'Add New User' });
 });
+/* GET signup page. */
+router.get('/signup', function (req, res) {
+    res.render('signup', { title: 'Sign Up Here:' });
+});
 /* POST to Add User Service */
 router.post('/adduser', function (req, res) {
     // Set our internal DB variable
     var db = req.db;
     // Get our form values. These rely on the "name" attributes
     var userName = req.body.username;
+    var userPassword = req.body.password;
     var userEmail = req.body.useremail;
     // Set our collection
     var collection = db.get('usercollection');
     // Submit to the DB
+    // if (userName.localeCompare(collection.getElementById("username")) != 0){
     collection.insert({
         "username": userName,
+        "password": userPassword,
         "email": userEmail
     }, function (err, doc) {
         if (err) {
@@ -44,7 +59,7 @@ router.post('/adduser', function (req, res) {
         }
         else {
             // And forward to success page
-            res.redirect("userlist");
+            res.redirect("profile");
         }
     });
 });

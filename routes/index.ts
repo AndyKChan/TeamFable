@@ -1,5 +1,4 @@
 /// <reference path='../types/DefinitelyTyped/node/node.d.ts'/>
-
 /// <reference path='../types/DefinitelyTyped/express/express.d.ts'/> 
 
 var express = require('express');
@@ -13,11 +12,6 @@ router.get('/', function(req, res, next) {
 /* GET Hello World page. */
 router.get('/helloworld', function(req, res) {
   res.render('helloworld', { title: 'Hello, World!' });
-});
-
-/* GET signup page. */
-router.get('/signup', function(req, res) {
-  res.render('signup', { title: 'Sign Up Here!' });
 });
 
 /* GET profile page. */
@@ -46,6 +40,11 @@ router.get('/newuser', function(req, res) {
     res.render('newuser', { title: 'Add New User' });
 });
 
+/* GET signup page. */
+router.get('/signup', function(req, res) {
+  res.render('signup', { title: 'Sign Up Here:' });
+});
+
 /* POST to Add User Service */
 router.post('/adduser', function(req, res) {
 
@@ -61,20 +60,23 @@ router.post('/adduser', function(req, res) {
     var collection = db.get('usercollection');
 
     // Submit to the DB
-    collection.insert({
-        "username" : userName,
-        "password" : userPassword,
-        "email" : userEmail
-    }, function (err, doc) {
-        if (err) {
-            // If it failed, return error
-            res.send("There was a problem adding the information to the database.");
-        }
-        else {
-            // And forward to success page
-            res.redirect("userlist");
-        }
-    });
+    // if (userName.localeCompare(collection.getElementById("username")) != 0){
+        collection.insert({
+         "username" : userName,
+         "password" : userPassword,
+         "email" : userEmail
+        }, function (err, doc) {
+         if (err) {
+             // If it failed, return error
+             res.send("There was a problem adding the information to the database.");
+         }
+         else {
+             // And forward to success page
+             res.redirect("profile");
+         }
+        })
+    //}
+    ;
 });
 
 module.exports = router;
