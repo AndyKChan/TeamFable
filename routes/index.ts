@@ -2,50 +2,47 @@
 
 ///<reference path='../types/DefinitelyTyped/express/express.d.ts'/> 
 
-interface UserInterface {
-    
-    function getName(){
-    getName : string;
-    }
-    function getEmail(){
-    getEmail : string; 
-    }
-}
-
-class User implements UserInterface {
-    
-    private name : string;
-    private email : string;
-
-    constructor(theName : string, theEmail: string){
-        this.name = theName;
-        this.email = theEmail;
-    }
-
-    function getName(){
-        return this.name;
-    }
-
-    function getEmail(){
-        return this.email;
-    }
-}
-
-class Router {
 
 var express = require('express');
 var router = express.Router();
 
 
-/* GET home page. */
+/* GET main page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.render('index');
 });
 
-/*GET Hello World Page. */
-router.get('/helloworld', function(req,res) {
-    res.render('helloworld', { title: 'Hello, World!'});
+/* GET login page. */
+router.get('/login', function(req, res) {
+  res.render('login');
 });
+
+/* GET signup page. */
+router.get('/signup', function(req, res) {
+    res.render('signup');
+});
+
+/* GET home page. */
+router.get('/home', function(req, res) {
+  res.render('home');
+});
+
+/* GET profile page. */
+router.get('/profile', function(req, res) {
+  res.render('profile');
+});
+
+
+/* GET comicMain page. */
+router.get('/comicmain', function(req, res) {
+  res.render('comicmain');
+});
+
+/* GET comic page. */
+router.get('/comic', function(req, res) {
+  res.render('comic');
+});
+
 
 /* GET Userlist page. */
 router.get('/userlist', function(req, res) {
@@ -58,10 +55,7 @@ router.get('/userlist', function(req, res) {
     });
 });
 
-/* GET New User page. */
-router.get('/newuser', function(req, res) {
-    res.render('newuser', { title: 'Add New User' });
-});
+
 
 /* POST to Add User Service */
 router.post('/adduser', function(req, res) {
@@ -93,5 +87,3 @@ router.post('/adduser', function(req, res) {
 });
 
 module.exports = router;
-}
-var app = new Router; 
