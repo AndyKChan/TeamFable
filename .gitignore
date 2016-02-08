@@ -1,2 +1,4 @@
 node_modules/
+data/
+types/
 .DS_Store

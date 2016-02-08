@@ -1,16 +1,51 @@
+///<reference path='../types/DefinitelyTyped/node/node.d.ts'/>
+
+///<reference path='../types/DefinitelyTyped/express/express.d.ts'/> 
+
+interface UserInterface {
+    
+    function getName(){
+    getName : string;
+    }
+    function getEmail(){
+    getEmail : string; 
+    }
+}
+
+class User implements UserInterface {
+    
+    private name : string;
+    private email : string;
+
+    constructor(theName : string, theEmail: string){
+        this.name = theName;
+        this.email = theEmail;
+    }
+
+    function getName(){
+        return this.name;
+    }
+
+    function getEmail(){
+        return this.email;
+    }
+}
+
+class Router {
+
 var express = require('express');
 var router = express.Router();
+
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-
-/* GET Hello World page. */
-router.get('/helloworld', function(req, res) {
-    res.render('helloworld', { title: 'Hello, World!' });
-})
+/*GET Hello World Page. */
+router.get('/helloworld', function(req,res) {
+    res.render('helloworld', { title: 'Hello, World!'});
+});
 
 /* GET Userlist page. */
 router.get('/userlist', function(req, res) {
@@ -27,7 +62,6 @@ router.get('/userlist', function(req, res) {
 router.get('/newuser', function(req, res) {
     res.render('newuser', { title: 'Add New User' });
 });
-
 
 /* POST to Add User Service */
 router.post('/adduser', function(req, res) {
@@ -58,5 +92,6 @@ router.post('/adduser', function(req, res) {
     });
 });
 
-
 module.exports = router;
+}
+var app = new Router; 

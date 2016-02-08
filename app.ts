@@ -1,3 +1,11 @@
+///<reference path='types/DefinitelyTyped/node/node.d.ts'/>
+///<reference path='types/DefinitelyTyped/express/express.d.ts'/> 
+
+interface Error {
+ status?: number;
+ }
+
+class Application {
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -6,11 +14,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 
-// New Code
 var mongo = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/nodetest1');
-
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -29,13 +35,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
 // Make our db accessible to our router
 app.use(function(req,res,next){
     req.db = db;
     next();
 });
-
 
 app.use('/', routes);
 app.use('/users', users);
@@ -73,3 +77,4 @@ app.use(function(err, req, res, next) {
 
 
 module.exports = app;
+}
