@@ -1,6 +1,9 @@
 ///<reference path='types/DefinitelyTyped/node/node.d.ts'/>
 ///<reference path='types/DefinitelyTyped/express/express.d.ts'/> 
 
+
+
+
 interface Error {
  status?: number;
  }
@@ -21,10 +24,19 @@ class Application{
     var monk = require('monk');
     var db = monk('localhost:27017/nodetest1');
 
+
+
+    // read&write image 
+    var fs = require('fs');
+    var mongoose = require('mongoose');
+    var Schema = mongoose.Schema;
+
+
     var routes = require('./routes/index');
     var users = require('./routes/users');
 
     var app = express();
+
 
     // view engine setup
     app.set('views', path.join(__dirname, 'views'));

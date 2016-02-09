@@ -13,6 +13,14 @@ var Application = (function () {
         var mongo = require('mongodb');
         var monk = require('monk');
         var db = monk('localhost:27017/nodetest1');
+        // read&write image 
+        var fs = require('fs');
+        var mongoose = require('mongoose');
+        var Schema = mongoose.Schema;
+        // img path
+        var imgPath = '/path/to/some/img.png';
+        // connect to mongo
+        mongoose.connect('localhost', 'testing_storeImg');
         var routes = require('./routes/index');
         var users = require('./routes/users');
         var app = express();
