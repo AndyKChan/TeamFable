@@ -1,5 +1,5 @@
 ///<reference path='types/DefinitelyTyped/node/node.d.ts'/>
-///<reference path='types/DefinitelyTyped/express/express.d.ts'/> 
+///<reference path='types/DefinitelyTyped/express/express.d.ts'/>
 var Application = (function () {
     function Application() {
     }
@@ -10,16 +10,24 @@ var Application = (function () {
         var logger = require('morgan');
         var cookieParser = require('cookie-parser');
         var bodyParser = require('body-parser');
-        var mongo = require('mongodb');
-        var monk = require('monk');
-        var db = monk('localhost:27017/nodetest1');
+        //Mongoose
+        var mongoose = require('mongoose');
+        //Passport
+        var passport = require('passport');
+        var flash = require('connect-flash');
+        //Session
+        var session = require('express-session');
+        var mongoStore = require('connect-mongo')(session);
         var routes = require('./routes/index');
         var users = require('./routes/users');
+        var configDB = require('./config/database.js');
+        require('./config/passport');
         var app = express();
-        // view engine setup
-        app.set('views', path.join(__dirname, 'views'));
+        //Setting up templating engine
+        var exphbs = require('express-handlebars');
+        app.engine('html', exphbs({ defaultLayout: 'main' }));
         app.set('view engine', 'html');
-        app.engine('html', require('ejs').renderFile);
+        app.set('views', path.join(__dirname, 'views'));
         // uncomment after placing your favicon in /public
         //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
         app.use(logger('dev'));
@@ -27,6 +35,25 @@ var Application = (function () {
         app.use(bodyParser.urlencoded({ extended: false }));
         app.use(cookieParser());
         app.use(express.static(path.join(__dirname, 'public')));
+        //Connect to mongoDB
+        mongoose.connect(configDB.url);
+        //Check database connection
+        var db = mongoose.connection;
+        db.on('error', console.error.bind(console, 'connection error:'));
+        db.once('open', function () {
+            console.log("Successfully connected to mongoDB");
+        });
+        //Required setup for passport
+        app.use(session({
+            secret: process.env.SESSION_SECRET || 'whenyoufeelitintherainbow',
+            httpOnly: true,
+            resave: false,
+            saveUninitialized: false,
+            store: new mongoStore({ mongooseConnection: db })
+        })); // session secret
+        app.use(passport.initialize());
+        app.use(passport.session()); // persistent login sessions
+        app.use(flash()); // use connect-flash for flash messages stored in session
         // Make our db accessible to our router
         app.use(function (req, res, next) {
             req.db = db;

@@ -1,5 +1,7 @@
-extends layout
-
-block content
-  h1= title
-  p Welcome to #{title}
+<div class="comicmain">
+  <h1>Faable</h1>
+  <a href="/readcomic" type="button" class="btn btn-info">Read Comic</a>
+  {{#if user.local.contributor}}
+    <a href="/editcomic" type="button" class="btn btn-info">Edit Comic</a>
+  {{/if}}
+</div>

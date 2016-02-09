@@ -6,3 +6,15 @@ body {
 a {
   color: #00B7FF;
 }
+
+.mainpage {
+	text-align: center;
+}
+
+.signup {
+	margin-right: auto;
+}
+
+.home{
+	text-align: center;
+}
