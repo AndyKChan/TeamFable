@@ -3,6 +3,6 @@
  */
 module.exports = {
 
-    'url' : process.env.MONGOHQ_URL || 'mongodb://localhost/comicdatabase'
+    'url' : process.env.MONGOHQ_URL || 'mongodb://admin:admin@ds059135.mongolab.com:59135/fable310'
 
 };
