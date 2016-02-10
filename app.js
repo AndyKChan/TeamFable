@@ -23,6 +23,7 @@ var Application = (function () {
         var configDB = require('./config/database.js');
         require('./config/passport');
         var app = express();
+        var multer = require('multer');
         //Setting up templating engine
         var exphbs = require('express-handlebars');
         app.engine('html', exphbs({ defaultLayout: 'main' }));

@@ -3,6 +3,7 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
+var multer = require('multer');
 /**
  * Middleware
  */
@@ -17,6 +18,24 @@ var isLoggedIn = function (req, res, next) {
 /* GET main page. */
 router.get('/', function (req, res, next) {
     res.render('index');
+});
+router.post('/fileupload', multer({ dest: './public/images/'}).single('upl'), function(req,res){
+    console.log(req.body); //form fields
+    /* example output:
+    { title: 'abc' }
+     */
+    console.log(req.file); //form files
+    /* example output:
+            { fieldname: 'upl',
+              originalname: 'grumpy.png',
+              encoding: '7bit',
+              mimetype: 'image/png',
+              destination: './uploads/',
+              filename: '436ec561793aa4dc475a88e84776b1b9',
+              path: 'uploads/436ec561793aa4dc475a88e84776b1b9',
+              size: 277056 }
+     */
+    res.status(204).end();
 });
 /* GET login page. */
 router.get('/login', function (req, res) {
