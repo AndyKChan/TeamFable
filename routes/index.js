@@ -38,8 +38,14 @@ router.get('/profile', isLoggedIn, function (req, res) {
         user: req.user // get the user out of session and pass to template
     });
 });
-/* GET comicMain page. */
-router.get('/comicmain', isLoggedIn, function (req, res) {
+/* GET solo comic main page. */
+router.get('/solo', isLoggedIn, function (req, res) {
+    res.render('comicmain', {
+        user: req.user // get the user out of session and pass to template
+    });
+});
+/* GET cooperative comic main page. */
+router.get('/cooperative', isLoggedIn, function (req, res) {
     res.render('comicmain', {
         user: req.user // get the user out of session and pass to template
     });
@@ -47,6 +53,12 @@ router.get('/comicmain', isLoggedIn, function (req, res) {
 /* GET comic page. */
 router.get('/comic', isLoggedIn, function (req, res) {
     res.render('comic', {
+        user: req.user // get the user out of session and pass to template
+    });
+});
+/* GET upload page. */
+router.get('/upload', isLoggedIn, function (req, res) {
+    res.render('upload', {
         user: req.user // get the user out of session and pass to template
     });
 });
