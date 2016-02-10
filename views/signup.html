@@ -30,11 +30,20 @@
     </div>
 
     <div class="form-group">
+      <label for="inputPassword3" class="col-sm-2 control-label">Confirm Password</label>
+      <div class="col-sm-10">
+        <input type="password" name="passwordc" class="form-control" id="inputPassword3" placeholder="Confirm Password">
+      </div>
+    </div>
+
+    <div class="form-group">
       <label for="inputPassword3" class="col-sm-2 control-label">Picture</label>
       <div class="col-sm-10">
         <input type="text" name="picture" class="form-control" id="inputPicture3" placeholder="URL to your picture">
       </div>
     </div>
+
+
 
     <!-- <div class="form-group">
         <label for="exampleInputFile" class="col-sm-2 control-label">Upload an image</label>
@@ -47,8 +56,8 @@
       <div class="col-sm-offset-2 col-sm-10">
         <div class="checkbox">
           <label>
-            <input type="radio" name = "contributor"> Contributor <br>
-            <input type="radio" name = "viewer"> Viewer
+            <input type="radio" name = "usertype" value = "contributor"> Contributor <br>
+            <input type="radio" name = "usertype" value = "viewer"> Viewer
           </label>
         </div>
       </div>
@@ -56,8 +65,11 @@
 
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-10">
-        <button type="submit" class="btn btn-default">Sign Up</button>
+        <div class= "links">
+          <a href="/login" style="display: inline-block;">Already a User?</a>
+        <button type="submit" class="btn btn-default" style="display: inline-block;">Sign Up</button>        
       </div>
     </div>
+      </div>
   </form>
 </div>
