@@ -4,30 +4,79 @@
   {{#if user.local.contributor}}
     <a href="/editcomic" type="button" class="btn btn-info">Edit Comic</a>
 
-//this part doesn't work X_X
-<input id="files" type="file" />
+<input type="file" id="file" name="files[]" multiple />
+
+<script type="text/javascript">
+
+readonly attribute DOMString name;
+readonly attribute Date lastModifiedDate;
+
+function startRead(evt) {
+    var file = document.getElementById(‘file‘).files[0];
+    if (file) {
+        if (file.type.match("image.*")) {
+            getAsImage(file);
+            alert("Name: " + file.name + "\n" + "Last Modified Date :" + file.lastModifiedDate);
+        }
+        else {
+            getAsText(file);
+            alert("Name: " + file.name + "\n" + "Last Modified Date :" + file.lastModifiedDate);
+        }
+    }
+    evt.stopPropagation();
+    evt.preventDefault();
+}
+</script>
+
+<input type=file id=’file’ onchange="startRead()"/>
+
+<script type="text/javascript">
+function startReadFromDrag(evt) {
+    var file = evt.dataTransfer.files[0];
+    if (file) {
+        if (file.type.match("image.*")) {
+            getAsImage(file);
+            alert("Name: " + file.name + "\n" + "Last Modified Date :" + file.lastModifiedDate);
+        }
+        else {
+            getAsText(file);
+            alert("Name: " + file.name + "\n" + "Last Modified Date :" + file.lastModifiedDate);
+        }
+    }
+    evt.stopPropagation();
+    evt.preventDefault();
+}
+
+function getAsImage(readFile) {
+    var reader = new FileReader();
+    reader.readAsDataURL(readFile);
+    reader.onload = addImg;
+}
+
+function addImg(imgsrc) {
+    var img = document.createElement(‘img‘);
+    img.setAttribute("src", imgsrc.target.result);
+    document.getElementById("op").insertBefore(img);
+}
+</script>
+
+<div id="draghere" >Drop files here</div>
+#draghere{
+  width:300px;
+  height:100px;
+  background-color:rgba(221,214,155,0.4);
+  border:1px dashed black;
+  text-align:center;
+}
 
 <script>
-document.getElementById('files').addEventListener('change', function(e) {
-    var file = this.files[0];
-    var xhr = new XMLHttpRequest();
-    (xhr.upload || xhr).addEventListener('progress', function(e) {
-        var done = e.position || e.loaded
-        var total = e.totalSize || e.total;
-        console.log('xhr progress: ' + Math.round(done/total*100) + '%');
-    });
-    xhr.addEventListener('load', function(e) {
-        console.log('xhr upload complete', e, this.responseText);
-    });
-    xhr.open('post', '/URL-HERE', true);
-    var fd = new FormData;
-	fd.append('photo1', file);
-	fd.append('photo2', file2);
-	fd.append('other_data', 'foo bar');
-	xhr.send(fd);
-    xhr.send(file);
-});
+void readAsArrayBuffer(Blob blob);
+
+void readAsText(Blob blob, optional DOMString encoding);
+
+void readAsDataURL(Blob blob);
 </script>
+div id="op"></div>
 
   {{/if}}
 </div>
