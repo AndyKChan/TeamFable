@@ -66,6 +66,10 @@ passport.use('local-signup', new LocalStrategy({
           newUser.local.password = newUser.generateHash(password);
           newUser.local.contributor = req.body['contributor'];
           newUser.local.picture = req.body['picture'];
+          newUser.local.usertype = req.body['usertype'];
+          if(req.body['usertype'] == 'contributor'){
+            newUser.local.contributor = req.body['usertype'];
+          }
 
           // save the user
           newUser.save(function(err) {
