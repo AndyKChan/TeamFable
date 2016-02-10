@@ -1,80 +1,37 @@
-<div class="comicmain">
-  <h1>Faable</h1>
-  <a href="/readcomic" type="button" class="btn btn-info">Read Comic</a>
-  {{#if user.local.contributor}}
-    <a href="/editcomic" type="button" class="btn btn-info">Edit Comic</a>
-    <input type="file" id="file" name="files[]" multiple />
+<!DOCTYPE html>
 
+<html>
+<head>
+<title>JavaScript file upload</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <script type="text/javascript">
+var upload = function() {
+    var photo = document.getElementById("photo");
+    var file = photo.files[0];
 
-readonly attribute DOMString name;
-readonly attribute Date lastModifiedDate;
+    console.log("File name: " + file.fileName);
+    console.log("File size: " + file.fileSize);
+    console.log("Binary content: " + file.getAsBinary());
+    console.log("Text content: " + file.getAsText(""));
 
-function startRead(evt) {
-    var file = document.getElementById(‘file‘).files[0];
-    if (file) {
-        if (file.type.match("image.*")) {
-            getAsImage(file);
-            alert("Name: " + file.name + "\n" + "Last Modified Date :" + file.lastModifiedDate);
-        }
-        else {
-            getAsText(file);
-            alert("Name: " + file.name + "\n" + "Last Modified Date :" + file.lastModifiedDate);
-        }
-    }
-    evt.stopPropagation();
-    evt.preventDefault();
-}
+    var preview = document.getElementById("preview");
+    preview.src = file.getAsDataURL();
+
+    return false;
+};
 </script>
+</head>
+<body>
 
-<input type=file id=’file’ onchange="startRead()"/>
+<form action="/" method="post" onsubmit="return upload();">
+  <fieldset>
+    <legend>Upload photo</legend>
+    <input type="file" name="photo" id="photo">
+    <input type="submit" value="Upload">
+    <hr>
+    <img src="" alt="Image preview" id="preview">
+  </fieldset>
+</form>
 
-<script type="text/javascript">
-function startReadFromDrag(evt) {
-    var file = evt.dataTransfer.files[0];
-    if (file) {
-        if (file.type.match("image.*")) {
-            getAsImage(file);
-            alert("Name: " + file.name + "\n" + "Last Modified Date :" + file.lastModifiedDate);
-        }
-        else {
-            getAsText(file);
-            alert("Name: " + file.name + "\n" + "Last Modified Date :" + file.lastModifiedDate);
-        }
-    }
-    evt.stopPropagation();
-    evt.preventDefault();
-}
-
-function getAsImage(readFile) {
-    var reader = new FileReader();
-    reader.readAsDataURL(readFile);
-    reader.onload = addImg;
-}
-
-function addImg(imgsrc) {
-    var img = document.createElement(‘img‘);
-    img.setAttribute("src", imgsrc.target.result);
-    document.getElementById("op").insertBefore(img);
-}
-</script>
-
-<div id="draghere" >Drop files here</div>
-#draghere{
-  width:300px;
-  height:100px;
-  background-color:rgba(221,214,155,0.4);
-  border:1px dashed black;
-  text-align:center;
-}
-
-<script>
-void readAsArrayBuffer(Blob blob);
-
-void readAsText(Blob blob, optional DOMString encoding);
-
-void readAsDataURL(Blob blob);
-</script>
-div id="op"></div>
-  {{/if}}
-</div>
+</body>
+</html>
