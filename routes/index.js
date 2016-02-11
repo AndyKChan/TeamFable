@@ -41,7 +41,7 @@ router.post('/fileupload', function(request, response) {
   }
   console.log(request.file);
   // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
-  local.user.filename = request.file.filename;
+  User.local.filename = request.file.filename;
   response.end('Your File Uploaded');
   console.log('Photo Uploaded');
   })
