@@ -64,6 +64,12 @@ router.get('/comic', isLoggedIn, function(req, res) {
     });
 });
 
+/* GET search page. */
+router.get('/search', isLoggedIn, function(req, res) {
+  res.render('search', {
+        user: req.user // get the user out of session and pass to template
+    });
+});
 
 /* GET Userlist page. */
 router.get('/userlist', function(req, res) {
