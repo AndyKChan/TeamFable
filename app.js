@@ -12,8 +12,6 @@ var Application = (function () {
         var bodyParser = require('body-parser');
         //Mongoose
         var mongoose = require('mongoose');
-        //Grid
-        var Grid = require('gridfs-stream');
         //Passport
         var passport = require('passport');
         var flash = require('connect-flash');
@@ -46,8 +44,6 @@ var Application = (function () {
         db.once('open', function () {
             console.log("Successfully connected to mongoDB");
         });
-        //GFS
-        var gfs = Grid(db, mongoose);
         //Required setup for passport
         app.use(session({
             secret: process.env.SESSION_SECRET || 'whenyoufeelitintherainbow',
