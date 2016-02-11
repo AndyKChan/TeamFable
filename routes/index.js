@@ -75,12 +75,6 @@ router.get('/comic', isLoggedIn, function (req, res) {
         user: req.user // get the user out of session and pass to template
     });
 });
-/* GET upload page. */
-router.get('/upload', isLoggedIn, function (req, res) {
-    res.render('upload', {
-        user: req.user // get the user out of session and pass to template
-    });
-});
 /* GET Userlist page. */
 router.get('/userlist', function (req, res) {
     var db = req.db;
