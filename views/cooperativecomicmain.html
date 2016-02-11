@@ -1,3 +1,4 @@
+
 <div class="cooperativecomicmain">
   <h1>Fable</h1>
   <a href="/cooperativecomic" type="button" class="btn btn-info">Read Comic</a>
@@ -17,6 +18,17 @@
 <script type="text/javascript" src="uploader.js"></script>
 </head>
 <body>
+<div class="cooperativecomicmain">
+
+  <h1>Faable</h1>
+  <a href="/cooperativecomic" type="button" class="btn btn-info">Read Comic</a>
+  {{#each filenames}}
+  <img src='images/{{this}}' alt="Smiley face" height="400" width="400">
+{{/each}}
+  {{#if user.local.contributor}}
+    <a href="/editcomic" type="button" class="btn btn-info">Edit Comic</a>
+  <a href="/home" type="button" class="btn btn-info">Home Page</a>
+
     <form method="post" enctype="multipart/form-data" action="/fileupload">
       <p>
         <input type="text" name="title" placeholder="title"/>
@@ -28,7 +40,7 @@
         <input type="submit"/>
       </p>
     </form>
-    
+    </div>
 </body>
 
 
