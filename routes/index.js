@@ -43,7 +43,7 @@ router.get('/login', function (req, res) {
 });
 /* GET signup page. */
 router.get('/signup', function (req, res) {
-    res.render('signup', { message: req.flash('signupMessage') });
+    res.render('signup', { message: req.flash('signupMessage'));
 });
 /* GET home page. */
 router.get('/home', isLoggedIn, function (req, res) {
