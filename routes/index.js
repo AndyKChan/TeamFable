@@ -63,7 +63,7 @@ router.post('/fileupload2', function(request, response) {
   
   for(i=0;i <files.length; i++){
     console.log(files[i].filename);
-    filename_arr.push(files[i].filename);
+    filename_arr2.push(files[i].filename);
     if (i == (files.length -1)){
         response.render('solocomicmain', {filenames: filename_arr2});   
     }
