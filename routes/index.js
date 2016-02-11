@@ -143,6 +143,12 @@ router.get('/profile', isLoggedIn, function (req, res) {
         user: req.user // get the user out of session and pass to template
     });
 });
+/* GET myworks page. */
+router.get('/myworks', isLoggedIn, function (req, res) {
+    res.render('myworks', {
+        user: req.user // get the user out of session and pass to template
+    });
+});
 /* GET search page. */
 router.get('/search', isLoggedIn, function (req, res) {
     res.render('search', {
