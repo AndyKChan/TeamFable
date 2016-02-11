@@ -97,6 +97,12 @@ router.get('/profile', isLoggedIn, function (req, res) {
         user: req.user // get the user out of session and pass to template
     });
 });
+/* GET search page. */
+router.get('/search', isLoggedIn, function (req, res) {
+    res.render('search', {
+        user: req.user // get the user out of session and pass to template
+    });
+});
 /* GET solo comic main page. */
 router.get('/solo', isLoggedIn, function (req, res) {
     //var soloURL = '/solo/';
