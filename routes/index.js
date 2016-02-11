@@ -73,9 +73,9 @@ router.get('/profile', isLoggedIn, function (req, res) {
 });
 /* GET solo comic main page. */
 router.get('/solo', isLoggedIn, function (req, res) {
-    var soloURL = '/solo/';
-    var titleADDON = user.local.comictitle;
-    var url = soloURL.concat(titleADDON);
+    //var soloURL = '/solo/';
+   // var titleADDON = user.local.comictitle;
+   // var url = soloURL.concat(titleADDON);
     res.render('solocomicmain', {
 
         user: req.user // get the user out of session and pass to template
