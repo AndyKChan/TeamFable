@@ -57,6 +57,12 @@ router.get('/profile', isLoggedIn, function (req, res) {
         user: req.user // get the user out of session and pass to template
     });
 });
+/* add edit comic functionality */
+router.get('/editcomic', isLoggedIn, function (req, res) {
+    res.render('solocomicmain', {
+        user: req.user // get the user out of session and pass to template
+    });
+});
 /* GET solo comic main page. */
 router.get('/solo', isLoggedIn, function (req, res) {
     res.render('solocomicmain', {
