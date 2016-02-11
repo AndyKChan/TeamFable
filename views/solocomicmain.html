@@ -1,37 +1,68 @@
 <div class="solocomicmain">
-  <h1>Faable</h1>
+  <h1>Fable</h1>
   <a href="/solocomic" type="button" class="btn btn-info">Read Comic</a>
   {{#if user.local.contributor}}
     <a href="/editcomic" type="button" class="btn btn-info">Edit Comic</a>
     <a href="/home" type="button" class="btn btn-info">Home Page</a>
+
     
 <!DOCTYPE html>
-
 <html>
 <head>
-<title></title>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<meta http-equiv="imagetoolbar" content="false">
-<meta http-equiv="imagetoolbar" content="no">
-<link rel="stylesheet" type="text/css" href="css/default.css">
-<script type="text/javascript" src="uploader.js"></script>
+<script type="text/javascript">
+function checkEdits() {
+
+//find out if the user has previously saved edits
+if(localStorage.userEdits!=null)
+document.getElementById("edit").innerHTML = localStorage.userEdits;
+}
+
+function saveEdits() {
+
+//get the editable element
+var editElem = document.getElementById("edit");
+
+//get the edited element content
+var userVersion = editElem.innerHTML;
+
+//save the content to local storage
+localStorage.userEdits = userVersion;
+
+//write a confirmation to the user
+document.getElementById("update").innerHTML="Edits saved!";
+
+}
+
+function saveEdits() {
+
+//get the editable element
+var editElem = document.getElementById("edit");
+
+//get the edited element content
+var userVersion = editElem.innerHTML;
+
+//save the content to local storage
+localStorage.userEdits = userVersion;
+
+//write a confirmation to the user
+document.getElementById("update").innerHTML="Edits saved!";
+
+}
+var editElem = document.getElementById("edit");
+editElem.contentEditable="false";
+
+</script>
 </head>
-<body>
-    <form method="post" enctype="multipart/form-data" action="/fileupload">
-      <p>
-        <input type="text" name="title" placeholder="title"/>
-      </p>
-      <p>
-        <input type="file" name="upl"/>
-      </p>
-      <p>
-        <input type="submit"/>
-      </p>
-    </form>
-    
+<body onload="checkEdits()">
+<div id="edit" contenteditable="true">
+Here is the element's original content
+</div>
+
+<input type="button" value="save my edits" onclick="saveEdits()"/>
+<div id="update"> - Edit the text and click to save for next time</div>
+
 </body>
-
-
 </html>
+
 {{/if}}
 </div>
