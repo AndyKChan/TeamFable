@@ -33,7 +33,53 @@ var isLoggedIn = function (req, res, next) {
 router.get('/', function (req, res, next) {
     res.render('index');
 });
-/* File uploading service */
+
+/* Solo File Uploading Service */
+router.post('/fileupload2', function(request, response) {
+    var filename_arr2 = [];
+  upload(request, response, function(err) {
+      if(err) {
+        console.log('Error Occured');
+        console.log(err);
+        return;
+    }
+    console.log(request.file);
+  // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
+
+  var file2 = new File({
+    filename: request.file.filename
+});
+  file2.save(function(err) {
+      if (err) throw err;
+      console.log('File saved!');
+  });
+  File2.find({}, function(err, files) {
+      if (err) throw err;
+
+  // object of all the users
+  
+  console.log("FAF");
+  console.log(files);
+  
+  for(i=0;i <files.length; i++){
+    console.log(files[i].filename);
+    filename_arr.push(files[i].filename);
+    if (i == (files.length -1)){
+        response.render('solocomicmain', {filenames: filename_arr2});   
+    }
+};
+
+});
+  
+})
+});
+router.get("/images/:id", function (request, response) {
+    var path = imageDir + request.params.filename;
+    console.log("fetching image: ", path);
+    response.sendFile(path);
+});
+
+/*  Cooperative File Uploading Service */
 router.post('/fileupload', function(request, response) {
     var filename_arr = [];
   upload(request, response, function(err) {
