@@ -49,6 +49,13 @@ router.get('/profile', isLoggedIn, function(req, res) {
     });
 });
 
+/* GET myworks page. */
+router.get('/myworks', isLoggedIn, function(req, res) {
+  res.render('myworks', {
+        user: req.user // get the user out of session and pass to template
+    });
+});
+
 
 /* GET comicMain page. */
 router.get('/comicmain', isLoggedIn, function(req, res) {
