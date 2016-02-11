@@ -12,17 +12,18 @@
   <a href="/search" type="button" class="btn btn-info">Search</a>
   {{#if user.local.contributor}}
     <a href="/myworks" type="button" class="btn btn-info">My Works</a>
-    <a href="/solo" type="button" class="btn btn-info">Solo</a>
-    <a href="/cooperative" type="button" class="btn btn-info">Cooperative</a>
-      <div class="form-group">
-      <label for="inputComicTitles3" class="col-sm-2 control-label">Comic Titles:</label>
-      <br>
-      <br>
+     
+    <div class="form-group">
+    <br>
+    <br>
+      <label for="inputComicTitles3" class="col-sm-2 control-label">Name your comic: </label>
       <div class="col-sm-5">
         <input type="comictitles" name="comic titles" class="form-control" id="inputComicTitles3" placeholder="Comic Title">
-         <button type="submit" class="btn btn-primary" style="display: inline-block;">Sign Up</button>  
+        <a href="/solo" type="button" class="btn btn-info" style="display: inline-block;">Solo</a>
+         <a href="/cooperative" type="button" class="btn btn-info" style="display: inline-block;">Cooperative</a>
       </div>
     </div>
+
   {{/if}}
   <a href="/logout" type="button" class="btn btn-info">Logout</a>
 </div>
