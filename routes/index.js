@@ -6,16 +6,16 @@ var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var multer = require('multer');
-var imageDir = __dirname + "/public/images";
+var imageDir = __dirname + "/../public/images/";
 var fs = require("fs");
 var storage = multer.diskStorage({
   destination: function (request, file, callback) {
     callback(null, './public/images');
-  },
-  filename: function (request, file, callback) {
+},
+filename: function (request, file, callback) {
     console.log(file);
     callback(null, file.originalname)
-  }
+}
 });
 var upload = multer({storage: storage}).single('upl');
 /**
@@ -35,24 +35,42 @@ router.get('/', function (req, res, next) {
 });
 /* File uploading service */
 router.post('/fileupload', function(request, response) {
+    var filename_arr = [];
   upload(request, response, function(err) {
-  if(err) {
-    console.log('Error Occured');
-    console.log(err);
-    return;
-  }
-  console.log(request.file);
+      if(err) {
+        console.log('Error Occured');
+        console.log(err);
+        return;
+    }
+    console.log(request.file);
   // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
-  var uploadFileName = new File({local: req.file.filename});
-  uploadFileName.local.filename = request.file.filename;
-    uploadFileName.save(function(err) {
-             if (err)
-               throw err;
-             return done(null, File);
-    });
-  response.end('Your File Uploaded');
-  console.log('Photo Uploaded');
-  })
+
+  var file = new File({
+    filename: request.file.filename
+});
+  file.save(function(err) {
+      if (err) throw err;
+      console.log('File saved!');
+  });
+  File.find({}, function(err, files) {
+      if (err) throw err;
+
+  // object of all the users
+  
+  console.log("FAF");
+  console.log(files);
+  
+  for(i=0;i <files.length; i++){
+    console.log(files[i].filename);
+    filename_arr.push(files[i].filename);
+    if (i == (files.length -1)){
+        response.render('cooperativecomicmain', {filenames: filename_arr});   
+    }
+};
+
+});
+  
+})
 });
 router.get("/images/:id", function (request, response) {
     var path = imageDir + request.params.filename;
@@ -84,7 +102,7 @@ router.get('/solo', isLoggedIn, function (req, res) {
     //var soloURL = '/solo/';
    // var titleADDON = user.local.comictitle;
    // var url = soloURL.concat(titleADDON);
-    res.render('solocomicmain', {
+   res.render('solocomicmain', {
 
         user: req.user // get the user out of session and pass to template
     });
@@ -103,9 +121,11 @@ router.get('/solocomic2', isLoggedIn, function (req, res) {
 });
 /* GET cooperative comic main page. */
 router.get('/cooperative', isLoggedIn, function (req, res) {
-    res.render('comicmain', {
+    res.render('cooperativecomicmain', {
         user: req.user // get the user out of session and pass to template
+
     });
+
 });
 /* GET cooperative comic page 1. */
 router.get('/cooperativecomic', isLoggedIn, function (req, res) {
@@ -138,21 +158,21 @@ router.get('/userlist', function (req, res) {
 /**
  * Logout page
  */
-router.get('/logout', function (req, res, next) {
+ router.get('/logout', function (req, res, next) {
     req.logout();
     // req.session.destroy();
     res.redirect('/');
 });
-/* POST to Authenticate Service */
-router.post('/login', passport.authenticate('local-login', {
+ /* POST to Authenticate Service */
+ router.post('/login', passport.authenticate('local-login', {
     successRedirect: '/home',
     failureRedirect: '/login',
     failureFlash: true // allow flash messages
 }));
-/* POST to Add User Service */
-router.post('/signup', passport.authenticate('local-signup', {
+ /* POST to Add User Service */
+ router.post('/signup', passport.authenticate('local-signup', {
     successRedirect: '/',
     failureRedirect: '/signup',
     failureFlash: true // allow flash messages
 }));
-module.exports = router;
+ module.exports = router;
