@@ -1,3 +1,23 @@
+<head>
+  <style>
+  body{
+
+  }
+  .center{
+    text-align:center;
+  }
+  .container{
+    float: left;
+    width: 600px;
+    margin:5px
+  }
+  .pp{
+    font-size: 150%
+  }
+  </style>
+</head>
+
+
 <div class="profile">
 
 	<nav class="navbar navbar-inverse navbar-fixed-top">
@@ -10,6 +30,7 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="/home">Home</a>
+          <a class="navbar-brand">{{user.local.username}}</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -25,17 +46,11 @@
       </div>
     </nav>
 
-  <h1>Profile Page</h1>
+  <h1 class = "center">Profile Page</h1>
+  <div class="container" id="left" >
   <a href="#" target=><img src={{user.local.picture}} border="0" width="144" height="144" class="img-thumbnail"></a>
-  <p>Name: {{user.local.username}}</p>
-
-  <div class="form-group">
-      <label for="inputPassword3" class="col-sm-2 control-label">Name:</label>
-      <div class="col-sm-10">
-        <input type="text" name="birth" class="form-control" id="inputbirth3" placeholder={{user.local.username}}>
-      </div>
-    </div>
-
+  <br>
+  <p class="pp">General information</p>
   <div class="form-group">
       <label for="inputPassword3" class="col-sm-2 control-label">Birthdate:</label>
       <div class="col-sm-10">
@@ -56,14 +71,24 @@
         <input type="text" name="birth" class="form-control" id="inputbirth3" placeholder={{user.local.location}}>
       </div>
     </div>
+    
+    <p class="pp">
+      {{#if user.local.contributor}}
+      <div class="pp">You are a contributor</div>
+      {{else}}
+      <div class="pp">You are a viewer</div>
+    {{/if}}</p>
   <button type="submit" class="btn btn-default" style="display: inline-block;">Save</button>
+</div>
 
-<h2>Favourite Comic</h2>
+
+<div class="container" id="right">
+<h2>Favourite Comic <span class="glyphicon glyphicon-heart-empty"></span></h2>
 
   <table class="table">
   	
 
 
   </table>
-
+</div>
 </div>
