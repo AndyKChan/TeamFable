@@ -1,6 +1,7 @@
 ///<reference path='../types/DefinitelyTyped/node/node.d.ts'/>
 ///<reference path='../types/DefinitelyTyped/express/express.d.ts'/>
 var User = require('../models/user');
+var File = require('../models/file');
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
@@ -41,12 +42,12 @@ router.post('/fileupload', function(request, response) {
   }
   console.log(request.file);
   // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
-
-  User.local.filename = request.file.filename;
-  User.save(function(err) {
+  var uploadFileName = new File();
+  uploadFileName.local.filename = request.file.filename;
+  File.save(function(err) {
             if (err)
               throw err;
-            return done(null, User);
+            return done(null, File);
           });
   response.end('Your File Uploaded');
   console.log('Photo Uploaded');

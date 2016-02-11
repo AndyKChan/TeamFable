@@ -14,7 +14,6 @@ var userSchema = mongoose.Schema({
         contributor: Boolean,
         picture: String,
         comictitles: [String],
-        fileName: String
     }
 });
 
