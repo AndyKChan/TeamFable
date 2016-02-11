@@ -12,7 +12,8 @@ var userSchema = mongoose.Schema({
         username: String,
         password: String,
         contributor: Boolean,
-        picture: String
+        picture: String,
+        comictitles: [String]
     }
 });
 

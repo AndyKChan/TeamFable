@@ -1,9 +1,22 @@
 ///<reference path='../types/DefinitelyTyped/node/node.d.ts'/>
 ///<reference path='../types/DefinitelyTyped/express/express.d.ts'/>
+var User = require('../models/user');
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
 var multer = require('multer');
+var imageDir = __dirname + "/public/images";
+var fs = require("fs");
+var storage = multer.diskStorage({
+  destination: function (request, file, callback) {
+    callback(null, './public/images');
+  },
+  filename: function (request, file, callback) {
+    console.log(file);
+    callback(null, file.originalname)
+  }
+});
+var upload = multer({storage: storage}).single('upl');
 /**
  * Middleware
  */
@@ -19,23 +32,23 @@ var isLoggedIn = function (req, res, next) {
 router.get('/', function (req, res, next) {
     res.render('index');
 });
-router.post('/fileupload', multer({ dest: './public/images/'}).single('upl'), function(req,res){
-    console.log(req.body); //form fields
-    /* example output:
-    { title: 'abc' }
-     */
-    console.log(req.file); //form files
-    /* example output:
-            { fieldname: 'upl',
-              originalname: 'grumpy.png',
-              encoding: '7bit',
-              mimetype: 'image/png',
-              destination: './uploads/',
-              filename: '436ec561793aa4dc475a88e84776b1b9',
-              path: 'uploads/436ec561793aa4dc475a88e84776b1b9',
-              size: 277056 }
-     */
-    res.status(204).end();
+router.post('/fileupload', function(request, response) {
+  upload(request, response, function(err) {
+  if(err) {
+    console.log('Error Occured');
+    console.log(err);
+    return;
+  }
+  console.log(request.file);
+  // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
+  response.end('Your File Uploaded');
+  console.log('Photo Uploaded');
+  })
+});
+router.get("/images/:id", function (request, response) {
+    var path = imageDir + request.params.filename;
+    console.log("fetching image: ", path);
+    response.sendFile(path);
 });
 /* GET login page. */
 router.get('/login', function (req, res) {
@@ -57,50 +70,34 @@ router.get('/profile', isLoggedIn, function (req, res) {
         user: req.user // get the user out of session and pass to template
     });
 });
-/* add edit comic functionality */
-router.get('/editcomic', isLoggedIn, function (req, res) {
-    res.render('solocomicmain', {
-        user: req.user // get the user out of session and pass to template
-    });
-});
 /* GET solo comic main page. */
 router.get('/solo', isLoggedIn, function (req, res) {
+    var soloURL = '/solo/';
+    var titleADDON = user.local.comictitle;
+    var url = soloURL.concat(titleADDON);
     res.render('solocomicmain', {
-        user: req.user // get the user out of session and pass to template
-    });
-});
-/* GET solo comic page 1. */
-router.get('/solocomic', isLoggedIn, function (req, res) {
-    res.render('solocomic', {
-        user: req.user // get the user out of session and pass to template
-    });
-});
-/* GET solo comic page 2. */
-router.get('/solocomic2', isLoggedIn, function (req, res) {
-    res.render('solocomic2', {
-        user: req.user // get the user out of session and pass to template
-    });
-});
 
+        user: req.user // get the user out of session and pass to template
+    });
+});
 /* GET cooperative comic main page. */
 router.get('/cooperative', isLoggedIn, function (req, res) {
-    res.render('cooperativecomicmain', {
+    res.render('comicmain', {
         user: req.user // get the user out of session and pass to template
     });
 });
-/* GET cooperative comic page 1. */
-router.get('/cooperativecomic', isLoggedIn, function (req, res) {
-    res.render('cooperativecomic', {
+/* GET comic page. */
+router.get('/comic', isLoggedIn, function (req, res) {
+    res.render('comic', {
         user: req.user // get the user out of session and pass to template
     });
 });
-/* GET cooperative comic page 2. */
-router.get('/cooperativecomic2', isLoggedIn, function (req, res) {
-    res.render('cooperativecomic2', {
+/* GET upload page. */
+router.get('/upload', isLoggedIn, function (req, res) {
+    res.render('upload', {
         user: req.user // get the user out of session and pass to template
     });
 });
-
 /* GET Userlist page. */
 router.get('/userlist', function (req, res) {
     var db = req.db;
