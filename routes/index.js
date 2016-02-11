@@ -33,6 +33,7 @@ var isLoggedIn = function (req, res, next) {
 router.get('/', function (req, res, next) {
     res.render('index');
 });
+/* File uploading service */
 router.post('/fileupload', function(request, response) {
   upload(request, response, function(err) {
   if(err) {
@@ -44,11 +45,11 @@ router.post('/fileupload', function(request, response) {
   // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
   var uploadFileName = new File();
   uploadFileName.local.filename = request.file.filename;
-  File.save(function(err) {
-            if (err)
-              throw err;
-            return done(null, File);
-          });
+    File.save(function(err) {
+             if (err)
+               throw err;
+             return done(null, File);
+    });
   response.end('Your File Uploaded');
   console.log('Photo Uploaded');
   })
