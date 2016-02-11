@@ -59,22 +59,42 @@ router.get('/profile', isLoggedIn, function (req, res) {
 });
 /* GET solo comic main page. */
 router.get('/solo', isLoggedIn, function (req, res) {
-    res.render('comicmain', {
+    res.render('solocomicmain', {
         user: req.user // get the user out of session and pass to template
     });
 });
+/* GET solo comic page 1. */
+router.get('/solocomic', isLoggedIn, function (req, res) {
+    res.render('solocomic', {
+        user: req.user // get the user out of session and pass to template
+    });
+});
+/* GET solo comic page 2. */
+router.get('/solocomic2', isLoggedIn, function (req, res) {
+    res.render('solocomic2', {
+        user: req.user // get the user out of session and pass to template
+    });
+});
+
 /* GET cooperative comic main page. */
 router.get('/cooperative', isLoggedIn, function (req, res) {
-    res.render('comicmain', {
+    res.render('cooperativecomicmain', {
         user: req.user // get the user out of session and pass to template
     });
 });
-/* GET comic page. */
-router.get('/comic', isLoggedIn, function (req, res) {
-    res.render('comic', {
+/* GET cooperative comic page 1. */
+router.get('/cooperativecomic', isLoggedIn, function (req, res) {
+    res.render('cooperativecomic', {
         user: req.user // get the user out of session and pass to template
     });
 });
+/* GET cooperative comic page 2. */
+router.get('/cooperativecomic2', isLoggedIn, function (req, res) {
+    res.render('cooperativecomic2', {
+        user: req.user // get the user out of session and pass to template
+    });
+});
+
 /* GET Userlist page. */
 router.get('/userlist', function (req, res) {
     var db = req.db;
