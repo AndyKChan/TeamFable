@@ -53,7 +53,7 @@ router.post('/fileupload2', function(request, response) {
       if (err) throw err;
       console.log('File saved!');
   });
-  File2.find({}, function(err, files) {
+  File.find({}, function(err, files) {
       if (err) throw err;
 
   // object of all the users
