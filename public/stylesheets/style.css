@@ -74,6 +74,7 @@ h2 {
 	
 	background-image: url("http://images7.alphacoders.com/359/359582.jpg");
 	background-repeat: no-repeat; background-size: 100% 100%;
+	position: absolute;
 
     left: 0; right: 0;
     top: 0; bottom: 0;
