@@ -88,9 +88,6 @@ h2 {
 }
 
 .home{
-	text-align: center;
-}
-=======
 	
 	background-image: url("http://images7.alphacoders.com/359/359582.jpg");
 	background-repeat: no-repeat ; background-size: 100% 100%;
@@ -106,6 +103,7 @@ h2 {
     color: white;
 
 }
+
 
 .home .btn {
 

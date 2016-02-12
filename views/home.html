@@ -34,7 +34,7 @@
   </h1-->
     
   <h1>Home</h1>
-  <img src={{user.local.picture}} style="width:304px;height:228px;">
+  
   <!--a href="/profile" type="button" class="btn btn-info">My Profile</a-->
   <!--a href="/search" type="button" class="btn btn-info">Search</a-->
   {{#if user.local.contributor}}
@@ -42,7 +42,8 @@
     <div class="form-group">
     <br>
     <br>
-      <label for="inputComicTitles3" class="col-sm-2 control-label">Name your comic: </label>
+      <label for="inputComicTitles3" class="col-sm-1 control-label">Name your comic: </label>
+
       <div class="col-sm-10">
         <input type="comictitles" name="comic titles" class="form-control" id="inputComicTitles3" placeholder="Comic Title">
         <a href="/solo" type="button" class="btn btn-info" style="display: inline-block;">Solo</a>
