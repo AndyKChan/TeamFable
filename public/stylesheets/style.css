@@ -1,5 +1,4 @@
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
@@ -7,14 +6,142 @@ a {
   color: #00B7FF;
 }
 
-.mainpage {
-	text-align: center;
+h1 {
+
+	font-size: 100px;
+	color: grey;
+
 }
 
+.mainpage .btn {
+
+	margin: 10px 20px;
+}
+
+
+h2 {
+	font-size: 20px;
+
+	text-align: center;
+
+	color: grey;
+
+}
+
+.login .form-control {
+
+
+	margin: 20px 0;
+} 
+
+
+.mainpage {
+	background-image: url("http://images7.alphacoders.com/359/359582.jpg");
+	background-repeat: no-repeat; background-size: 100% 100%;
+
+	position: absolute;
+    left: 0; right: 0;
+    top: 0; bottom: 0;
+
+	padding-top: 300px;
+	text-align: center;
+	
+
+}
+
+
+.login {
+	background-image: url("http://images7.alphacoders.com/359/359582.jpg");
+	background-repeat: no-repeat ; background-size: 100% 100%;
+	position: absolute;
+    
+    padding-top: 200px;
+    
+    left: 0; right: 0;
+    top: 0; bottom: 0;
+
+	
+
+}
+
+.login h2 {
+
+	 color: white;
+}
+
+
 .signup {
-	margin-right: auto;
+	
+	background-image: url("http://images7.alphacoders.com/359/359582.jpg");
+	background-repeat: no-repeat; background-size: 100% 100%;
+
+    left: 0; right: 0;
+    top: 0; bottom: 0;
+
+    color: white;
+}
+
+.signup h2 {
+
+	 color: white;
 }
 
 .home{
 	text-align: center;
 }
+=======
+	
+	background-image: url("http://images7.alphacoders.com/359/359582.jpg");
+	background-repeat: no-repeat ; background-size: 100% 100%;
+	position: absolute;
+    
+    padding-top: 200px;
+    
+    left: 0; right: 0;
+    top: 0; bottom: 0;
+
+
+    text-align: center;
+    color: white;
+
+}
+
+.home .btn {
+
+	margin: 30px 20px;
+
+}
+
+
+.home .form-control {
+
+	margin-right: auto;
+	margin-left: auto;
+		
+}
+
+
+
+.profile{
+	
+	background-image: url("http://cdn.makeuseof.com/wp-content/uploads/2013/08/Solid-Base.jpg?26523c");
+	background-repeat: no-repeat ; background-size: 100% 100%;
+	opacity: 50;
+	position: absolute;
+    
+    padding-top: 100px;
+    
+    left: 0; right: 0;
+    top: 0; bottom: 0;
+
+
+    text-align: center;
+    color: grey;
+
+}
+
+
+.profile h1 {
+	padding-bottom: 50px;
+}
+
