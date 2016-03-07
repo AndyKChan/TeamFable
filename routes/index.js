@@ -143,6 +143,26 @@ router.get('/profile', isLoggedIn, function (req, res) {
         user: req.user // get the user out of session and pass to template
     });
 });
+router.get('/comment', isLoggedIn, function (req, res) {
+  Comment.find({}, function(err, comments) {
+      if (err) throw err;
+    res.render('comment', {comment: comments , user: req.user});
+  });
+});
+/* POST to comments */
+router.post('/comment', function(req, res) {
+var comment = new Comment({
+    "comment.post": req.body["comment"],
+    "comment.commentor": req.user.local.username,
+    "comment.picture": req.user.local.picture,
+});
+  comment.save(function(err) {
+      if (err) throw err;
+      res.redirect('/comment');
+      console.log('comment posted!');
+  });
+});
+
 /* GET myworks page. */
 router.get('/myworks', isLoggedIn, function (req, res) {
     res.render('myworks', {
