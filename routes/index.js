@@ -60,11 +60,13 @@ router.post('/fileupload2', function(request, response) {
   
   console.log("FAF");
   console.log(files);
-  
+  //i'm pulling file names from the database in this for loop and sending it, my problem is here where i should 
+  // send back the whole file object
   for(i=0;i <files.length; i++){
     console.log(files[i].filename);
     filename_arr2.push(files[i].filename);
     if (i == (files.length -1)){
+        //send back the whole file object, look at the tutorial for user/email
         response.render('solocomicmain', {filenames: filename_arr2});   
     }
 };
