@@ -36,11 +36,26 @@
         </div>
       </div>
     </nav>
-<div class="cooperativecomicmain">
+
+<script type="text/javascript">
+    $(document).ready(function() {
+            document.onkeydown = function() 
+                {
+                    var j = event.keyIdentifier
+                    if (j == "Right")
+                        window.location = nextUrl
+                        }
+                   });
+
+      $(document).ready(function() {
+                    var nextPage = $("#next_page_link")
+                    nextUrl = nextPage.attr("href")
+                });
+</script>
 
   <h1>Fable</h1>
   <h2>Cooperative Comic<h2>
-  <a href="/cooperativecomic" type="button" class="btn btn-info">Read Comic</a>
+  <a id="next_page_link" href="/cooperativecomic" type="button" class="btn btn-info">Read Comic</a>
   {{#each filenames}}
   <img src='images/{{this}}' alt="Smiley face" height="400" width="400">
 {{/each}}
@@ -59,7 +74,6 @@
         <input type="submit"/>
       </p>
     </form>
-    </div>
 </body>
 
 

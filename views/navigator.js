@@ -1,8 +1,4 @@
-<html>
-<head>
-
-<script type="text/javascript">
-    $(document).ready(function() {
+ $(document).ready(function() {
             document.onkeydown = function() 
                 {
                     var j = event.keyIdentifier
@@ -13,20 +9,9 @@
                         }
                    });
 
-      $(document).ready(function() {
+$(document).ready(function() {
                     var nextPage = $("#next_page_link")
                     var prevPage = $("#previous_page_link")
                     nextUrl = nextPage.attr("href")
                     prevUrl = prevPage.attr("href")
-                });
-
-</script>
-</head>
-<body>
-<p>
-	<h1>Fable</h1>
-    <a id="previous_page_link" href="/cooperative" type="button" class="btn btn-info" >Previous Page</a> 
-    <a id="next_page_link" href="/cooperativecomic2" type="button" class="btn btn-info" >Next Page</a>
-</p>
-</body>
-</html>
+});
