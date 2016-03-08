@@ -2,6 +2,7 @@
 ///<reference path='../types/DefinitelyTyped/express/express.d.ts'/>
 var User = require('../models/user');
 var File = require('../models/file');
+var Comment = require('../models/comment');
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
@@ -145,6 +146,27 @@ router.get('/profile', isLoggedIn, function (req, res) {
         user: req.user // get the user out of session and pass to template
     });
 });
+router.get('/comment', isLoggedIn, function (req, res) {
+  Comment.find({}, function(err, comments) {
+      if (err) throw err;
+    res.render('comment', {comment: comments , user: req.user});
+  });
+});
+/* POST to comments */
+router.post('/comment', function(req, res) {
+var comment = new Comment({
+    "comment.post": req.body["comment"],
+    "comment.commentor": req.user.local.username,
+    "comment.picture": req.user.local.picture,
+    "comment.date": Date(),
+});
+  comment.save(function(err) {
+      if (err) throw err;
+      res.redirect('/comment');
+      console.log('comment posted!');
+  });
+});
+
 /* GET myworks page. */
 router.get('/myworks', isLoggedIn, function (req, res) {
     res.render('myworks', {
