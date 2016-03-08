@@ -2,6 +2,7 @@
 ///<reference path='../types/DefinitelyTyped/express/express.d.ts'/>
 var User = require('../models/user');
 var File = require('../models/file');
+var Comment = require('../models/comment');
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
