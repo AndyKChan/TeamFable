@@ -156,6 +156,7 @@ var comment = new Comment({
     "comment.post": req.body["comment"],
     "comment.commentor": req.user.local.username,
     "comment.picture": req.user.local.picture,
+    "comment.date": Date(),
 });
   comment.save(function(err) {
       if (err) throw err;
