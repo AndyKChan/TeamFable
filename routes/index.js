@@ -19,7 +19,7 @@ filename: function (request, file, callback) {
     callback(null, file.originalname)
 }
 });
-var upload = multer({storage: storage}).single('upl');
+var upload = multer({storage: storage}).single('filename');
 /**
  * Middleware
  */
@@ -37,97 +37,80 @@ router.get('/', function (req, res, next) {
 });
 
 
-/* Solo File Uploading Service */
+/* Cooperative File Uploading Service */
 router.post('/fileupload2', function(request, response) {
-    var filename_arr2 = [];
+    
   upload(request, response, function(err) {
       if(err) {
         console.log('Error Occured');
         console.log(err);
         return;
-    }
+      }
     console.log(request.file);
   // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
 
   var file2 = new File({
-    filename: request.file.filename
-});
+                  filename: request.file.filename
+              });
+  
   file2.save(function(err) {
       if (err) throw err;
       console.log('File saved!');
   });
-  File.find({}, function(err, files) {
+
+  File.find().limit(1).sort({$natural:-1}).exec(function(err, files) { 
       if (err) throw err;
-
   // object of all the users
-  
-  console.log("FAF");
-  console.log(files);
-  //i'm pulling file names from the database in this for loop and sending it, my problem is here where i should 
-  // send back the whole file object
-  for(i=0;i <files.length; i++){
-    console.log(files[i].filename);
-    filename_arr2.push(files[i].filename);
-    if (i == (files.length -1)){
-        //send back the whole file object, look at the tutorial for user/email
-        response.render('solocomicmain', {filenames: filename_arr2});   
-    }
-};
+    console.log("FAF");
+    console.log(files);
+  //i'm pulling file names from the database in this for loop and sending it, 
+  //my problem is here where i should send back the whole file object
+          //send back the whole file object, look at the tutorial for user/email
+      response.redirect("/cooperative");   
+  })
+});
+});
 
-});
-  
-})
-});
 router.get("/images/:id", function (request, response) {
     var path = imageDir + request.params.filename;
     console.log("fetching image: ", path);
     response.sendFile(path);
 });
 
-/*  Cooperative File Uploading Service */
-router.post('/fileupload', function(request, response) {
-    var filename_arr = [];
-  upload(request, response, function(err) {
-      if(err) {
-        console.log('Error Occured');
-        console.log(err);
-        return;
-    }
-    console.log(request.file);
-  // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
 
-  var file = new File({
-    filename: request.file.filename
-});
-  file.save(function(err) {
+// router.get("/images/:id", function (request, response) {
+//     var path = imageDir + request.params.filename;
+//     console.log("fetching image: ", path);
+//     response.sendFile(path);
+// });
+
+/* GET cooperative comic main page. */
+router.get('/cooperative', isLoggedIn, function (req, res) {
+Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
       if (err) throw err;
-      console.log('File saved!');
+      File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
+        res.render('cooperativecomicmain', {comic: comics, file: files , user: req.user});
+      });
   });
-  File.find({}, function(err, files) {
+});
+
+/* POST to comic */
+router.post('/cooperative', function(req, res) {
+
+  var comic = new Comic({
+    "comic.comicName": req.body["comicName"],
+    "comic.cooperative": true,
+    "comic.description": req.body["description"],
+    "comic.favorite": false,
+    "comic.author": req.user.local.username,
+    "comic.date": new Date(),
+    "comic.img": req.body["img"]
+  });
+
+  comic.save(function(err) {
       if (err) throw err;
-
-  // object of all the users
-  
-  console.log("FAF");
-  console.log(files);
-  
-  for(i=0;i <files.length; i++){
-    console.log(files[i].filename);
-    filename_arr.push(files[i].filename);
-    if (i == (files.length -1)){
-        response.render('cooperativecomicmain', {filenames: filename_arr});   
-    }
-};
-
-});
-  
-})
-});
-
-router.get("/images/:id", function (request, response) {
-    var path = imageDir + request.params.filename;
-    console.log("fetching image: ", path);
-    response.sendFile(path);
+      res.redirect('/cooperative');
+  });
 });
 
 /* GET login page. */
@@ -163,7 +146,7 @@ var comment = new Comment({
     "comment.post": req.body["comment"],
     "comment.commentor": req.user.local.username,
     "comment.picture": req.user.local.picture,
-    "comment.date": Date(),
+    "comment.date": new Date(),
 });
   comment.save(function(err) {
       if (err) throw err;
@@ -174,16 +157,17 @@ var comment = new Comment({
 
 /* GET cooperative comic main page. */
 router.get('/cooperative', isLoggedIn, function (req, res) {
-    res.render('cooperativecomicmain', {
-
-        user: req.user // get the user out of session and pass to template
-    });
+Comic.find({}, function(err, comics) {
+      if (err) throw err;
+      console.log(comics);
+    res.render('cooperativecomicmain', {comic: comics , user: req.user});
+  });
 });
 
 /* POST to comic */
 router.post('/cooperative', function(req, res) {
 var comic = new Comic({
-    "comic.comicName": req.body["comicName"],
+    "comic.comicName": req.body["title"],
     "comic.cooperative": true,
     "comic.description": req.body["description"],
     "comic.favorite": false,

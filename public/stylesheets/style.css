@@ -20,7 +20,7 @@ h1 {
 
 
 h2 {
-	font-size: 20px;
+	font-size: 30px;
 
 	text-align: center;
 
@@ -144,3 +144,53 @@ h2 {
 	padding-bottom: 50px;
 }
 
+form {
+	font-size: 20px;
+}
+
+.cooperative{
+	
+	background-image: url("http://images7.alphacoders.com/359/359582.jpg");
+	background-repeat: no-repeat ; background-size: 100% 100%;
+	position: absolute;
+ 	
+    
+    left: 0; right: 0;
+    top: 0; bottom: 0;
+
+
+    text-align: center;
+    color: white;
+
+}
+
+#textbox{
+	width: 400px;
+}
+
+#picture{
+	display:inline-block;
+	margin: 50px 0;
+}
+
+#cooperativeTitle{
+	font-size: 100px;
+	margin-bottom: 30px;
+	color:#fff;
+}
+
+#titleBox{
+	width: 400px;
+	margin: 10px;
+}
+
+#textTitleBox input, #textTitleBox textarea{
+	border-radius: 5px;
+	font-size: 14px;
+	padding: 6px 12px;
+}
+
+#titleBox::-webkit-input-placeholder { font-size:14; color:#555; }
+#titleBox::-moz-placeholder { font-size:14;  color:#555; } / firefox 19+ /
+#titleBox:-ms-input-placeholder { font-size:14; color:#555; } / ie /
+#titleBox:-moz-placeholder { font-size:14;  color:#555; }

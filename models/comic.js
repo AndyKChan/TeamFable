@@ -13,6 +13,8 @@ var comicSchema = mongoose.Schema({
    	 	description: String,
    	 	favorite: Boolean,
    		author: String,
+   		date: Date,
+   		img: String
 	}
 });
 

@@ -13,6 +13,7 @@
 
 </head>
 <body>
+<div class="cooperative">
   <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -52,45 +53,52 @@
                     var nextPage = $("#next_page_link")
                     nextUrl = nextPage.attr("href")
                 });
-
-      $(document).ready(function(){
-          comic.local.cooperative = true;
-      });
-
-      $(document).ready(function(){
-
-      });
 </script>
 
 <br>
 <br>
 <br>
-  <h2>Cooperative Comic<h2>
-  
+  <h2 id="cooperativeTitle">Cooperative Comic</h2>
+  {{#each comic}}
+  {{this.comic.comicName}}
+
   {{this.comic.description}}
+
   
+  <form method="post"  enctype="multipart/form-data"  action="/fileupload2">
+  <input type="file" name="filename" style="display: inline-block;">
+  <button type="submit" class="btn btn-primary" >Submit</button>
+  </form>
+  
+  {{/each}}
+  {{#each file}}
+  <img id="picture" src='images/{{this.filename}}' height="400" width="400">
+  {{/each}}
+
+
   <center>
   <a id="next_page_link" href="/cooperativecomic" type="button" class="btn btn-info">Read Comic</a>
   <a href="/home" type="button" class="btn btn-info">Home Page</a>
-  {{#each filenames}}
-  <img src='images/{{this}}' alt="Smiley face" height="400" width="400">
-{{/each}}
+  
   {{#if user.local.contributor}}
   <br>
   <br>
-  <form class="form-horizontal" name="description" method="post" action="/cooperative" >
-      <textarea type="text" name="description" class="form-control" placeholder="description" rows="3" cols="30" ></textarea>
-      <button type="submit" class="btn btn-primary" style="display: inline-block;">Submit</button>
+  <form id="textTitleBox" class="form-horizontal" name="description" method="post" action="/cooperative" >
+      <input id="titleBox" type="text" name="comicName" placeholder="title">
+
+      <textarea id="textbox" type="text" name="description" class="form-control" placeholder="description" rows="3" cols="10" ></textarea>
+  <br>
+  
+  
+  <button type="submit" class="btn btn-primary" style="display: inline-block;">Submit</button>
   </form>
-  <br>
-  <br>
-    <form method="post" enctype="multipart/form-data" action="/fileupload">
-        <input type="file" name="upl"/>
-    </form>
+
+
   </center>
 </body>
 
 
 </html>
 {{/if}}
+</div>
 </div>
