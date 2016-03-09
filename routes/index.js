@@ -174,10 +174,10 @@ var comment = new Comment({
 
 /* GET cooperative comic main page. */
 router.get('/cooperative', isLoggedIn, function (req, res) {
-    res.render('cooperativecomicmain', {
-
-        user: req.user // get the user out of session and pass to template
-    });
+Comic.find({}, function(err, comic) {
+      if (err) throw err;
+    res.render('cooperativecomicmain', {comic: comics , user: req.user});
+  });
 });
 
 /* POST to comic */
