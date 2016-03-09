@@ -174,7 +174,7 @@ var comment = new Comment({
 
 /* GET cooperative comic main page. */
 router.get('/cooperative', isLoggedIn, function (req, res) {
-Comic.find({}, function(err, comic) {
+Comic.find({}, function(err, comics) {
       if (err) throw err;
     res.render('cooperativecomicmain', {comic: comics , user: req.user});
   });
