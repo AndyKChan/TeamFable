@@ -134,6 +134,11 @@ router.get('/profile', isLoggedIn, function (req, res) {
     });
 });
 
+// to remove everything
+// Comment.remove({}, function (err) {
+//  if (err) return handleError(err);
+  // removed!
+//});
 router.get('/comment', isLoggedIn, function (req, res) {
   Comment.find({}, function(err, comments) {
       if (err) throw err;
@@ -159,7 +164,6 @@ var comment = new Comment({
 router.get('/cooperative', isLoggedIn, function (req, res) {
 Comic.find({}, function(err, comics) {
       if (err) throw err;
-      console.log(comics);
     res.render('cooperativecomicmain', {comic: comics , user: req.user});
   });
 });
