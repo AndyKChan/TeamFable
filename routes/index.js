@@ -151,6 +151,11 @@ router.get('/profile', isLoggedIn, function (req, res) {
     });
 });
 
+// to remove everything
+// Comment.remove({}, function (err) {
+//  if (err) return handleError(err);
+  // removed!
+//});
 router.get('/comment', isLoggedIn, function (req, res) {
   Comment.find({}, function(err, comments) {
       if (err) throw err;
