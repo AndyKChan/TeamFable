@@ -9,6 +9,8 @@
 <meta http-equiv="imagetoolbar" content="no">
 <link rel="stylesheet" type="text/css" href="css/default.css">
 <script type="text/javascript" src="uploader.js"></script>
+
+
 </head>
 <body>
   <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -26,7 +28,6 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/profile">Profile</a></li>
-            <li><a href="/solo">Solo</a></li>
             <li><a href="/myworks">My Works</a></li>
             <li><a href="/logout">Logout</a></li>
           </ul>
@@ -51,29 +52,42 @@
                     var nextPage = $("#next_page_link")
                     nextUrl = nextPage.attr("href")
                 });
+
+      $(document).ready(function(){
+          comic.local.cooperative = true;
+      });
+
+      $(document).ready(function(){
+
+      });
 </script>
 
-  <h1>Fable</h1>
+<br>
+<br>
+<br>
   <h2>Cooperative Comic<h2>
+  
+  {{this.comic.description}}
+  
+  <center>
   <a id="next_page_link" href="/cooperativecomic" type="button" class="btn btn-info">Read Comic</a>
+  <a href="/home" type="button" class="btn btn-info">Home Page</a>
   {{#each filenames}}
   <img src='images/{{this}}' alt="Smiley face" height="400" width="400">
 {{/each}}
   {{#if user.local.contributor}}
-    <a href="/editcomic" type="button" class="btn btn-info">Edit Comic</a>
-  <a href="/home" type="button" class="btn btn-info">Home Page</a>
-
+  <br>
+  <br>
+  <form class="form-horizontal" name="description" method="post" action="/cooperative" >
+      <textarea type="text" name="description" class="form-control" placeholder="description" rows="3" cols="30" ></textarea>
+      <button type="submit" class="btn btn-primary" style="display: inline-block;">Submit</button>
+  </form>
+  <br>
+  <br>
     <form method="post" enctype="multipart/form-data" action="/fileupload">
-      <p>
-        <input type="text" name="title" placeholder="title"/>
-      </p>
-      <p>
         <input type="file" name="upl"/>
-      </p>
-      <p>
-        <input type="submit"/>
-      </p>
     </form>
+  </center>
 </body>
 
 

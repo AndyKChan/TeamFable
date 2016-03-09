@@ -2,6 +2,7 @@
 ///<reference path='../types/DefinitelyTyped/express/express.d.ts'/>
 var User = require('../models/user');
 var File = require('../models/file');
+var Comic = require('../models/comic');
 var Comment = require('../models/comment');
 var express = require('express');
 var router = express.Router();
@@ -34,6 +35,7 @@ var isLoggedIn = function (req, res, next) {
 router.get('/', function (req, res, next) {
     res.render('index');
 });
+
 
 /* Solo File Uploading Service */
 router.post('/fileupload2', function(request, response) {
@@ -121,11 +123,13 @@ router.post('/fileupload', function(request, response) {
   
 })
 });
+
 router.get("/images/:id", function (request, response) {
     var path = imageDir + request.params.filename;
     console.log("fetching image: ", path);
     response.sendFile(path);
 });
+
 /* GET login page. */
 router.get('/login', function (req, res) {
     res.render('login', { message: req.flash('loginMessage') });
@@ -146,6 +150,7 @@ router.get('/profile', isLoggedIn, function (req, res) {
         user: req.user // get the user out of session and pass to template
     });
 });
+
 router.get('/comment', isLoggedIn, function (req, res) {
   Comment.find({}, function(err, comments) {
       if (err) throw err;
@@ -164,6 +169,29 @@ var comment = new Comment({
       if (err) throw err;
       res.redirect('/comment');
       console.log('comment posted!');
+  });
+});
+
+/* GET cooperative comic main page. */
+router.get('/cooperative', isLoggedIn, function (req, res) {
+    res.render('cooperativecomicmain', {
+
+        user: req.user // get the user out of session and pass to template
+    });
+});
+
+/* POST to comic */
+router.post('/cooperative', function(req, res) {
+var comic = new Comic({
+    "comic.comicName": req.body["comicName"],
+    "comic.cooperative": true,
+    "comic.description": req.body["description"],
+    "comic.favorite": false,
+    "comic.author": req.user.local.username,
+});
+  comic.save(function(err) {
+      if (err) throw err;
+      res.redirect('/cooperative');
   });
 });
 
@@ -201,14 +229,7 @@ router.get('/solocomic2', isLoggedIn, function (req, res) {
         user: req.user // get the user out of session and pass to template
     });
 });
-/* GET cooperative comic main page. */
-router.get('/cooperative', isLoggedIn, function (req, res) {
-    res.render('cooperativecomicmain', {
-        user: req.user // get the user out of session and pass to template
 
-    });
-
-});
 /* GET cooperative comic page 1. */
 router.get('/cooperativecomic', isLoggedIn, function (req, res) {
     res.render('cooperativecomic', {
@@ -227,6 +248,14 @@ router.get('/upload', isLoggedIn, function (req, res) {
         user: req.user // get the user out of session and pass to template
     });
 });
+
+/* Edit view. */
+router.get('/editcomic', isLoggedIn, function (req, res) {
+    res.render('cooperativecomicmain', {
+        user: req.user // get the user out of session and pass to template
+    });
+});
+
 /* GET Userlist page. */
 router.get('/userlist', function (req, res) {
     var db = req.db;
