@@ -233,6 +233,31 @@ router.get('/profile', isLoggedIn, function (req, res) {
     });
 });
 
+router.post('/profile', function (req, res) {
+var username = req.user.local.username;
+var birthdate = req.user.local.birthdate;
+var gender = req.user.local.gender;
+var location = req.user.local.location;
+
+if (req.body["birthdate"] == "") {
+  req.body["birthdate"] = birthdate;
+}
+if (req.body["location"] == "") {
+  req.body["location"] = location;
+}
+if (req.body["gender"] == "") {
+  req.body["gender"] = gender;
+}
+User.update({'local.username': username},
+    {'local.birthdate':req.body["birthdate"], 
+    'local.gender':req.body["gender"], 
+    'local.location':req.body["location"]
+    }, {multi:true},function(err, raw){
+      res.redirect("/profile");
+});
+});
+
+
 // to remove everything
 // Comment.remove({}, function (err) {
 //  if (err) return handleError(err);
