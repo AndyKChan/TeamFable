@@ -305,6 +305,15 @@ router.get('/search', isLoggedIn, function (req, res) {
     });
 });
 
+router.post('/sresult', function(req,res,next){
+  Comic.find({comicName:req.body.data}, function(err,comics){
+    if(err) throw err;
+    console.log(req.body.data);
+    console.log(comics);
+    res.send(comics);
+  })
+})
+
 /* GET solo comic page 1. */
 router.get('/solocomic', isLoggedIn, function (req, res) {
     res.render('solocomic', {
