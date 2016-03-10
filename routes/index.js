@@ -305,14 +305,15 @@ router.get('/search', isLoggedIn, function (req, res) {
     });
 });
 
-router.post('/sresult', function(req,res,next){
-  Comic.find({comicName:req.body.data}, function(err,comics){
+router.post('/test', function(req,res,next) {
+  Comic.find({'comic.author' : req.body.data}, function(err,comics){
     if(err) throw err;
     console.log(req.body.data);
-    console.log(comics);
-    res.send(comics);
-  })
-})
+    console.log({comic: comics});
+    res.send(JSON.stringify(comics));
+  });
+ //res.send(req.body.data);
+ });
 
 /* GET solo comic page 1. */
 router.get('/solocomic', isLoggedIn, function (req, res) {

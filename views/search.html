@@ -20,10 +20,18 @@
       });
 
 });
-</script>
-</head>
+</script><div class="home">
+  <h1>Search For Comics Here!</h1>
 
-<nav class="navbar navbar-inverse navbar-fixed-top">
+  <form class="form-horizontal" id="test" name="search" method="get" action="/search" >
+      <input type="text" class="form-control" id="in" placeholder="Search...">
+  </form>
+
+  <div>
+    <p id="result">1: </p>
+  </div>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -37,7 +45,7 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="/solo">Solo</a></li-->
+            <li><a href="/solo">Solo</a></li>
             <li><a href="/cooperative">Cooperative</a></li>
             <li><a href="/profile">Profile</a></li>
             <li><a href="/logout">Logout</a></li>
@@ -45,18 +53,25 @@
         </div>
       </div>
     </nav>
-
-
-
-<div class="home">
-  <h1>Search For Comics Here!</h1>
-
-  <form class="form-horizontal" name="search" method="get" action="/search" >
-      <input type="text" class="form-control" id="in" placeholder="Search...">
-  </form>
-  <div>
-    <p id= "result"></p>
-  </div>
-
-  
 </div>
+
+<script>
+$(document).ready(function(){
+  $("#test").submit(function(){
+    $.ajax({
+      method: "POST",
+      url: "/test",
+      data:{data:$('#in').val()}
+    }).done(function(data){
+      //alert("!!");
+      //alert(data);
+      $("#result").html(data)
+      //document.getElementById("result").innerHTML= data;
+    });
+
+    return false;
+
+    });
+
+});
+</script>
