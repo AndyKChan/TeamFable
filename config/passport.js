@@ -68,6 +68,9 @@ passport.use('local-signup', new LocalStrategy({
           newUser.local.email = req.body['email'];
           newUser.local.password = newUser.generateHash(password);
           newUser.local.contributor = req.body['contributor'];
+          if (req.body["picture"] == "") {
+              req.body["picture"] = "http://blogdailyherald.com/wp-content/uploads/2014/10/wallpaper-for-facebook-profile-photo.jpg";
+            }
           newUser.local.picture = req.body['picture'];
           newUser.local.usertype = req.body['usertype'];
           if(req.body['usertype'] == 'contributor'){
