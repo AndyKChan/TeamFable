@@ -14,7 +14,9 @@ var comicSchema = mongoose.Schema({
    	 	favorite: Boolean,
    		author: String,
    		date: Date,
-   		img: String
+   		img: String,
+   		page1: [String],
+   		page2: [String],
 	}
 });
 

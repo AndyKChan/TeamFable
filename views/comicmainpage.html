@@ -93,21 +93,46 @@
 <br>
 <br>
 
-
-
+{{#if this.comic.cooperative}}
+  {{#each comic}}  
+  {{#if this.comic.comicName}}
+  <h2 id="cooperativeTitle">{{this.comic.comicName}}</h2>
+  {{else}}
+  {{#if this.comic.cooperative}}
   <h2 id="cooperativeTitle">Cooperative Comic</h2>
+  {{else}}
+  <h2 id="cooperativeTitle">Solo Comic</h2>
+  {{/if}}
+  {{/if}}
+  {{/each}}
 
-<br>
-<br>
+  {{#if user.local.contributor}}
+  {{#if this.comic.cooperative}}
  <form method="post"  enctype="multipart/form-data"  action="/fileupload2">
  
   <input type="file" name="filename" style="display: inline-block;">
   <button type="submit" class="btn btn-primary" >Submit</button>
   </form>
+  {{/if}}
+  {{/if}}
 
+  
+  {{#each file}}
+  <div>
+  <img id="picture" src='images/{{this.filename}}' height="400" width="400">
+  </div>
+  {{/each}}
+  {{#each comic}}
+  {{this.comic.description}}
+  {{/each}}
+  <br>
+  <br>
   <center>
+  <a id="next_page_link" href="/cooperativecomic" type="button" class="btn btn-info">Read Comic</a>
+  <a href="/home" type="button" class="btn btn-info">Home Page</a>
   
   {{#if user.local.contributor}}
+  {{#if this.comic.cooperative}}
   <br>
   <br>
    {{#each comic}}
@@ -132,8 +157,9 @@
 
 </body>
 
-
+{{/if}}
 </html>
 {{/if}}
 </div>
 </div>
+{{/if}}

@@ -77,11 +77,25 @@ router.get("/images/:id", function (request, response) {
     response.sendFile(path);
 });
 
+/* GET comic main page. */
+router.get('/comicmainpage', isLoggedIn, function (req, res) {
+Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
+      if (err) throw err;
+      File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
+        res.render('comicmainpage', {comic: comics, file: files , user: req.user});
+      });
+  });
+});
 
-// router.get("/images/:id", function (request, response) {
-//     var path = imageDir + request.params.filename;
-//     console.log("fetching image: ", path);
-//     response.sendFile(path);
+//old
+// /* GET cooperative comic main page. */
+// router.get('/cooperative', isLoggedIn, function (req, res) {
+// Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
+//       if (err) throw err;
+//       File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
+//         res.render('cooperativecomicmain', {comic: comics, file: files , user: req.user});
+//       });
+//   });
 // });
 
 /* GET cooperative comic main page. */
@@ -94,7 +108,7 @@ Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) {
   });
 });
 
-/* POST to comic */
+/* POST to cooperative comic */
 router.post('/cooperative', function(req, res) {
 
   var comic = new Comic({
@@ -104,14 +118,99 @@ router.post('/cooperative', function(req, res) {
     "comic.favorite": false,
     "comic.author": req.user.local.username,
     "comic.date": new Date(),
-    "comic.img": req.body["img"]
+    "comic.img": req.body["img"],
+    "comic.page1": req.body["page1"],
+    "comic.page2": req.body["page2"]
   });
 
   comic.save(function(err) {
       if (err) throw err;
-      res.redirect('/cooperative');
+      res.redirect('/comicmainpage');
   });
 });
+
+// /* GET solo comic main page. */
+// router.get('/solo', isLoggedIn, function (req, res) {
+//     //var soloURL = '/solo/';
+//    // var titleADDON = user.local.comictitle;
+//    // var url = soloURL.concat(titleADDON);
+//    res.render('solocomicmain', {
+
+//         user: req.user // get the user out of session and pass to template
+//     });
+// });
+
+/* GET solo comic main page. */
+router.get('/solo', isLoggedIn, function (req, res) {
+Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
+      if (err) throw err;
+      File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
+        res.render('solocomicmain', {comic: comics, file: files , user: req.user});
+      });
+  });
+});
+
+/* POST to solo comic */
+router.post('/solo', function(req, res) {
+
+  var comic = new Comic({
+    "comic.comicName": req.body["comicName"],
+    "comic.cooperative": false,
+    "comic.description": req.body["description"],
+    "comic.favorite": false,
+    "comic.author": req.user.local.username,
+    "comic.date": new Date(),
+    "comic.img": req.body["img"],
+    "comic.page1": req.body["page1"],
+    "comic.page2": req.body["page2"]
+  });
+
+  comic.save(function(err) {
+      if (err) throw err;
+      res.redirect('/comicmainpage');
+  });
+});
+
+/* Solo File Uploading Service */
+router.post('/fileupload', function(request, response) {
+    
+  upload(request, response, function(err) {
+      if(err) {
+        console.log('Error Occured');
+        console.log(err);
+        return;
+      }
+    console.log(request.file);
+  // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
+
+  var file = new File({
+                  filename: request.file.filename
+              });
+  
+  file.save(function(err) {
+      if (err) throw err;
+      console.log('File saved!');
+  });
+
+  File.find().limit(1).sort({$natural:-1}).exec(function(err, files) { 
+      if (err) throw err;
+  // object of all the users
+    console.log("FAF");
+    console.log(files);
+  //i'm pulling file names from the database in this for loop and sending it, 
+  //my problem is here where i should send back the whole file object
+          //send back the whole file object, look at the tutorial for user/email
+      response.redirect("/solo");   
+  })
+});
+});
+
+router.get("/images/:id", function (request, response) {
+    var path = imageDir + request.params.filename;
+    console.log("fetching image: ", path);
+    response.sendFile(path);
+});
+
 
 /* GET login page. */
 router.get('/login', function (req, res) {
@@ -160,51 +259,27 @@ var comment = new Comment({
   });
 });
 
-/* GET cooperative comic main page. */
-router.get('/cooperative', isLoggedIn, function (req, res) {
-Comic.find({}, function(err, comics) {
-      if (err) throw err;
-    res.render('cooperativecomicmain', {comic: comics , user: req.user});
-  });
-});
 
-/* POST to comic */
-router.post('/cooperative', function(req, res) {
-var comic = new Comic({
-    "comic.comicName": req.body["title"],
-    "comic.cooperative": true,
-    "comic.description": req.body["description"],
-    "comic.favorite": false,
-    "comic.author": req.user.local.username,
-});
-  comic.save(function(err) {
-      if (err) throw err;
-      res.redirect('/cooperative');
-  });
-});
 
 /* GET myworks page. */
-router.get('/myworks', isLoggedIn, function (req, res) {
-    res.render('myworks', {
-        user: req.user // get the user out of session and pass to template
+router.get('/myworks', isLoggedIn, function(req, res){
+   Comic.find({author : req.user.local.username}, function(err, comics){
+       if (err) throw err;
+      res.render('myworks', {
+         comic: comics,
+         user: req.user // get the user out of session and pass to template
+      });
     });
 });
+  
+
 /* GET search page. */
 router.get('/search', isLoggedIn, function (req, res) {
     res.render('search', {
         user: req.user // get the user out of session and pass to template
     });
 });
-/* GET solo comic main page. */
-router.get('/solo', isLoggedIn, function (req, res) {
-    //var soloURL = '/solo/';
-   // var titleADDON = user.local.comictitle;
-   // var url = soloURL.concat(titleADDON);
-   res.render('solocomicmain', {
 
-        user: req.user // get the user out of session and pass to template
-    });
-});
 /* GET solo comic page 1. */
 router.get('/solocomic', isLoggedIn, function (req, res) {
     res.render('solocomic', {
@@ -220,10 +295,112 @@ router.get('/solocomic2', isLoggedIn, function (req, res) {
 
 /* GET cooperative comic page 1. */
 router.get('/cooperativecomic', isLoggedIn, function (req, res) {
-    res.render('cooperativecomic', {
-        user: req.user // get the user out of session and pass to template
-    });
+Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
+      if (err) throw err;
+      File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
+        res.render('cooperativecomic', {comic: comics, file: files , user: req.user});
+      });
+  });
 });
+
+/* POST to comic */
+router.post('/cooperativecomic', function(req, res) {
+
+  var comic = new Comic({
+    "comic.comicName": req.body["comicName"],
+    "comic.cooperative": true,
+    "comic.description": req.body["description"],
+    "comic.favorite": false,
+    "comic.author": req.user.local.username,
+    "comic.date": new Date(),
+    "comic.img": req.body["img"],
+    "comic.page1": req.body["page1"],
+    "comic.page2": req.body["page2"]
+  });
+
+  comic.save(function(err) {
+      if (err) throw err;
+      res.redirect('/cooperativecomic');
+  });
+});
+
+// /* Cooperative comic page 2 File Uploading Service */
+// router.post('/fileuploadpage1', function(request, response) {
+    
+//   upload(request, response, function(err) {
+//       if(err) {
+//         console.log('Error Occured');
+//         console.log(err);
+//         return;
+//       }
+//     console.log(request.file);
+//   // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
+
+//   var file2 = new File({
+//                   filename: request.file.filename
+//               });
+  
+//   file2.save(function(err) {
+//       if (err) throw err;
+//       console.log('File saved!');
+//   });
+
+//   File.find().limit(1).sort({$natural:-1}).exec(function(err, files) { 
+//       if (err) throw err;
+//   // object of all the users
+//     console.log("FAF");
+//     console.log(files);
+//   //i'm pulling file names from the database in this for loop and sending it, 
+//   //my problem is here where i should send back the whole file object
+//           //send back the whole file object, look at the tutorial for user/email
+//       response.redirect("/cooperativecomic");   
+//   })
+// });
+// });
+
+
+/* comic page Uploading Service */
+router.post('/fileuploadpage1', function(request, response) {
+    var filename_arr2 = [];
+  upload(request, response, function(err) {
+      if(err) {
+        console.log('Error Occured');
+        console.log(err);
+        return;
+    }
+    console.log(request.file);
+  // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
+
+  var file2 = new File({
+    filename: request.file.filename
+});
+  file2.save(function(err) {
+      if (err) throw err;
+      console.log('File saved!');
+  });
+  File.find({}, function(err, files) {
+      if (err) throw err;
+
+  // object of all the users
+  
+  console.log("FAF");
+  console.log(files);
+  //i'm pulling file names from the database in this for loop and sending it, 
+  //my problem is here where i should send back the whole file object
+  for(i=0;i <files.length; i++){
+    console.log(files[i].filename);
+    filename_arr2.push(files[i].filename);
+    if (i == (files.length -1)){
+        //send back the whole file object, look at the tutorial for user/email
+        response.render('fileuploadpage1', {filenames: filename_arr2});   
+    }
+};
+
+});
+  
+})
+});
+
 /* GET cooperative comic page 2. */
 router.get('/cooperativecomic2', isLoggedIn, function (req, res) {
     res.render('cooperativecomic2', {

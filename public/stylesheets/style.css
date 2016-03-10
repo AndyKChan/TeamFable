@@ -1,3 +1,5 @@
+
+
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
@@ -170,7 +172,7 @@ form {
 
 #picture{
 	display:inline-block;
-	margin: 50px 0;
+	margin: 15px 30px;
 }
 
 #cooperativeTitle{
@@ -182,6 +184,7 @@ form {
 #titleBox{
 	width: 400px;
 	margin: 10px;
+	color:#555;
 }
 
 #textTitleBox input, #textTitleBox textarea{
@@ -194,3 +197,4 @@ form {
 #titleBox::-moz-placeholder { font-size:14;  color:#555; } / firefox 19+ /
 #titleBox:-ms-input-placeholder { font-size:14; color:#555; } / ie /
 #titleBox:-moz-placeholder { font-size:14;  color:#555; }
+
