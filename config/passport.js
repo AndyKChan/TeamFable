@@ -61,6 +61,9 @@ passport.use('local-signup', new LocalStrategy({
 
           console.log(req.body['picture']);
           // set the user's local credentials
+          newUser.local.birthdate = "";
+          newUser.local.gender = "";
+          newUser.local.location = "";
           newUser.local.username = username;
           newUser.local.email = req.body['email'];
           newUser.local.password = newUser.generateHash(password);
