@@ -9,7 +9,7 @@ var server = supertest.agent("http://localhost:3000");
 
 describe('Routing', function() {
 
-  it("should return home page",function(done){
+  it("should return the index page",function(done){
     server
     .get("/")
     .expect(200) // THis is HTTP response
@@ -24,9 +24,9 @@ describe('Routing', function() {
     it('should return error trying to make account with duplicate username', function(done) {
       var user = {
         local: {
-        username: 'bob',
-        password: 'password',
-        email: 'bob@bob.ca'
+        username: 'stuff',
+        password: 'noob',
+        email: 'stuff@stuff.ca'
       }
       };
 
