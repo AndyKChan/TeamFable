@@ -45,7 +45,14 @@
         </div>
       </div>
     </nav>
-
+    <br>
+    <br>
   <h1 class = "center">{{user.local.username}}'s Comics</h1>
 
 </div>
+<body>
+{{#each comic}}
+{{this.comic.comicName}}
+{{/each}}
+
+</body>

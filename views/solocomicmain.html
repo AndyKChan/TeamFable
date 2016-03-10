@@ -10,9 +10,14 @@
 <link rel="stylesheet" type="text/css" href="css/default.css">
 <script type="text/javascript" src="uploader.js"></script>
 
+<<<<<<< HEAD
 </script>
+=======
+
+>>>>>>> 0fcd8216d14ded6e46d0c8c305fc4883138ea699
 </head>
 <body>
+<div class="cooperative">
   <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -28,7 +33,6 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/profile">Profile</a></li>
-            <li><a href="/cooperative">Cooperative</a></li>
             <li><a href="/myworks">My Works</a></li>
             <li><a href="/logout">Logout</a></li>
           </ul>
@@ -38,32 +42,106 @@
         </div>
       </div>
     </nav>
-<div class="solocomicmain">
-  <h1>Faable</h1>
-  <a href="/solocomic" type="button" class="btn btn-info">Read Comic</a>
-   {{#each filenames}}
-   //if {{this}}.user == file.
-  <img src='images/{{this}}' height="400" width="400">
-	{{/each}}
-  {{#if user.local.contributor}}
-    <a href="/editcomic" type="button" class="btn btn-info">Edit Comic</a>
-    <a href="/home" type="button" class="btn btn-info">Home Page</a>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+            document.onkeydown = function() 
+                {
+                    var j = event.keyIdentifier
+                    if (j == "Right")
+                        window.location = nextUrl
+                        }
+                   });
+
+      $(document).ready(function() {
+                    var nextPage = $("#next_page_link")
+                    nextUrl = nextPage.attr("href")
+                });
+</script>
+
+ <!-- 
+<script>
+    Handlebars.registerHelper('compare', function(lvalue, rvalue, options) {
+
+    if (arguments.length < 3)
+        throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
+
+    var operator = options.hash.operator || "==";
+
+    var operators = {
+        '==':       function(l,r) { return l == r; },
+        '===':      function(l,r) { return l === r; },
+        '!=':       function(l,r) { return l != r; },
+        '<':        function(l,r) { return l < r; },
+        '>':        function(l,r) { return l > r; },
+        '<=':       function(l,r) { return l <= r; },
+        '>=':       function(l,r) { return l >= r; },
+        'typeof':   function(l,r) { return typeof l == r; }
+    }
+
+    if (!operators[operator])
+        throw new Error("Handlerbars Helper 'compare' doesn't know the operator "+operator);
+
+    var result = operators[operator](lvalue,rvalue);
+
+    if( result ) {
+        return options.fn(this);
+    } else {
+        return options.inverse(this);
+    }
+
+});
+</script> -->
+
+<br>
+<br>
+<br>
+
+
+
+  <h2 id="cooperativeTitle">Solo Comic</h2>
+
+<br>
+<br>
+ <form method="post"  enctype="multipart/form-data"  action="/fileupload">
  
-<form method="post" enctype="multipart/form-data" action="/fileupload2">
-      <p>
-        <input type="text" name="title" placeholder="title"/>
-      </p>
-      <p>
-        <input type="file" name="upl"/>
-      </p>
-      <p>
-        <input type="submit"/>
-      </p>
-    </form>
-    </div>
+  <input type="file" name="filename" style="display: inline-block;">
+  <button type="submit" class="btn btn-primary" >Submit</button>
+  </form>
+
+  <center>
+  
+  
+  <br>
+  <br>
+   
+  
+
+  
+  <form id="textTitleBox" class="form-horizontal" name="description" method="post" action="/cooperative" >
+      <input id="titleBox" type="text" name="comicName" placeholder="input title here">
+      
+
+      <textarea id="textbox" type="text" name="description" class="form-control" placeholder="input description here" rows="3" cols="10" ></textarea>
+      
+  <br>
+  
+  
+  <button type="submit" class="btn btn-primary" style="display: inline-block;">Submit</button>
+  </form>
+
+
+  
+  </center>
+
 </body>
 
 
 </html>
+<<<<<<< HEAD
 {{/if}}
+=======
+
+</div>
+>>>>>>> 0fcd8216d14ded6e46d0c8c305fc4883138ea699
 </div>

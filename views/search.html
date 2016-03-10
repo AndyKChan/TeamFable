@@ -1,10 +1,29 @@
-<div class="home">
-  <h1>Search For Comics Here!</h1>
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+  $(document).ready(function(){
+    $("#test").submit(function(){
+      $.ajax({
+        method: "POST",
+        url: "/sresult",
+        data:{data:$('#in').val()}
+      }).done(function(data){
+        //alert("!!");
+        //alert(data);
+        $("#result").html(data)
+        //document.getElementById("result").innerHTML= data;
+      });
 
-  <form class="form-horizontal" name="search" method="get" action="/search" >
-      <input type="text" class="form-control" placeholder="Search...">
-  </form>
-  <nav class="navbar navbar-inverse navbar-fixed-top">
+      return false;
+
+      });
+
+});
+</script>
+</head>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -14,15 +33,30 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="/home">Home</a>
+          <a class="navbar-brand">{{user.local.username}}</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Profile</a></li>
+            <li><a href="/solo">Solo</a></li-->
+            <li><a href="/cooperative">Cooperative</a></li>
+            <li><a href="/profile">Profile</a></li>
             <li><a href="/logout">Logout</a></li>
           </ul>
         </div>
       </div>
     </nav>
+
+
+
+<div class="home">
+  <h1>Search For Comics Here!</h1>
+
+  <form class="form-horizontal" name="search" method="get" action="/search" >
+      <input type="text" class="form-control" id="in" placeholder="Search...">
+  </form>
+  <div>
+    <p id= "result"></p>
+  </div>
+
+  
 </div>

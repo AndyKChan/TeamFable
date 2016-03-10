@@ -1,4 +1,6 @@
 <div class="comment">
+  <br>
+  <br>
   <h1>Comments!</h1>
   <form class="form-horizontal" name="comment" method="post" action="/comment" >
       <textarea type="text" name="comment"class="form-control" placeholder="Write something..." rows="3" cols="30" ></textarea>
@@ -25,13 +27,16 @@
         </div>
       </div>
     </nav>
+    <br>
+    <br>
     {{#each comment}}
+    
     <div id="container" style="white-space:nowrap">
       <br>
-      <img src={{this.comment.picture}} style="width:80;height:80px";"display:inline";"white-space:nowrap">
-       {{this.comment.post}}
+      <img src={{this.comment.picture}} style="width:160;height:160px";"display:inline";"white-space:nowrap">
+       <font size= "5"> {{this.comment.post}} </font>
      </div> 
-     {{this.comment.commentor}}
+      <font size= "5">{{this.comment.commentor}}</font>
      <br>
      {{this.comment.date}}
     {{/each}}
