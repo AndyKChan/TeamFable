@@ -311,7 +311,11 @@ router.post('/test', function(req,res,next) {
     if(err) throw err;
     console.log(req.body.data);
     console.log({comic: comics});
-    res.send(JSON.stringify(comics));
+    var a;
+    for(i=0;i<comics.length;i++){
+      a += " " + comics[i]["comic"]["comicName"]; 
+    }
+    res.send(a);
   });
  //res.send(req.body.data);
  });
