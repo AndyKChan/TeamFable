@@ -307,7 +307,7 @@ router.get('/search', isLoggedIn, function (req, res) {
 });
 
 router.post('/test', function(req,res,next) {
-  Comic.find({'comic.author' : req.body.data}, function(err,comics){
+  Comic.find({$or[{'comic.author' : req.body.data},{'comic.comicName' : req.body.data}], function(err,comics){
     if(err) throw err;
     console.log(req.body.data);
     console.log({comic: comics});
