@@ -1,26 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script>
-  $(document).ready(function(){
-    $("#test").submit(function(){
-      $.ajax({
-        method: "POST",
-        url: "/sresult",
-        data:{data:$('#in').val()}
-      }).done(function(data){
-        //alert("!!");
-        //alert(data);
-        $("#result").html(data)
-        //document.getElementById("result").innerHTML= data;
-      });
-
-      return false;
-
-      });
-
-});
-</script><div class="home">
+<div class="home">
   <h1>Search For Comics Here!</h1>
 
   <form class="form-horizontal" id="test" name="search" method="get" action="/search" >
@@ -53,7 +34,9 @@
         </div>
       </div>
     </nav>
-</div>
+</head>
+<body>
+
 
 <script>
 $(document).ready(function(){
@@ -75,3 +58,5 @@ $(document).ready(function(){
 
 });
 </script>
+</body>
+</div>
