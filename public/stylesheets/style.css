@@ -152,7 +152,7 @@ form {
 
 .cooperative{
 	
-	background-image: url("https://upload.wikimedia.org/wikipedia/commons/9/9b/Koerner_Library_UBC.jpg");
+	background-image: url("https://images5.alphacoders.com/387/387546.jpg");
 	background-repeat: no-repeat ; background-size: 100% 100%;
 	position: absolute;
  	
@@ -184,7 +184,7 @@ form {
 #titleBox{
 	width: 400px;
 	margin: 10px;
-	color:#555;
+	color:#000;
 }
 
 #textTitleBox input, #textTitleBox textarea{
@@ -193,8 +193,8 @@ form {
 	padding: 6px 12px;
 }
 
-#titleBox::-webkit-input-placeholder { font-size:14; color:#555; }
-#titleBox::-moz-placeholder { font-size:14;  color:#555; } / firefox 19+ /
-#titleBox:-ms-input-placeholder { font-size:14; color:#555; } / ie /
-#titleBox:-moz-placeholder { font-size:14;  color:#555; }
+#titleBox::-webkit-input-placeholder { font-size:14; color:#000; }
+#titleBox::-moz-placeholder { font-size:14;  color:#000; } / firefox 19+ /
+#titleBox:-ms-input-placeholder { font-size:14; color:#000; } / ie /
+#titleBox:-moz-placeholder { font-size:14;  color:#000; }
 
