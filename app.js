@@ -26,7 +26,36 @@ var Application = (function () {
         var multer = require('multer');
         //Setting up templating engine
         var exphbs = require('express-handlebars');
-        app.engine('html', exphbs({ defaultLayout: 'main' }));
+        // exphbs.registerHelper('compare', function(lvalue, rvalue, options) {
+
+        // if (arguments.length < 3)
+        //     throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
+
+        //     var operator = options.hash.operator || "==";
+
+        //     var operators = {
+        //      '==':       function(l,r) { return l == r; },
+        //     '===':      function(l,r) { return l === r; },
+        //     '!=':       function(l,r) { return l != r; },
+        //     '<':        function(l,r) { return l < r; },
+        //     '>':        function(l,r) { return l > r; },
+        //     '<=':       function(l,r) { return l <= r; },
+        //     '>=':       function(l,r) { return l >= r; },
+        //     'typeof':   function(l,r) { return typeof l == r; }
+        //     }
+
+        //  if (!operators[operator])
+        //         throw new Error("Handlerbars Helper 'compare' doesn't know the operator "+operator);
+
+        //     var result = operators[operator](lvalue,rvalue);
+
+        //     if( result ) {
+        //         return options.fn(this);
+        //         } else {
+        //     return options.inverse(this);
+        //  }
+        //  });
+     app.engine('html', exphbs({ defaultLayout: 'main' }));
         app.set('view engine', 'html');
         app.set('views', path.join(__dirname, 'views'));
         // uncomment after placing your favicon in /public
