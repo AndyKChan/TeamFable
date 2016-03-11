@@ -26,35 +26,40 @@ var Application = (function () {
         var multer = require('multer');
         //Setting up templating engine
         var exphbs = require('express-handlebars');
-        // exphbs.registerHelper('compare', function(lvalue, rvalue, options) {
+        var hbs = exphbs.create({
+    helpers: {
+        compare: function (lvalue, rvalue, options) { 
+            if (arguments.length < 3)
+            throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
 
-        // if (arguments.length < 3)
-        //     throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
+            var operator = options.hash.operator || "==";
 
-        //     var operator = options.hash.operator || "==";
+            var operators = {
+             '==':       function(l,r) { return l == r; },
+            '===':      function(l,r) { return l === r; },
+            '!=':       function(l,r) { return l != r; },
+            '<':        function(l,r) { return l < r; },
+            '>':        function(l,r) { return l > r; },
+            '<=':       function(l,r) { return l <= r; },
+            '>=':       function(l,r) { return l >= r; },
+            'typeof':   function(l,r) { return typeof l == r; }
+            }
 
-        //     var operators = {
-        //      '==':       function(l,r) { return l == r; },
-        //     '===':      function(l,r) { return l === r; },
-        //     '!=':       function(l,r) { return l != r; },
-        //     '<':        function(l,r) { return l < r; },
-        //     '>':        function(l,r) { return l > r; },
-        //     '<=':       function(l,r) { return l <= r; },
-        //     '>=':       function(l,r) { return l >= r; },
-        //     'typeof':   function(l,r) { return typeof l == r; }
-        //     }
+         if (!operators[operator])
+                throw new Error("Handlerbars Helper 'compare' doesn't know the operator "+operator);
 
-        //  if (!operators[operator])
-        //         throw new Error("Handlerbars Helper 'compare' doesn't know the operator "+operator);
+            var result = operators[operator](lvalue,rvalue);
 
-        //     var result = operators[operator](lvalue,rvalue);
+            if( result ) {
+                return options.fn(this);
+                } else {
+            return options.inverse(this);
+           }
+        } 
+    }
+    });
 
-        //     if( result ) {
-        //         return options.fn(this);
-        //         } else {
-        //     return options.inverse(this);
-        //  }
-        //  });
+    app.engine('handlebars', hbs.engine);
      app.engine('html', exphbs({ defaultLayout: 'main' }));
         app.set('view engine', 'html');
         app.set('views', path.join(__dirname, 'views'));
