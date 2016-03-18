@@ -145,7 +145,7 @@ router.get('/solo', isLoggedIn, function (req, res) {
 Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
       if (err) throw err;
       File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
-        res.render('solocomicmain', {comic: comics, file: files , user: req.user});
+        res.render('solocomicmain/' + req.user.username, {comic: comics, file: files , user: req.user});
       });
   });
 });

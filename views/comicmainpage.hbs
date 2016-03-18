@@ -93,7 +93,9 @@
 <br>
 <br>
 
-
+  {{#compare this.comic.comicName this.comic.comicName operator="=="}}
+  PRINT TRUE YO TRUE
+  {{/compare}}
   {{#each comic}}  
   {{#if this.comic.comicName}}
   <h2 id="cooperativeTitle">{{this.comic.comicName}}</h2>

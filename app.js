@@ -26,43 +26,46 @@ var Application = (function () {
         var multer = require('multer');
         //Setting up templating engine
         var exphbs = require('express-handlebars');
-        var hbs = exphbs.create({
-    helpers: {
-        compare: function (lvalue, rvalue, options) { 
-            if (arguments.length < 3)
+        var hbs = require('hbs');
+        hbs.registerHelper('compare', function(lvalue, rvalue, options) {
+
+        if (arguments.length < 3)
             throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
 
-            var operator = options.hash.operator || "==";
-
-            var operators = {
-             '==':       function(l,r) { return l == r; },
-            '===':      function(l,r) { return l === r; },
+        var operator = options.hash.operator || "==";
+        
+        var operators = {
+            '==':       function(l,r) { return l == r; },
+            '===':  function(l,r) { return l === r; },
             '!=':       function(l,r) { return l != r; },
             '<':        function(l,r) { return l < r; },
             '>':        function(l,r) { return l > r; },
             '<=':       function(l,r) { return l <= r; },
             '>=':       function(l,r) { return l >= r; },
             'typeof':   function(l,r) { return typeof l == r; }
-            }
+        }
 
-         if (!operators[operator])
-                throw new Error("Handlerbars Helper 'compare' doesn't know the operator "+operator);
+        if (!operators[operator])
+            throw new Error("Handlerbars Helper 'compare' doesn't know the operator "+operator);
 
-            var result = operators[operator](lvalue,rvalue);
+        var result = operators[operator](lvalue,rvalue);
 
-            if( result ) {
-                return options.fn(this);
-                } else {
+        if( result ) {
+            return options.fn(this);
+        } else {
             return options.inverse(this);
-           }
-        } 
-    }
+        }
+        
     });
 
+    app.set('views', path.join(__dirname, 'views'));
     app.engine('handlebars', hbs.engine);
-     app.engine('html', exphbs({ defaultLayout: 'main' }));
-        app.set('view engine', 'html');
-        app.set('views', path.join(__dirname, 'views'));
+    app.set('view engine', hbs);
+//
+    //app.engine('handlebars', hbs.engine);
+  //   app.engine('html', hbs({ defaultLayout: 'main' }));
+        //app.set('view engine', 'html');
+        
         // uncomment after placing your favicon in /public
         //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
         app.use(logger('dev'));
