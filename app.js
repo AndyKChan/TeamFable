@@ -26,7 +26,8 @@ var Application = (function () {
         var multer = require('multer');
         //Setting up templating engine
         var exphbs = require('express-handlebars');
-        var hbs = require('hbs');
+       var hbs = require('hbs');
+
         hbs.registerHelper('compare', function(lvalue, rvalue, options) {
 
         if (arguments.length < 3)
@@ -59,8 +60,8 @@ var Application = (function () {
     });
 
     app.set('views', path.join(__dirname, 'views'));
-    app.engine('handlebars', hbs.engine);
-    app.set('view engine', hbs);
+    app.engine('html', require('hbs').__express, exphbs({ defaultLayout: 'main' }));
+    app.set('view engine', 'html');
 //
     //app.engine('handlebars', hbs.engine);
   //   app.engine('html', hbs({ defaultLayout: 'main' }));
