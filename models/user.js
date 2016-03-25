@@ -17,7 +17,6 @@ var userSchema = mongoose.Schema({
         contributor: Boolean,
         picture: String,
         comictitles: [String],
-        cooperative: Boolean
     }
 });
 

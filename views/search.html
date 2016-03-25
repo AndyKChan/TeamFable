@@ -13,10 +13,20 @@
 
   <form class="form-horizontal" id="test" name="search" method="get" action="/search" >
       <input type="text" class="form-control" id="in" placeholder="Search...">
+      <div class="radio">
+        <lable class="checkbox-inline">
+          <input type="radio" name="searchtype" id="searchtype" value="comic">ComicName
+        </lable>
+        <lable class="checkbox-inline">
+          <input type="radio" name="searchtype" id="searchtype" value="author">Author
+        </lable>
+      </div>
   </form>
 
   <div>
-    <p id="result">1: </p>
+    <p>Result</P>
+      <p id="result"></p>
+    <li id="re2"></li>
   </div>
 
   <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -50,18 +60,27 @@
     <!-- Latest compiled and minified JavaScript -->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
-
 <script>
 $(document).ready(function(){
   $("#test").submit(function(){
     $.ajax({
       method: "POST",
       url: "/test",
-      data:{data:$('#in').val()}
+      data:{data:$('#in').val(),type:$('#searchtype:checked').val()}
     }).done(function(data){
-      //alert("!!");
-      //alert(data);
-      $("#result").html(data)
+      // alert("!!");
+      // var da[] = data.split(" ");
+      // for (i=0;i<da.length;i++){
+      //   if($('#searchtype:checked').val() =="comic"){
+      //     var herf = "/comic/" + da[i];
+      //     $("#re2").append("<a herf="+herf+"list-group-item>"+da[i]+"</a>");
+      //   } else {
+      //     var herf = "/profile/" + da[i];
+      //     $("#re2").append("<a herf="+herf+"list-group-item>"+da[i]+"</a>");
+      //   }
+      // }
+      $("#result").html(data);
+      
       //document.getElementById("result").innerHTML= data;
     });
 
@@ -71,5 +90,3 @@ $(document).ready(function(){
 
 });
 </script>
-</body>
-</div>
