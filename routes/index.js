@@ -156,7 +156,7 @@ router.get('/solo', isLoggedIn, function (req, res) {
 Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
       if (err) throw err;
       File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
-        res.render('solocomicmain', {comic: comics, file: files , user: req.user});
+        res.render('solocomicmain/' + req.user.username, {comic: comics, file: files , user: req.user});
       });
   });
 });
@@ -168,6 +168,7 @@ router.post('/solo', function(req, res) {
     "comic.comicName": req.body["comicName"],
     "comic.cooperative": false,
     "comic.description": req.body["description"],
+    "comic.genre" : req.body["genre"],
     "comic.favorite": false,
     "comic.author": req.user.local.username,
     "comic.date": new Date(),
@@ -238,9 +239,23 @@ router.get('/home', isLoggedIn, function (req, res) {
     });
 });
 /* GET profile page. */
-router.get('/profile', isLoggedIn, function (req, res) {
+router.get('/profile/:username', isLoggedIn, function (req, res) {
+  var u = req.user;
+  console.log(req.params);
+   User.findOne({'local.username':req.params.username}, function(err, user) {
+      if (err) throw err;
+      u = user;
+  console.log(req.params);
     res.render('profile', {
-        user: req.user // get the user out of session and pass to template
+        user: req.user, otheruser: u // get the user out of session and pass to template
+    });
+});
+});   
+router.get('/profile', isLoggedIn, function (req, res) {
+  var u = req.user;
+  console.log(req);
+    res.render('profile', {
+        user: u, otheruser: u // get the user out of session and pass to template
     });
 });
 
@@ -355,8 +370,7 @@ router.post('/test', function(req,res,next) {
       console.log(a);
       res.send(a);
     });
-
-  }
+ }
  //res.send(req.body.data);
  });
 
@@ -390,6 +404,7 @@ router.post('/cooperativecomic', function(req, res) {
     "comic.comicName": req.body["comicName"],
     "comic.cooperative": true,
     "comic.description": req.body["description"],
+    "comic.genre": req.body["genre"],
     "comic.favorite": false,
     "comic.author": req.user.local.username,
     "comic.date": new Date(),

@@ -55,45 +55,15 @@
                 });
 </script>
 
- <!-- 
-<script>
-    Handlebars.registerHelper('compare', function(lvalue, rvalue, options) {
 
-    if (arguments.length < 3)
-        throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
-
-    var operator = options.hash.operator || "==";
-
-    var operators = {
-        '==':       function(l,r) { return l == r; },
-        '===':      function(l,r) { return l === r; },
-        '!=':       function(l,r) { return l != r; },
-        '<':        function(l,r) { return l < r; },
-        '>':        function(l,r) { return l > r; },
-        '<=':       function(l,r) { return l <= r; },
-        '>=':       function(l,r) { return l >= r; },
-        'typeof':   function(l,r) { return typeof l == r; }
-    }
-
-    if (!operators[operator])
-        throw new Error("Handlerbars Helper 'compare' doesn't know the operator "+operator);
-
-    var result = operators[operator](lvalue,rvalue);
-
-    if( result ) {
-        return options.fn(this);
-    } else {
-        return options.inverse(this);
-    }
-
-});
-</script> -->
 
 <br>
 <br>
 <br>
 
-{{#if this.comic.cooperative}}
+  {{#compare this.comic.comicName this.comic.comicName operator="=="}}
+  PRINT TRUE YO TRUE
+  {{/compare}}
   {{#each comic}}  
   {{#if this.comic.comicName}}
   <h2 id="cooperativeTitle">{{this.comic.comicName}}</h2>
@@ -106,21 +76,22 @@
   {{/if}}
   {{/each}}
 
-  {{#if user.local.contributor}}
+  {{#each comic}}  
   {{#if this.comic.cooperative}}
  <form method="post"  enctype="multipart/form-data"  action="/fileupload2">
  
   <input type="file" name="filename" style="display: inline-block;">
   <button type="submit" class="btn btn-primary" >Submit</button>
   </form>
+  
   {{/if}}
-  {{/if}}
+  {{/each}}
 
   
   {{#each file}}
-  <div>
+  
   <img id="picture" src='images/{{this.filename}}' height="400" width="400">
-  </div>
+  
   {{/each}}
   {{#each comic}}
   {{this.comic.description}}
@@ -131,11 +102,11 @@
   <a id="next_page_link" href="/cooperativecomic" type="button" class="btn btn-info">Read Comic</a>
   <a href="/home" type="button" class="btn btn-info">Home Page</a>
   
-  {{#if user.local.contributor}}
+  {{#each comic}}
   {{#if this.comic.cooperative}}
   <br>
   <br>
-   {{#each comic}}
+   
   
 
   
@@ -151,15 +122,14 @@
   <button type="submit" class="btn btn-primary" style="display: inline-block;">Submit</button>
   </form>
 
+{{/if}}
+{{/each}}
 
-  {{/each}}
+  <a href="comment" type="button">Comments</a>
   </center>
 
 </body>
 
-{{/if}}
 </html>
-{{/if}}
+
 </div>
-</div>
-{{/if}}

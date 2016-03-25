@@ -11,6 +11,7 @@ var comicSchema = mongoose.Schema({
    	 	comicName: String,
    	 	cooperative: Boolean,
    	 	description: String,
+         genre: String,
    	 	favorite: [String],
    		author: String,
    		date: Date,

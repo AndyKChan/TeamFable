@@ -54,40 +54,6 @@
                 });
 </script>
 
- <!-- 
-<script>
-    Handlebars.registerHelper('compare', function(lvalue, rvalue, options) {
-
-    if (arguments.length < 3)
-        throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
-
-    var operator = options.hash.operator || "==";
-
-    var operators = {
-        '==':       function(l,r) { return l == r; },
-        '===':      function(l,r) { return l === r; },
-        '!=':       function(l,r) { return l != r; },
-        '<':        function(l,r) { return l < r; },
-        '>':        function(l,r) { return l > r; },
-        '<=':       function(l,r) { return l <= r; },
-        '>=':       function(l,r) { return l >= r; },
-        'typeof':   function(l,r) { return typeof l == r; }
-    }
-
-    if (!operators[operator])
-        throw new Error("Handlerbars Helper 'compare' doesn't know the operator "+operator);
-
-    var result = operators[operator](lvalue,rvalue);
-
-    if( result ) {
-        return options.fn(this);
-    } else {
-        return options.inverse(this);
-    }
-
-});
-</script> -->
-
 <br>
 <br>
 <br>
@@ -119,6 +85,12 @@
   <!--
   <form id="textTitleBox" class="form-horizontal" name="description" method="post" action="/cooperative" >
       <input id="titleBox" type="text" name="comicName" placeholder="input title here">
+<<<<<<< HEAD
+=======
+      
+      <input id="titleBox" type="text" name="genre" placeholder="input genre here">
+
+>>>>>>> 4fe691cfbaaccfa86a1cd640951807a7816e09c8
       <textarea id="textbox" type="text" name="description" class="form-control" placeholder="input description here" rows="3" cols="10" ></textarea>
       
   <br>
