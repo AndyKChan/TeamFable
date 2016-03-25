@@ -4,6 +4,7 @@ var User = require('../models/user');
 var File = require('../models/file');
 var Comic = require('../models/comic');
 var Comment = require('../models/comment');
+var Comicstrip = require('../models/comicstrip');
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
@@ -16,7 +17,9 @@ var storage = multer.diskStorage({
 },
 filename: function (request, file, callback) {
     console.log(file);
-    callback(null, file.originalname)
+    var fileFormat = (file.originalname).split(".");
+    // rename the file to be the comicname + "-" + pagenumber
+    callback(null, request.body["comicName"]+"-"+request.body["stripid"]+ "." +fileFormat[fileFormat.length - 1]);
 }
 });
 var upload = multer({storage: storage}).single('filename');
@@ -39,35 +42,39 @@ router.get('/', function (req, res, next) {
 
 /* Cooperative File Uploading Service */
 router.post('/fileupload2', function(request, response) {
-    
-  upload(request, response, function(err) {
-      if(err) {
-        console.log('Error Occured');
-        console.log(err);
-        return;
-      }
-    console.log(request.file);
-  // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
+  Comic.findOne({"comic.comicName" : request.body["comicName"]},function(err,comic){
+    if(err) throw err;
+    console.log("find");
+    console.log(comic);
 
-  var file2 = new File({
-                  filename: request.file.filename
-              });
-  
-  file2.save(function(err) {
-      if (err) throw err;
-      console.log('File saved!');
-  });
-
-  File.find().limit(1).sort({$natural:-1}).exec(function(err, files) { 
-      if (err) throw err;
-  // object of all the users
-    console.log("FAF");
-    console.log(files);
+    if(comic){
+      upload(request, response, function(err) {
+        if(err) {
+          console.log('Error Occured');
+          console.log(err);
+          return;
+        }
+  // Create a comicstrip including all necessary inofrmation for one specific picture
+    var comicstripcoop = new Comicstrip({"comicstrip.comicName" : request.body["comicName"],
+                                        "comicstrip.author": request.user.local.username,
+                                        "comicstrip.date": new Date(),
+                                        "comicstrip.stripid": request.body["comicName"]+"-"+request.body["stripid"]});
+  //upload the comicstrip to the database
+    comicstripcoop.save(function(err) {
+      if(err) throw err;
+      console.log("comicstrip");
+    });
+      console.log(JSON.stringify(comicstripcoop));
   //i'm pulling file names from the database in this for loop and sending it, 
   //my problem is here where i should send back the whole file object
           //send back the whole file object, look at the tutorial for user/email
       response.redirect("/cooperative");   
-  })
+  //})
+    });
+  } else {
+    console.log("No such comic");
+    res.redirect('/cooperative');
+  } 
 });
 });
 
@@ -109,23 +116,27 @@ Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) {
 });
 
 /* POST to cooperative comic */
-router.post('/cooperative', function(req, res) {
+router.post('/createcomic', function(req, res) {
+  console.log(req.body);
+  //console.log("here");
 
   var comic = new Comic({
     "comic.comicName": req.body["comicName"],
-    "comic.cooperative": true,
+    "comic.cooperative": (req.body["comictype"]=='coop'),
     "comic.description": req.body["description"],
-    "comic.favorite": false,
+    "comic.favorite":[],
     "comic.author": req.user.local.username,
     "comic.date": new Date(),
-    "comic.img": req.body["img"],
-    "comic.page1": req.body["page1"],
-    "comic.page2": req.body["page2"]
+    "comic.coverpage": [],
+    "comic.pages": []
+    //"comic.page1": req.body["page1"],
+    //"comic.page2": req.body["page2"]
   });
+  console.log("there");
 
   comic.save(function(err) {
       if (err) throw err;
-      res.redirect('/comicmainpage');
+      res.redirect('/comic/'+req.body["comicName"]);
   });
 });
 
@@ -304,15 +315,50 @@ router.get('/search', isLoggedIn, function (req, res) {
         user: req.user // get the user out of session and pass to template
     });
 });
+/*search result*/
+router.post('/test', function(req,res,next) {
+  console.log("POST REQ");
+  console.log(req.body.type);
+  var a ="";
+  if(req.body.type == "comic"){
+    Comic.find({'comic.comicName' : req.body.data},function(err,comics){
+      console.log("SEARCHING");
+      console.log(comics);
+      if(err) throw err;
+      //console.log(req.body);
+      //console.log({comic: comics});
+      
+      if(comics.length!=0){
+        for(i=0;i<comics.length;i++){
+          a += " " + comics[i]["comic"]["comicName"];
+        }
+        //console.log(comics[0]);
+        //console.log(comics[0]["comic"]["author"]);
+      } else {
+        a = "Not Found!";
+      }
+      console.log(a);
+      res.send(a);
+    });
+  } else {
+    User.find({'local.username' : req.body.data},function(err,users){
+      console.log("SEARCHING");
+      console.log(users);
+      if(err) throw err;
+      if(users.length!=0){
+        for(i=0;i<users.length;i++){
+          a += " " + users[i]["local"]["username"];
+        }
+      } else {
+        a = "Not Found!";
+      }
+      console.log(a);
+      res.send(a);
+    });
 
-router.post('/sresult', function(req,res,next){
-  Comic.find({comicName:req.body.data}, function(err,comics){
-    if(err) throw err;
-    console.log(req.body.data);
-    console.log(comics);
-    res.send(comics);
-  })
-})
+  }
+ //res.send(req.body.data);
+ });
 
 /* GET solo comic page 1. */
 router.get('/solocomic', isLoggedIn, function (req, res) {
@@ -433,6 +479,26 @@ router.post('/fileuploadpage1', function(request, response) {
 });
   
 })
+});
+
+/*Get comic mainpage with cover page and Comicname*/
+router.get('/comic/:name', isLoggedIn, function(req, res){
+  var comicName = req.params.name;
+  console.log(comicName);
+  Comic.findOne({"comic.comicName" : comicName},function(err,comic){
+    if(err) throw err;
+    if(comic){
+      console.log(JSON.stringify(comic));
+      console.log(req.user);
+      res.render('test',{user: req.user, comic});
+    } else {
+      console.log("No such comic");
+      // still need to improve
+      res.redirect('/home');
+    }
+    
+  });
+
 });
 
 /* GET cooperative comic page 2. */

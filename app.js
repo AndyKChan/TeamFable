@@ -23,6 +23,7 @@ var Application = (function () {
         var configDB = require('./config/database.js');
         require('./config/passport');
         var app = express();
+        // multer used to upload image
         var multer = require('multer');
         //Setting up templating engine
         var exphbs = require('express-handlebars');

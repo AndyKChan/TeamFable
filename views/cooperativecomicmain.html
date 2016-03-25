@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 <html>
@@ -99,8 +98,12 @@
 
 <br>
 <br>
- <form method="post"  enctype="multipart/form-data"  action="/fileupload2">
- 
+ <form method="post"  enctype="multipart/form-data"  class="form-horizontal" action="/fileupload2">
+  <!--input type="text" name="comicName" class="form-control" placeholder="put your comic name here"!-->
+  <input id="titleBox" type="text" name="comicName" placeholder="Comic Name">
+  <br>
+  <input type= "text" name="stripid" placeholder="Page Number">
+  <br>
   <input type="file" name="filename" style="display: inline-block;">
   <button type="submit" class="btn btn-primary" >Submit</button>
   </form>
@@ -113,11 +116,9 @@
    {{#each comic}}
   
 
-  
+  <!--
   <form id="textTitleBox" class="form-horizontal" name="description" method="post" action="/cooperative" >
       <input id="titleBox" type="text" name="comicName" placeholder="input title here">
-      
-
       <textarea id="textbox" type="text" name="description" class="form-control" placeholder="input description here" rows="3" cols="10" ></textarea>
       
   <br>
@@ -129,7 +130,7 @@
 
   {{/each}}
   </center>
-
+-->
 </body>
 
 

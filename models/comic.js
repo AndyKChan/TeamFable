@@ -11,12 +11,14 @@ var comicSchema = mongoose.Schema({
    	 	comicName: String,
    	 	cooperative: Boolean,
    	 	description: String,
-   	 	favorite: Boolean,
+   	 	favorite: [String],
    		author: String,
    		date: Date,
-   		img: String,
-   		page1: [String],
-   		page2: [String],
+         blocklist:[String],
+   		coverpage: String,
+         pages:[String]
+   		//page1: [String],
+   		//page2: [String],
 	}
 });
 
