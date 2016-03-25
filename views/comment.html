@@ -31,14 +31,13 @@
     <br>
     <br>
     {{#each comment}}
-    
     <div id="container" style="white-space:nowrap">
       <br>
       <img src={{this.comment.picture}} style="width:160;height:160px";"display:inline";"white-space:nowrap">
        <font size= "5"> {{this.comment.post}} </font>
      </div> 
-      <font size= "5">{{this.comment.commentor}}</font>
+      <a href="/profile/{{this.comment.commentor}}" class="links"> <font size= "5">{{this.comment.commentor}}</font> </a>
      <br>
      {{this.comment.date}}
-    {{/each}}
+    {{/each}} 
 </div>
