@@ -58,6 +58,7 @@ var Application = (function () {
         }
         
     });
+//external style sheet css html
 
     app.set('views', path.join(__dirname, 'views'));
     app.engine('html', require('hbs').__express, exphbs({ defaultLayout: 'main' }));
