@@ -8,6 +8,7 @@ var bcrypt = require('bcrypt-nodejs');
 // define the schema for our user model
 var commentSchema = mongoose.Schema({
     comment: {
+        comic: String,
         post: String,
         commentor: String,
         picture: String,

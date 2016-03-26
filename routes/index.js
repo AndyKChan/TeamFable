@@ -330,23 +330,29 @@ User.update({'local.username': username},
 //  if (err) return handleError(err);
   // removed!
 //});
-router.get('/comment', isLoggedIn, function (req, res) {
-  Comment.find({}, function(err, comments) {
+router.get('/comment/:comic', isLoggedIn, function (req, res) {
+  Comment.find({'comment.comic':req.params.comic}, function(err, comments) {
       if (err) throw err;
-    res.render('comment', {comment: comments , user: req.user});
-  });
+      {Comic.findOne({'comic.comicName':req.params.comic}, function(err, comic) {
+      if (err) throw err;
+    res.render('comment', {comment: comments , user: req.user, comic: comic});
+  });}
+ });
 });
 /* POST to comments */
 router.post('/comment', function(req, res) {
+console.log(req.body);
 var comment = new Comment({
     "comment.post": req.body["comment"],
     "comment.commentor": req.user.local.username,
     "comment.picture": req.user.local.picture,
     "comment.date": new Date(),
+    "comment.comic": req.body["comicName"],
 });
+console.log(comment);
   comment.save(function(err) {
       if (err) throw err;
-      res.redirect('/comment');
+      res.redirect('/comment/'+comment.comment.comic);
       console.log('comment posted!');
   });
 });
