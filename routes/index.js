@@ -56,7 +56,7 @@ router.post('/fileupload2', function(request, response) {
       if(err) throw err;
       console.log("finding");
       console.log(comic);
-      if(comic){
+  
       var comicstripcoop = new Comicstrip({"comicstrip.comicName" : request.body["comicName"],
                                         "comicstrip.author": request.user.local.username,
                                         "comicstrip.date": new Date(),
@@ -68,24 +68,30 @@ router.post('/fileupload2', function(request, response) {
       });
 
       var a = comic.comic.pages;
-      //var a = request.file.filename;
       a.push(request.file.filename);
       console.log(a);
       console.log(comicName);
-
-      Comic.update(
-        {'comic.comicName':comicName},
-        {'comic.pages':a},
-        {safe: true},
-        function(err,raw){
-          if(err) throw err;
-          console.log(raw);
-        }
-      );
-      console.log("success");
-      }
-
-
+      if(request.body["stripid"] == "cover"){
+        Comic.update(
+          {'comic.comicName' : comicName},
+          {'comic.coverpage' : request.file.filename},
+          {safe: true},
+          function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+        );
+      } else{
+        Comic.update(
+          {'comic.comicName':comicName},
+          {'comic.pages':a},
+          {safe: true},
+          function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+        );
+      } 
     });
     response.redirect("/comic/"+comicName);   
   //});
