@@ -74,7 +74,7 @@ router.post('/fileupload2', function(request, response) {
       if(request.body["stripid"] == "cover"){
         Comic.update(
           {'comic.comicName' : comicName},
-          {'comic.coverpage' : request.file.filename/},
+          {'comic.coverpage' : request.file.filename},
           {safe: true},
           function(err,raw){
             if(err) throw err;
