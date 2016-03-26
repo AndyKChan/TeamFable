@@ -87,7 +87,7 @@ router.post('/fileupload2', function(request, response) {
 
 
     });
-    response.redirect("/cooperative");   
+    response.redirect("/comic/"+comicName);   
   //});
 });
 });
