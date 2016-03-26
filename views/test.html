@@ -5,9 +5,13 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="imagetoolbar" content="false">
 <meta http-equiv="imagetoolbar" content="no">
-<link rel="stylesheet" type="text/css" href="css/default.css">
-<script type="text/javascript" src="uploader.js"></script>
 <title>{{comic.comic.comicName}}</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="stylesheets/style.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
 </head>
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -45,10 +49,8 @@
 	<img id="picture">
 </div>
 <center>
-<button type="button" class="btn btn-primary" onclick="lastpage()">LastPage</button>
+<button type="button" class="btn btn-primary" onclick="lastpage1()">LastPage</button>
 <button type="button" class="btn btn-primary" onclick="nextpage()">NextPage</button>
-  
-<scrip>
-</scrip>
+<a class="btn btn-primary" herf="/comic/{{comic.comic.comicName}}/upload">Upload Comicstrip</a>
 
 </html>

@@ -40,42 +40,65 @@ router.get('/', function (req, res, next) {
 });
 
 
-/* Cooperative File Uploading Service */
+/* file upload  */
 router.post('/fileupload2', function(request, response) {
-  Comic.findOne({"comic.comicName" : request.body["comicName"]},function(err,comic){
-    if(err) throw err;
-    console.log("find");
-    console.log(comic);
-
-    if(comic){
-      upload(request, response, function(err) {
-        if(err) {
-          console.log('Error Occured');
-          console.log(err);
-          return;
-        }
-  // Create a comicstrip including all necessary inofrmation for one specific picture
-    var comicstripcoop = new Comicstrip({"comicstrip.comicName" : request.body["comicName"],
+    
+  upload(request, response, function(err) {
+      if(err) {
+        console.log('Error Occured');
+        console.log(err);
+        return;
+      }
+    console.log(request.body);
+    console.log(request.file);
+    var comicName= request.body["comicName"];
+    Comic.findOne({"comic.comicName" : comicName},function(err,comic){
+      if(err) throw err;
+      console.log("finding");
+      console.log(comic);
+      if(comic){
+      var comicstripcoop = new Comicstrip({"comicstrip.comicName" : request.body["comicName"],
                                         "comicstrip.author": request.user.local.username,
                                         "comicstrip.date": new Date(),
                                         "comicstrip.stripid": request.body["comicName"]+"-"+request.body["stripid"]});
-  //upload the comicstrip to the database
-    comicstripcoop.save(function(err) {
-      if(err) throw err;
-      console.log("comicstrip");
+
+      comicstripcoop.save(function(err) {
+        if(err) throw err;
+        console.log("comicstrip created");
+      });
+
+      var a = comic.comic.pages;
+      //var a = request.file.filename;
+      a.push(request.file.filename);
+      console.log(a);
+      console.log(comicName);
+
+      Comic.update(
+        {'comic.comicName':comicName},
+        {'comic.pages':a},
+        {safe: true},
+        function(err,raw){
+          if(err) throw err;
+          console.log(raw);
+        }
+      );
+      console.log("success");
+      }
+
+
     });
-      console.log(JSON.stringify(comicstripcoop));
-  //i'm pulling file names from the database in this for loop and sending it, 
-  //my problem is here where i should send back the whole file object
-          //send back the whole file object, look at the tutorial for user/email
-      response.redirect("/cooperative");   
-  //})
-    });
-  } else {
-    console.log("No such comic");
-    res.redirect('/cooperative');
-  } 
+    response.redirect("/cooperative");   
+  //});
 });
+});
+
+router.post('/uploadc',function(req,res){
+  console.log('start');
+  //console.log(JSON.stringify(req.files));
+  console.log(req.files);
+  console.log(req.body)
+  res.send("test");
+
 });
 
 router.get("/images/:id", function (request, response) {
@@ -115,6 +138,23 @@ Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) {
   });
 });
 
+/* GET comic upload page*/
+router.get('/comic/:name/upload',isLoggedIn,function(req,res){
+  var comicName = req.params.name;
+  console.log(comicName);
+  Comic.findOne({"comic.comicName" : comicName},function(err,comic){
+    if(err) throw err;
+    console.log(comic);
+    if(comic){
+      res.render('uploadcomic',{comic,user:req.user});
+    } else {
+      console.log("No such comic");
+      // still need to improve
+      res.redirect('/home');
+    }
+  });
+});
+
 /* POST to cooperative comic */
 router.post('/createcomic', function(req, res) {
   console.log(req.body);
@@ -128,7 +168,8 @@ router.post('/createcomic', function(req, res) {
     "comic.author": req.user.local.username,
     "comic.date": new Date(),
     "comic.coverpage": [],
-    "comic.pages": []
+    "comic.pages": [],
+    "comic.worklist":[req.user.local.username,]
     //"comic.page1": req.body["page1"],
     //"comic.page2": req.body["page2"]
   });
