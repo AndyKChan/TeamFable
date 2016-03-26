@@ -92,14 +92,21 @@ router.post('/fileupload2', function(request, response) {
 });
 });
 
-router.post('/uploadc',function(req,res){
-  console.log('start');
-  //console.log(JSON.stringify(req.files));
-  console.log(req.files);
-  console.log(req.body)
-  res.send("test");
-
+router.get('/comic/:name/uploadcover',function(req,res){
+  var comicName = req.params.name;
+  console.log(comicName);
+  Comic.findOne({"comic.comicName" : comicName},function(err,comic){
+    if(err) throw err;
+    console.log(comic);
+    if(comic){
+      res.render('uploadcover',{comic,user:req.user});
+    } else {
+      console.log("No such comic!");
+      res.redirect('/home');
+    }
+  });
 });
+
 
 router.get("/images/:id", function (request, response) {
     var path = imageDir + request.params.filename;
@@ -116,17 +123,6 @@ Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) {
       });
   });
 });
-
-//old
-// /* GET cooperative comic main page. */
-// router.get('/cooperative', isLoggedIn, function (req, res) {
-// Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
-//       if (err) throw err;
-//       File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
-//         res.render('cooperativecomicmain', {comic: comics, file: files , user: req.user});
-//       });
-//   });
-// });
 
 /* GET cooperative comic main page. */
 router.get('/cooperative', isLoggedIn, function (req, res) {
