@@ -12,7 +12,7 @@ var comicSchema = mongoose.Schema({
    	 	cooperative: Boolean,
    	 	description: String,
          genre: String,
-   	 	favorite: [String],
+   	 	favourite: [String],
    		author: String,
    		date: Date,
          worklist:[String],

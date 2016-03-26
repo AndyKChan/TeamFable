@@ -166,7 +166,7 @@ router.post('/createcomic', function(req, res) {
     "comic.comicName": req.body["comicName"],
     "comic.cooperative": (req.body["comictype"]=='coop'),
     "comic.description": req.body["description"],
-    "comic.favorite":[],
+    "comic.favourite":[],
     "comic.author": req.user.local.username,
     "comic.date": new Date(),
     "comic.coverpage": [],
@@ -467,42 +467,55 @@ router.post('/cooperativecomic', function(req, res) {
       res.redirect('/cooperativecomic');
   });
 });
+/*add favourite*/
 
-// /* Cooperative comic page 2 File Uploading Service */
-// router.post('/fileuploadpage1', function(request, response) {
-    
-//   upload(request, response, function(err) {
-//       if(err) {
-//         console.log('Error Occured');
-//         console.log(err);
-//         return;
-//       }
-//     console.log(request.file);
-//   // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
+router.post('/addfavourite',function(req,res){
+  console.log("here");
+  console.log(req.body);
+  var comicName = req.body.comic;
+  var username = req.body.data;
+  console.log(comicName);
+  console.log(username);
 
-//   var file2 = new File({
-//                   filename: request.file.filename
-//               });
-  
-//   file2.save(function(err) {
-//       if (err) throw err;
-//       console.log('File saved!');
-//   });
+  Comic.findOne({"comic.comicName" : comicName},function(err,comic){
+    if(err) throw err;
 
-//   File.find().limit(1).sort({$natural:-1}).exec(function(err, files) { 
-//       if (err) throw err;
-//   // object of all the users
-//     console.log("FAF");
-//     console.log(files);
-//   //i'm pulling file names from the database in this for loop and sending it, 
-//   //my problem is here where i should send back the whole file object
-//           //send back the whole file object, look at the tutorial for user/email
-//       response.redirect("/cooperativecomic");   
-//   })
-// });
-// });
+    var tempcomicfavour = comic.comic.favourite;
+    console.log(tempcomicfavour);
+    if(tempcomicfavour.indexOf(username) == -1){
+      tempcomicfavour.push(username); 
+    }
+    Comic.update(
+          {'comic.comicName' : comicName},
+          {'comic.favourite' : tempcomicfavour},
+          {safe: true},
+          function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+        );
+  });
 
-
+  User.findOne({},function(err,user){
+    if (err) throw err;
+    var tempuserfavourite = user.local.favourite;
+    if(tempuserfavourite.indexOf(comicName) == -1){
+      tempuserfavourite.push(comicName);
+    }
+    console.log(tempuserfavourite);
+    User.update(
+    {'local.username': username},
+    {'local.favourite':tempuserfavourite},
+    {safe:true},
+    function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+  );
+  }); 
+  console.log("comicsucc");
+  res.send("Success");
+});
 /* comic page Uploading Service */
 router.post('/fileuploadpage1', function(request, response) {
     var filename_arr2 = [];
