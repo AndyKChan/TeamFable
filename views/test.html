@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta http-equiv="imagetoolbar" content="false">
+<meta http-equiv="imagetoolbar" content="no">
+<title>{{comic.comic.comicName}}'s Main Page</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="stylesheets/style.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+</head>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/home">Home</a>
+          <a class="navbar-brand">{{user.local.username}}</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/myworks">My Works</a></li>
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+        </div>
+      </div>
+</nav>
+<br>
+<br>
+<center>
+<h1>Comic Name: {{comic.comic.comicName}}</h1>
+<p1>Author: {{comic.comic.author}}</p1>
+
+<center>
+<div>
+	<img id="picture" src="/images/{{comic.comic.coverpage}}">
+</div>
+<center>
+<button type="button" class="btn btn-primary" onclick="lastpage1()">LastPage</button>
+<button type="button" class="btn btn-primary" onclick="nextpage()">NextPage</button>
+</div>
+<br>
+<br>
+<center>
+
+<div>
+<a button class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/upload">Upload Comicstrip</a>
+<a button class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/uploadcover">Upload Coverpage</a>
+</div>
+<br>
+<div>
+<a href="/comment/{{comic.comic.comicName}}" class="links"> <font size= "5">Comments!</font> </a>
+<button type="button" id="addf" class="btn btn-primary">Add to Favourite</button>
+</div>
+
+<script>
+$(document).ready(function(){
+  $('#addf').on('click',function(){
+    alert("!");
+    $.ajax({
+      method: "POST",
+      url: "/addfavourite",
+      data:{data:"{{user.local.username}}",comic:"{{comic.comic.comicName}}"}
+    }).done(function(data){
+      alert(data);
+    });
+  });
+});
+</script>  
+</html>

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 <html>
@@ -7,9 +6,10 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="imagetoolbar" content="false">
 <meta http-equiv="imagetoolbar" content="no">
-<link rel="stylesheet" type="text/css" href="css/default.css">
-<script type="text/javascript" src="uploader.js"></script>
+<<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
+  <link rel="stylesheet" href="stylesheets/style.css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
 
 </head>
 <body>
@@ -55,40 +55,6 @@
                 });
 </script>
 
- <!-- 
-<script>
-    Handlebars.registerHelper('compare', function(lvalue, rvalue, options) {
-
-    if (arguments.length < 3)
-        throw new Error("Handlerbars Helper 'compare' needs 2 parameters");
-
-    var operator = options.hash.operator || "==";
-
-    var operators = {
-        '==':       function(l,r) { return l == r; },
-        '===':      function(l,r) { return l === r; },
-        '!=':       function(l,r) { return l != r; },
-        '<':        function(l,r) { return l < r; },
-        '>':        function(l,r) { return l > r; },
-        '<=':       function(l,r) { return l <= r; },
-        '>=':       function(l,r) { return l >= r; },
-        'typeof':   function(l,r) { return typeof l == r; }
-    }
-
-    if (!operators[operator])
-        throw new Error("Handlerbars Helper 'compare' doesn't know the operator "+operator);
-
-    var result = operators[operator](lvalue,rvalue);
-
-    if( result ) {
-        return options.fn(this);
-    } else {
-        return options.inverse(this);
-    }
-
-});
-</script> -->
-
 <br>
 <br>
 <br>
@@ -99,8 +65,12 @@
 
 <br>
 <br>
- <form method="post"  enctype="multipart/form-data"  action="/fileupload2">
- 
+ <form method="post"  enctype="multipart/form-data"  class="form-horizontal" action="/fileupload2">
+  <!--input type="text" name="comicName" class="form-control" placeholder="put your comic name here"!-->
+  <input id="titleBox" type="text" name="comicName" placeholder="Comic Name">
+  <br>
+  <input type= "text" name="stripid" placeholder="Page Number">
+  <br>
   <input type="file" name="filename" style="display: inline-block;">
   <button type="submit" class="btn btn-primary" >Submit</button>
   </form>
@@ -113,12 +83,15 @@
    {{#each comic}}
   
 
-  
+  <!--
   <form id="textTitleBox" class="form-horizontal" name="description" method="post" action="/cooperative" >
       <input id="titleBox" type="text" name="comicName" placeholder="input title here">
+<<<<<<< HEAD
+=======
       
       <input id="titleBox" type="text" name="genre" placeholder="input genre here">
 
+>>>>>>> 4fe691cfbaaccfa86a1cd640951807a7816e09c8
       <textarea id="textbox" type="text" name="description" class="form-control" placeholder="input description here" rows="3" cols="10" ></textarea>
       
   <br>
@@ -130,7 +103,7 @@
 
   {{/each}}
   </center>
-
+-->
 </body>
 
 

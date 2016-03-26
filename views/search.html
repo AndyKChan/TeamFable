@@ -1,15 +1,32 @@
 <!DOCTYPE html>
 <html>
 <head>
-<div class="home">
+      <!-- Bootstrap -->
+    <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="stylesheets/style.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+<div class="Search">
+  <br>
+  <br>
+  <center>
   <h1>Search For Comics Here!</h1>
 
   <form class="form-horizontal" id="test" name="search" method="get" action="/search" >
       <input type="text" class="form-control" id="in" placeholder="Search...">
+      <div class="radio">
+        <lable class="checkbox-inline">
+          <input type="radio" name="searchtype" id="searchtype" value="comic">ComicName
+        </lable>
+        <lable class="checkbox-inline">
+          <input type="radio" name="searchtype" id="searchtype" value="author">Author
+        </lable>
+      </div>
   </form>
 
   <div>
-    <p id="result">1: </p>
+    <ul id="re2"></ul>
   </div>
 
   <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -36,7 +53,12 @@
     </nav>
 </head>
 <body>
+ <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
 
+    <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
 <script>
 $(document).ready(function(){
@@ -44,11 +66,22 @@ $(document).ready(function(){
     $.ajax({
       method: "POST",
       url: "/test",
-      data:{data:$('#in').val()}
+      data:{data:$('#in').val(),type:$('#searchtype:checked').val()}
     }).done(function(data){
-      //alert("!!");
-      //alert(data);
-      $("#result").html(data)
+      // alert("!!");
+      $('#re2').html('');
+      var da = data.split(" ");
+      for (i=1;i<da.length;i++){
+         if($('#searchtype:checked').val() =="comic"){
+           var herf = "/comic/" + da[i];
+           $("#re2").append("<li><a href="+herf+">"+da[i]+"</li>");
+        } else {
+          var herf = "/profile/" + da[i];
+          $("#re2").append("<li><a href="+herf+">"+da[i]+"</li>");
+        }
+      }
+      //$("#result").html(data);
+      
       //document.getElementById("result").innerHTML= data;
     });
 
@@ -58,5 +91,3 @@ $(document).ready(function(){
 
 });
 </script>
-</body>
-</div>

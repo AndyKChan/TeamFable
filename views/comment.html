@@ -1,8 +1,9 @@
 <div class="comment">
   <br>
   <br>
-  <h1>Comments!</h1>
+  <h1>{{comic.comic.comicName}}'s Comments!</h1>
   <form class="form-horizontal" name="comment" method="post" action="/comment" >
+      <input type="hidden" name="comicName" value="{{comic.comic.comicName}}">
       <textarea type="text" name="comment"class="form-control" placeholder="Write something..." rows="3" cols="30" ></textarea>
       <button type="submit" class="btn btn-primary" style="display: inline-block;">Comment</button>
   </form>
@@ -30,14 +31,13 @@
     <br>
     <br>
     {{#each comment}}
-    
     <div id="container" style="white-space:nowrap">
       <br>
       <img src={{this.comment.picture}} style="width:160;height:160px";"display:inline";"white-space:nowrap">
        <font size= "5"> {{this.comment.post}} </font>
      </div> 
-      <font size= "5">{{this.comment.commentor}}</font>
+      <a href="/profile/{{this.comment.commentor}}" class="links"> <font size= "5">{{this.comment.commentor}}</font> </a>
      <br>
      {{this.comment.date}}
-    {{/each}}
+    {{/each}} 
 </div>
