@@ -327,6 +327,13 @@ User.update({'local.username': username},
     }, {multi:true},function(err, data){
 });
 });
+/*delete invitations*/
+router.delete('/deleteInvite', function (req, res) {
+    User.update({"local.username":req.user.local.username},{$pull: {"local.invites": req.body.comic}},
+      { safe: true },
+      function () {
+      });
+});
 
 
 // to remove everything
