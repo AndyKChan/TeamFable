@@ -111,12 +111,14 @@
 <div class="container">
 <h2>Inbox <span class="glyphicon glyphicon-modal-window"></span></h2>
     {{#each invite}}
-    <form id="deleteInvite">
+    <form class="deleteInvite" name="{{@index}}">
+      <div id="reloadInvites">
     <a href="/comic/{{this}}" class="links">{{this}}</a><br>
-     <input type="hidden" id="comic" value="{{this}}">
-     <button type="submit" class="btn btn-primary" id="deleteInvite">X</button>
-     </form>
-    {{/each}}     
+     <input type="hidden" id="comic{{@index}}" value="{{this}}">
+     <button type="submit" class="btn btn-primary deleteInvite" name="{{@index}}">X</button>
+     </div>
+   </form>
+    {{/each}}        
 </div>
 
 </div>
@@ -140,15 +142,16 @@ $("#reload").load("/profile" + " #reload");
 </script>
 
 <script>
-  $("#deleteInvite").submit(function(){
+  $(".deleteInvite").submit(function(){
+  var index = $(this).attr("name");
     $.ajax({
     url: '/deleteInvite',
-    data:{comic:$('#comic').val()},
+    data:{comic:$('#comic'+index).val()},
     type: 'DELETE',
     complete: function() {
       alert("Refused invitation");
     }
     });
   });
-  //$("#reloadInvites").load("/profile" + " #reloadInvites");
+  $("#reloadInvites").load("/profile" + " #reloadInvites");
 </script>
