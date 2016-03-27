@@ -368,7 +368,7 @@ router.delete('/deleteComment', function (req, res) {
 
 /* GET myworks page. */
 router.get('/myworks', isLoggedIn, function(req, res){
-   Comic.find({author : req.user.local.username}, function(err, comics){
+   Comic.find({"comic.author" : req.user.local.username}, function(err, comics){
        if (err) throw err;
       res.render('myworks', {
          comic: comics,
