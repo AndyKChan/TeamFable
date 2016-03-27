@@ -43,22 +43,22 @@
      </div> 
       <a href="/profile/{{this.comment.commentor}}" class="links"> <font size= "5">{{this.comment.commentor}}</font> </a>
      <br>
-     <form id="deleteComment">
+     <form class="deleteComment" name="{{@index}}">
      {{this.comment.date}}
-     <input type="hidden" id="post" value="{{this.comment.post}}">
-     <input type="hidden" id="date" value="{{this.comment.date}}">
-     <button type="submit" class="btn btn-primary" id="deleteComment">X</button>
+     <input type="hidden" id="post{{@index}}" value="{{this.comment.post}}">
+     <input type="hidden" id="date{{@index}}" value="{{this.comment.date}}">
+     <button type="submit" class="btn btn-primary deleteComment" name ="{{@index}}">X</button>
      </form>
     {{/each}} 
 </div>
 
 
 <script>
-
-  $("#deleteComment").submit(function(){
+  $(".deleteComment").submit(function(){
+    var index = $(this).attr("name");
     $.ajax({
     url: '/deleteComment',
-    data:{post:$('#post').val(),date:$('#date').val()},
+    data:{post:$('#post'+index).val(),date:$('#date'+index).val(),index:index},
     type: 'DELETE',
     complete: function() {
         alert("deleted");
@@ -66,5 +66,4 @@
     });
   });
   $("#reload").load("/comment{{this.comment.comic}}" + " #reload");
-
 </script>
