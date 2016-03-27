@@ -99,6 +99,12 @@
   </table>
 </div>
 </div>
+<div class="container" id="right">
+<h2>Inbox <span class="glyphicon glyphicon-modal-window"></span></h2>
+    {{#each invite}}
+      <a href="/comic/{{this}}" class="links">{{this}}</a> <br>
+    {{/each}}     
+</div>
 
 <script>
 $(document).ready(function() {
