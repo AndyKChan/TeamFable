@@ -18,6 +18,7 @@ var userSchema = mongoose.Schema({
         picture: String,
         comictitles: [String],
         favourite:[String],
+        invites:[String],
     }
 });
 
