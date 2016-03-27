@@ -99,3 +99,20 @@
   </table>
 </div>
 </div>
+
+<script>
+$(document).ready(function() {
+  $("#updateProfile").submit(function(){
+    $.ajax({
+      type: "PUT",
+      contentType: "application/json",
+      url: "/updateProfile",
+      data:JSON.stringify({birthdate:$('#birthdate').val(),hobbies:$('#hobbies').val(),location:$('#location').val()}),
+      complete: function() {
+        }
+    })
+    return false;
+  });
+});
+
+</script>
