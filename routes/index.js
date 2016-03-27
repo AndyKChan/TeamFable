@@ -302,27 +302,28 @@ router.get('/profile', isLoggedIn, function (req, res) {
     });
 });
 
-router.post('/profile', function (req, res) {
+router.put('/updateProfile', function (req, res) {
+  console.log(req.body);
 var username = req.user.local.username;
 var birthdate = req.user.local.birthdate;
-var gender = req.user.local.gender;
+var hobbies = req.user.local.hobbies;
 var location = req.user.local.location;
 
-if (req.body["birthdate"] == "") {
-  req.body["birthdate"] = birthdate;
+if (req.body.birthdate == "") {
+  req.body.birthdate = birthdate;
 }
-if (req.body["location"] == "") {
-  req.body["location"] = location;
+if (req.body.location == "") {
+  req.body.location = location;
 }
-if (req.body["gender"] == "") {
-  req.body["gender"] = gender;
+if (req.body.hobbies == "") {
+  req.body.hobbies = hobbies;
 }
+
 User.update({'local.username': username},
-    {'local.birthdate':req.body["birthdate"], 
-    'local.gender':req.body["gender"], 
-    'local.location':req.body["location"]
-    }, {multi:true},function(err, raw){
-      res.redirect("/profile");
+    {'local.birthdate':req.body.birthdate, 
+    'local.hobbies':req.body.hobbies, 
+    'local.location':req.body.location,
+    }, {multi:true},function(err, data){
 });
 });
 
