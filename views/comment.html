@@ -1,3 +1,8 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="stylesheets/style.css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+
 <div class="comment">
   <br>
   <br>
@@ -31,13 +36,35 @@
     <br>
     <br>
     {{#each comment}}
-    <div id="container" style="white-space:nowrap">
+    <div id="container" style="white-space:nowrap" id="reload">
       <br>
       <img src={{this.comment.picture}} style="width:160;height:160px";"display:inline";"white-space:nowrap">
        <font size= "5"> {{this.comment.post}} </font>
      </div> 
       <a href="/profile/{{this.comment.commentor}}" class="links"> <font size= "5">{{this.comment.commentor}}</font> </a>
      <br>
+     <form id="deleteComment">
      {{this.comment.date}}
+     <input type="hidden" id="post" value="{{this.comment.post}}">
+     <input type="hidden" id="date" value="{{this.comment.date}}">
+     <button type="submit" class="btn btn-primary" id="deleteComment">X</button>
+     </form>
     {{/each}} 
 </div>
+
+
+<script>
+
+  $("#deleteComment").submit(function(){
+    $.ajax({
+    url: '/deleteComment',
+    data:{post:$('#post').val(),date:$('#date').val()},
+    type: 'DELETE',
+    complete: function() {
+        alert("deleted");
+    }
+    });
+  });
+  $("#reload").load("/comment{{this.comment.comic}}" + " #reload");
+
+</script>
