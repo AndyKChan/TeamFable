@@ -296,9 +296,10 @@ router.get('/profile/:username', isLoggedIn, function (req, res) {
 });   
 router.get('/profile', isLoggedIn, function (req, res) {
   var u = req.user;
+  var invite = u.local.invites;
   console.log(req);
     res.render('profile', {
-        user: u, otheruser: u // get the user out of session and pass to template
+        user: u, otheruser: u, invite // get the user out of session and pass to template
     });
 });
 
@@ -372,6 +373,27 @@ router.get('/myworks', isLoggedIn, function(req, res){
       });
     });
 });
+
+/* Post invite */
+router.post('/myworks', function(req, res) {
+    User.findOne({"local.username":req.body["invite"]},function(err,user){
+        if (err) throw err;
+        var tempuserinvites = user.local.invites;
+        if(tempuserinvites.indexOf(req.body["comicName"]) == -1){
+          tempuserinvites.push(req.body["comicName"]);
+        }
+        console.log(tempuserinvites);
+        User.update(
+            {'local.username': req.body["invite"]},
+            {'local.invites':tempuserinvites},
+            {safe:true},
+        function(err,raw){
+            if(err) throw err;
+            res.redirect("/profile");
+          }
+      );
+  });
+}); 
   
 
 /* GET search page. */
