@@ -55,9 +55,13 @@
   <h1 class = "center">{{user.local.username}}'s Comics</h1>
 
 </div>
-<body>
 {{#each comic}}
-{{this.comic.comicName}}
-{{/each}}
 
-</body>
+<form id="invite" class="form-horizontal"  action="/myworks" method="post">
+    <div style="display: inline-block;"> {{this.comic.comicName}} </div>
+    <div style="display: inline-block;"> <input type="text" name="invite" class="form-control" > </div>
+    <input type="hidden" name="comicName" value="{{this.comic.comicName}}">
+    <button type="submit" class="btn btn-primary">Invite</button>
+</form>
+
+{{/each}}
