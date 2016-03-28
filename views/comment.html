@@ -36,7 +36,8 @@
     <br>
     <br>
     {{#each comment}}
-    <div id="container" style="white-space:nowrap" id="reload">
+    <div id="reload">
+    <div id="container" style="white-space:nowrap">
       <br>
       <img src={{this.comment.picture}} style="width:160;height:160px";"display:inline";"white-space:nowrap">
        <font size= "5"> {{this.comment.post}} </font>
@@ -49,6 +50,7 @@
      <input type="hidden" id="date{{@index}}" value="{{this.comment.date}}">
      <button type="submit" class="btn btn-primary deleteComment" name ="{{@index}}">X</button>
      </form>
+   </div>
     {{/each}} 
 </div>
 
