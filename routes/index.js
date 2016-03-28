@@ -160,27 +160,32 @@ router.get('/comic/:name/upload',isLoggedIn,function(req,res){
 /* POST to cooperative comic */
 router.post('/createcomic', function(req, res) {
   console.log(req.body);
-  //console.log("here");
+  Comic.findOne({"comic.comicName" : req.body["comicName"]}, function(err, comic){
+    if(err) throw err;
+    console.log("finding");
+    if(comic){
+      console.log("show home");
+      res.send("Comic Already Exist. Please use another name");
+    } else{
+      var comic = new Comic({
+        "comic.comicName": req.body["comicName"],
+        "comic.cooperative": (req.body["comictype"]=='coop'),
+        "comic.description": req.body["description"],
+        "comic.favourite":[],
+        "comic.author": req.user.local.username,
+        "comic.date": new Date(),
+        "comic.coverpage": [],
+        "comic.pages": [],
+        "comic.worklist":[req.user.local.username,]
+      });
+      comic.save(function(err) {
+        if (err) throw err;
+        res.redirect('/comic/'+req.body["comicName"]);
+      });
+    }
 
-  var comic = new Comic({
-    "comic.comicName": req.body["comicName"],
-    "comic.cooperative": (req.body["comictype"]=='coop'),
-    "comic.description": req.body["description"],
-    "comic.favourite":[],
-    "comic.author": req.user.local.username,
-    "comic.date": new Date(),
-    "comic.coverpage": [],
-    "comic.pages": [],
-    "comic.worklist":[req.user.local.username,]
-    //"comic.page1": req.body["page1"],
-    //"comic.page2": req.body["page2"]
   });
-  console.log("there");
-
-  comic.save(function(err) {
-      if (err) throw err;
-      res.redirect('/comic/'+req.body["comicName"]);
-  });
+  
 });
 
 // /* GET solo comic main page. */
