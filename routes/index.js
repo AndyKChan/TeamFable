@@ -406,9 +406,25 @@ router.get('/myworks', isLoggedIn, function(req, res){
        if (err) throw err;
       res.render('myworks', {
          comic: comics,
+         otheruser: req.user,
          user: req.user // get the user out of session and pass to template
       });
     });
+});
+
+/* GET myworks page. */
+router.get('/myworks/:username', isLoggedIn, function(req, res){
+User.findOne({'local.username':req.params.username}, function(err, user) {
+if (err) throw err;
+   {Comic.find({"comic.author" : user.local.username}, function(err, comics){
+       if (err) throw err;
+      res.render('myworks', {
+         comic: comics,
+         otheruser: user,
+         user: req.user // get the user out of session and pass to template
+      });
+    });}
+});
 });
 
 /* Post invite */
