@@ -334,10 +334,32 @@ User.update({'local.username': username},
 });
 /*delete invitations*/
 router.delete('/deleteInvite', function (req, res) {
-    User.update({"local.username":req.user.local.username},{$pull: {"local.invites": req.body.comic}},
+    User.update({"local.username":req.user.local.username},{$pull: {"local.invites": req.body.comicName}},
       { safe: true },
       function () {
       });
+});
+
+/*POST user to worklist*/
+router.post('/acceptInvite', function(req, res) {
+  console.log(req.body);
+    Comic.findOne({"comic.comicName":req.body.comicName},function(err,comic){
+        if (err) throw err;
+        var tempcomicworklist = comic.comic.worklist;
+        if(tempcomicworklist.indexOf(req.user.local.username) == -1){
+          tempcomicworklist.push(req.user.local.username);
+        }
+        console.log(tempcomicworklist);
+        Comic.update(
+            {'comic.comicName': req.body.comicName},
+            {'comic.invites':tempcomicworklist},
+            {safe:true},
+        function(err,raw){
+            if(err) throw err;
+            res.redirect("/comic/"+req.body.comicName);
+          }
+      );
+  });
 });
 
 
