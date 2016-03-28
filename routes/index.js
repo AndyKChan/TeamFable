@@ -270,7 +270,15 @@ router.get("/images/:id", function (request, response) {
     console.log("fetching image: ", path);
     response.sendFile(path);
 });
+/*GET facebook login*/
+router.get('/auth/facebook',passport.authenticate('facebook'));
 
+/*call back from facebook login*/
+router.get('/auth/facebook/callback',
+  passport.authenticate('facebook',{failureRedirect:'/login'}),
+  function(req,res){
+    res.redirect('/home');
+  });
 
 /* GET login page. */
 router.get('/login', function (req, res) {
