@@ -1,5 +1,7 @@
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+//Passport with facebook
+var Strategy = require('passport-facebook').Strategy;
 var User = require('../models/user');
 var fs = require('fs');
 
@@ -90,6 +92,42 @@ passport.use('local-signup', new LocalStrategy({
     });
 
   }));
+// =========================================================================
+// FaceBook SIGNUP ============================================================
+// =========================================================================
+// we are using facebook Strategy when user wanto login with facebook
+passport.use(new Strategy({
+  clientID:952898294826486,
+  clientSecret:'aeb6facaea45d91d119f46ac6c717aaa',
+  callbackURL:"http://localhost:3000/auth/facebook/callback"
+},function(accessToken, refreshToken, profile, done) {
+  process.nextTick(function (){
+    User.findOne({'facebook.id':profile.id},function(err,user){
+      if(err) return done(err);
+      if(user)
+        return done(null,user);
+      else {
+        var newUser = new User();
+
+        newUser.facebook.id = profile.id;
+        newUser.facebook.token = accessToken;
+        newUser.facebook.name = profile.displayName;
+        //newUser.facebook.email = profile.emails[0].value;
+        newUser.local.username = profile.displayName;
+        newUser.local.picture = "https://graph.facebook.com/"+profile.username+"/picture"+"?width=200&height=200"+"&access_token="+accessToken;
+
+        newUser.save(function(err){
+          if (err) throw err;
+          return done(null,newUser);
+        });
+      }
+
+
+    });
+
+  });
+
+}));
 
 // =========================================================================
 // LOCAL LOGIN =============================================================

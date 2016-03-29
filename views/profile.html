@@ -14,14 +14,15 @@
   .pp{
     font-size: 150%
   }
+
   </style>
+</head>
+
 
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
   <link rel="stylesheet" href="stylesheets/style.css">
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script> 
-</head>
-
 
 <div class="profile">
 
@@ -53,49 +54,121 @@
 
   <h1 class = "center">{{otheruser.local.username}}'s Profile Page</h1>
   <div class="container" id="left" >
-  <a href="#" target=><img src={{otheruser.local.picture}} border="0" width="144" height="144" class="img-thumbnail"></a>
+  <a href="#" target=><img src='{{otheruser.local.picture}}' border="0" width="144" height="144" class="img-thumbnail"></a>
   <br>
   <p class="pp">General information</p>
-  <form class="form-horizontal" name="profile" action="/profile" method="post">
+
+  <form id="updateProfile" class="form-horizontal" name="profile" action="/profile" method="get">
+  <div id="reload">
   <div class="form-group">
       <label for="inputPassword3" class="col-sm-2 control-label">Birthdate:</label>
       <div class="col-sm-10">
-        <input type="text" name="birthdate" class="form-control" id="inputbirth3" placeholder={{user.local.birthdate}}>
+        <input type="text" name="birthdate" class="form-control" id="birthdate" placeholder={{user.local.birthdate}}>
       </div>
     </div>
 
     <div class="form-group">
-      <label for="inputPassword3" class="col-sm-2 control-label">Gender:</label>
+      <label for="inputPassword3" class="col-sm-2 control-label">Hobbies:</label>
       <div class="col-sm-10">
-        <input type="text" name="gender" class="form-control" id="inputbirth3" placeholder={{user.local.gender}}>
+        <input type="text" name="hobbies" class="form-control" id="hobbies" placeholder={{user.local.hobbies}}>
       </div>
     </div>
 
     <div class="form-group">
       <label for="inputPassword3" class="col-sm-2 control-label">Location:</label>
       <div class="col-sm-10">
-        <input type="text" name="location" class="form-control" id="inputbirth3" placeholder={{user.local.location}}>
+        <input type="text" name="location" class="form-control" id="location" placeholder={{user.local.location}}>
       </div>
     </div>
-    
+  </div>
+
     <p class="pp">
       {{#if user.local.contributor}}
       <div class="pp">You are a contributor</div>
       {{else}}
       <div class="pp">You are a viewer</div>
     {{/if}}</p>
-  <button type="submit" class="btn btn-default" style="display: inline-block;">Save</button>
+  <button id="updateProfile" type="submit" class="btn btn-default" style="display: inline-block;">Save</button>
 </form>
-</div>
-
+</div class="container" id="left" >
 
 <div class="container" id="right">
 <h2>Favourite Comic <span class="glyphicon glyphicon-heart-empty"></span></h2>
 
   <table class="table">
     
-
-
   </table>
 </div>
+
+
+<div class="container" id="right">
+<h2>Bookmarks <span class="glyphicon glyphicon-book"></span></h2>
+    {{#each bookmark}}
+      <a href="/cooperative/{{this.bookmark.comicName}}/{{this.bookmark.page}}" class="links"></a>
+    {{/each}} 
 </div>
+
+<div class="container">
+<h2>Inbox <span class="glyphicon glyphicon-modal-window"></span></h2>
+     {{#each invite}}
+    <form class="acceptInvite" name="{{@index}}">
+    <div id="reloadInvites">
+    <a href="/comic/{{this}}" class="links">{{this}}</a><br>
+     <input type="hidden" id="comic{{@index}}" value="{{this}}">
+     <button type="submit" class="btn btn-primary deleteInvite" name="{{@index}}">✓</button>
+     
+     </div>
+   </form>
+   <form class="refuseInvite" name="{{@index}}">
+      <button type="submit" class="btn btn-primary deleteInvite" name="{{@index}}">X</button>
+   </form>
+    {{/each}}           
+</div>
+
+</div>
+</div>
+
+<script>
+$(document).ready(function() {
+  $("#updateProfile").submit(function(){
+    $.ajax({
+      type: "PUT",
+      contentType: "application/json",
+      url: "/updateProfile",
+      data:JSON.stringify({birthdate:$('#birthdate').val(),hobbies:$('#hobbies').val(),location:$('#location').val()}),
+      complete: function() {
+        alert("profile updated");
+        }
+    })
+  });
+});
+$("#reload").load("/profile" + " #reload");
+</script>
+
+<script>
+  $(".refuseInvite , .acceptInvite").submit(function(){
+  var index = $(this).attr("name");
+    $.ajax({
+    url: '/deleteInvite',
+    data:{comicName:$('#comic'+index).val()},
+    type: 'DELETE',
+    complete: function() {
+    }
+    });
+  });
+  //$("#reloadInvites").load("/profile" + " #reloadInvites");
+  
+</script>
+
+<script>
+  $(".acceptInvite").submit(function(){
+  var index = $(this).attr("name");
+    $.ajax({
+    url: '/acceptInvite',
+    data:{comicName:$('#comic'+index).val()},
+    type: 'POST',
+    complete: function() {
+    }
+    });
+  });
+</script>
