@@ -509,13 +509,6 @@ router.post('/myworks', function(req, res) {
           }
       );
   });
-}); 
-  
-/* GET images */
-router.get("/images/:id", function (request, response) {
-    var path = imageDir + request.params.filename;
-    console.log("fetching image: ", path);
-    response.sendFile(path);
 });
 
 /* GET search page. */
@@ -527,7 +520,7 @@ router.get('/search', isLoggedIn, function (req, res) {
 /*search result*/
 router.post('/test', function(req,res,next) {
   console.log("POST REQ");
-  console.log(req.body.type);
+  console.log(req.body);
   var a ="";
   if(req.body.type == "comic"){
     Comic.find({'comic.comicName' : req.body.data},function(err,comics){

@@ -19,6 +19,7 @@ var userSchema = mongoose.Schema({
         comictitles: [String],
         favourite:[String],
         invites:[String],
+        bookmark:[String],
     },
     facebook: {
         id : String,

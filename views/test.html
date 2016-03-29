@@ -31,10 +31,13 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/profile">Profile</a></li>
             <li><a href="/myworks">My Works</a></li>
-            <li><a href="/logout">Logout</a></li>
+            <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
           </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
+          <form class="navbar-form navbar-right" role="search" id="navsearch" action="/navsearch" method="post">
+          <div class="form-group">
+            <input type="text" class="form-control" name="in" placeholder="Search...">
+            <button type="submit" class="btn btn-default">Submit</button>
+          </div>
           </form>
         </div>
       </div>
@@ -142,8 +145,6 @@ $(document).ready(function(){
 });
 </script>  
 
-<<<<<<< HEAD
-=======
 <script>
 $(document).ready(function() {
    $(".glyphicon-star-empty").click(function() {
@@ -170,5 +171,4 @@ $(document).ready(function() {
       });
 });
 </script>
->>>>>>> 64b52578b908fa5c3511be28c04b462fbc785cde
 </html>
