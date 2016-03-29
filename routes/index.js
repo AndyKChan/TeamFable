@@ -167,16 +167,17 @@ router.get('/comic/:name/:page', isLoggedIn, function(req,res){
   var page = req.params.page;
   var iterator = parseInt(page);
  
-   Comicstrip.find({"comicstrip.stripid" : iterator , "comicstrip.comicName" : comicName }, function(err,comic){
+   Comicstrip.find({"comicstrip.stripid" : page , "comicstrip.comicName" : comicName }, function(err,comic){
         console.log(comic);
         console.log(page);
         console.log(comicName);
         console.log("check");
+        
         var next;
-        if(comic.length == 0){
-           next = null;
-        } else { next = iterator + 1}
-        res.render('page', {comic : comic , user:req.user, next : next});
+        if(!comic){
+           next = false;
+        } else { next = comicName + "/" + (iterator + 1)}
+        res.render('page', {comic : comic , user:req.user, next : next, comicName : comicName});
    });
 });
 
