@@ -75,8 +75,8 @@
 <center>
 
 <div>
-<a button class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/upload">Upload Comicstrip</a>
-<a button class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/uploadcover">Upload Coverpage</a>
+<a button id="upcs" class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/upload">Upload Comicstrip</a>
+<a button id="upcp" class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/uploadcover">Upload Coverpage</a>
 </div>
 <br>
 <div>
@@ -109,6 +109,23 @@ $(document).ready(function(){
     } else {
       $('#delf').show();
       $('#addf').hide();
+    }
+  });
+});
+</script>
+<script>
+$(document).ready(function(){
+  $.ajax({
+    method: "POST",
+    url: "/checkuser",
+    data:{data:"{{user.local.username}}",type:"comic", comic:"{{comic.comic.comicName}}"}
+  }).done(function(data){
+    if(data =="notwork"){
+      $('#upcp').hide();
+      $('#upcs').hide();
+    } else {
+      $('#upcp').show();
+      $('#upcs').show();
     }
   });
 });

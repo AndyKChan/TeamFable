@@ -687,8 +687,16 @@ router.post('/checkuser',function(req,res){
         res.send("favourited");
       }
     });
+  } else if (req.body.type=="comic"){
+    Comic.findOne({"comic.comicName":req.body.comic},function(err,comic){
+      if (err) throw err;
+      if(comic.comic.worklist.indexOf(username) == -1){
+        res.send("notwork");
+      } else{
+        res.send("work");
+      }
+    });
   }
-
 });
 
 /*add favourite*/
