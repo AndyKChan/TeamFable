@@ -505,36 +505,46 @@ router.post('/test', function(req,res,next) {
       if(err) throw err;
       //console.log(req.body);
       //console.log({comic: comics});
-      
       if(comics.length!=0){
         for(i=0;i<comics.length;i++){
-          a += " " + comics[i]["comic"]["comicName"];
+          a += comics[i]["comic"]["comicName"]+" ";
         }
-        //console.log(comics[0]);
+        console.log(a);
         //console.log(comics[0]["comic"]["author"]);
       } else {
         a = "Not Found!";
       }
-      console.log(a);
       res.send(a);
     });
-  } else {
+  } else if(req.body.type == "author"){
     User.find({'local.username' : req.body.data},function(err,users){
       console.log("SEARCHING");
       console.log(users);
       if(err) throw err;
       if(users.length!=0){
         for(i=0;i<users.length;i++){
-          a += " " + users[i]["local"]["username"];
-        }
+          a += users[i]["local"]["username"]+" ";
+         }
       } else {
         a = "Not Found!";
       }
-      console.log(a);
       res.send(a);
     });
- }
- //res.send(req.body.data);
+  } else {
+    Comic.find({'comic.genre':req.body.data}, function(err,comics){
+      console.log("SEARCHING");
+      console.log(comics);
+      if (err) throw err;
+      if(comics.length != 0){
+        for(i=0;i<comics.length;i++){
+          a +=comics[i]["comic"]["comicName"]+" ";
+        }
+      } else {
+        a = "Not Found!"
+      }
+      res.send(a);
+      });
+  }
  });
  
  /* Put rating*/
