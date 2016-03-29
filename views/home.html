@@ -68,7 +68,12 @@ $(document).ready(function(){
       url: "/createcomic",
       data: $('#info').serialize()
     }).done(function(data){
-      alert(data);
+      if(data.redirect){
+        alert("here");
+        window.location.href= data.redirect;
+      } else {
+        alert(data);
+      }
     });
     return false;
   });

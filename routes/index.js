@@ -180,7 +180,7 @@ router.post('/createcomic', function(req, res) {
       });
       comic.save(function(err) {
         if (err) throw err;
-        res.redirect('/comic/'+req.body["comicName"]);
+        res.send({redirect:'/comic/'+req.body["comicName"]});
       });
     }
 
@@ -279,6 +279,18 @@ router.get('/auth/facebook/callback',
   function(req,res){
     res.redirect('/home');
   });
+
+/*Get fbtype page*/
+router.get('/fbtype',function(req,res){
+  res.render('fbtype',{user:req.user});
+});
+
+/* Post fbtype*/
+router.post('/fbtype',function(req,res){
+  console.log(req.body);
+  User.findOne({});
+
+});
 
 /* GET login page. */
 router.get('/login', function (req, res) {
