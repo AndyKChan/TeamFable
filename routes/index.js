@@ -634,8 +634,25 @@ router.post('/cooperativecomic', function(req, res) {
       res.redirect('/cooperativecomic');
   });
 });
-/*add favourite*/
 
+/*check user*/
+router.post('/checkuser',function(req,res){
+  console.log(req.body.data);
+  var username = req.body.data;
+  if(req.body.type=="favourite"){
+    User.findOne({"local.username":username},function(err,user){
+      if (err) throw err;
+      if (user.local.favourite.indexOf(req.body.comic) == -1){
+        res.send("notfavourite");
+      } else {
+        res.send("favourited");
+      }
+    });
+  }
+
+});
+
+/*add favourite*/
 router.post('/addfavourite',function(req,res){
   console.log("here");
   console.log(req.body);
@@ -663,7 +680,7 @@ router.post('/addfavourite',function(req,res){
         );
   });
 
-  User.findOne({},function(err,user){
+  User.findOne({"local.username" : username},function(err,user){
     if (err) throw err;
     var tempuserfavourite = user.local.favourite;
     if(tempuserfavourite.indexOf(comicName) == -1){
@@ -681,48 +698,51 @@ router.post('/addfavourite',function(req,res){
   );
   }); 
   console.log("comicsucc");
-  res.send("Success");
+  res.send("Added Successfully!");
 });
-/* comic page Uploading Service */
-router.post('/fileuploadpage1', function(request, response) {
-    var filename_arr2 = [];
-  upload(request, response, function(err) {
-      if(err) {
-        console.log('Error Occured');
-        console.log(err);
-        return;
-    }
-    console.log(request.file);
-  // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
+/*delete favourite*/
+router.post('/delfavourite',function(req,res){
 
-  var file2 = new File({
-    filename: request.file.filename
-});
-  file2.save(function(err) {
-      if (err) throw err;
-      console.log('File saved!');
+  var comicName = req.body.comic;
+  var username = req.body.data;
+
+  Comic.findOne({"comic.comicName" : comicName},function(err,comic){
+    if(err) throw err;
+
+    var tempcomicfavour = comic.comic.favourite;
+    var index = tempcomicfavour.indexOf(username);
+    if(index > -1){
+      tempcomicfavour.splice(index,1); 
+    }
+    Comic.update(
+          {'comic.comicName' : comicName},
+          {'comic.favourite' : tempcomicfavour},
+          {safe: true},
+          function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+        );
   });
-  File.find({}, function(err, files) {
-      if (err) throw err;
 
-  // object of all the users
-  
-  console.log("FAF");
-  console.log(files);
-  //i'm pulling file names from the database in this for loop and sending it, 
-  //my problem is here where i should send back the whole file object
-  for(i=0;i <files.length; i++){
-    console.log(files[i].filename);
-    filename_arr2.push(files[i].filename);
-    if (i == (files.length -1)){
-        //send back the whole file object, look at the tutorial for user/email
-        response.render('fileuploadpage1', {filenames: filename_arr2});   
+  User.findOne({"local.username" : username},function(err,user){
+    if (err) throw err;
+    var tempuserfavourite = user.local.favourite;
+    var comicindex = tempuserfavourite.indexOf(comicName);
+    if(comicindex > -1){
+      tempuserfavourite.splice(comicindex,1);
     }
-};
-
-});
-  
-})
+    User.update(
+    {'local.username': username},
+    {'local.favourite':tempuserfavourite},
+    {safe:true},
+    function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+  );
+  });
+  res.send("Delete Successfully!");
 });
 
 /*Get comic mainpage with cover page and Comicname*/

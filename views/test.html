@@ -11,7 +11,8 @@
 
   <link rel="stylesheet" href="stylesheets/style.css">
  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-
+<style>
+</style>
 </head>
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -76,6 +77,7 @@
 <div>
 <a button class="btn btn-primary" href="/comment/{{comic.comic.comicName}}">Comments</a>
 <button type="button" id="addf" class="btn btn-primary">Add to Favourite</button>
+<button type="button" id="delf" class="btn btn-primary">Remove from Favourite</button>
 <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count"></div>
 </div>
 <div id="fb-root"></div>
@@ -90,7 +92,27 @@
 
 <script>
 $(document).ready(function(){
+  $.ajax({
+    method: "POST",
+    url: "/checkuser",
+    data:{data:"{{user.local.username}}",type:"favourite", comic:"{{comic.comic.comicName}}"}
+  }).done(function(data){
+    if(data =="notfavourited"){
+      $('#addf').show();
+      $('#delf').hide();
+    } else {
+      $('#delf').show();
+      $('#addf').hide();
+    }
+  });
+});
+</script>
+
+<script>
+$(document).ready(function(){
   $('#addf').on('click',function(){
+    $('#addf').hide();
+    $('#delf').show();
     $.ajax({
       method: "POST",
       url: "/addfavourite",
@@ -100,7 +122,23 @@ $(document).ready(function(){
     });
   });
 });
+</script>
+<script>
+$(document).ready(function(){
+  $('#delf').on('click',function(){
+    $('#delf').hide();
+    $('#addf').show();
+    $.ajax({
+      method: "POST",
+      url: "/delfavourite",
+      data:{data:"{{user.local.username}}",comic:"{{comic.comic.comicName}}"}
+    }).done(function(data){
+      alert(data);
+    });
+  });
+});
 </script>  
+
 <script>
 $(document).ready(function() {
    $(".glyphicon-star-empty").click(function() {
