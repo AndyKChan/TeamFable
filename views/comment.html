@@ -46,9 +46,11 @@
      <br>
      <form class="deleteComment" name="{{@index}}">
      {{this.comment.date}}
+     {{#compare ../user.local.username this.comment.commentor operator="=="}}
      <input type="hidden" id="post{{@index}}" value="{{this.comment.post}}">
      <input type="hidden" id="date{{@index}}" value="{{this.comment.date}}">
      <button type="submit" class="btn btn-primary deleteComment" name ="{{@index}}">X</button>
+     {{/compare}}
      </form>
    </div>
     {{/each}} 
