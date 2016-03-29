@@ -49,7 +49,8 @@
 <p1>Author: {{comic.comic.author}}</p1>
 
 <h2>
-  Overall Rating: {{comic.comic.rating}} 
+  Overall Rating: 
+  <span id="reloadRating"> {{comic.comic.rating}} </span> 
   <span id="overall" class="glyphicon glyphicon-star" style="color:yellow"></span>! <br>
   Your Rating: 
   <span id="1" class="glyphicon glyphicon-star-empty"></span>
@@ -156,7 +157,7 @@ $(document).ready(function(){
 
 <script>
 $(document).ready(function() {
-   $(".glyphicon-star-empty").click(function() {
+   $(".glyphicon-star-empty").on('click',function() {
       for(i = 1; i < 6; i++ ){
        $("#"+i.toString()).css("color","black");
      }
@@ -169,15 +170,18 @@ $(document).ready(function() {
 });
 </script>
 <script>
-   $(".glyphicon-star-empty").click(function() {
+$(document).ready(function(){
+   $(".glyphicon-star-empty").on('click',function() {
    $.ajax({
       method: "PUT",
       contentType: "application/json",
       url: "/updateRating",
       data:JSON.stringify({rating:$(this).attr("id"),comicName:"{{comic.comic.comicName}}"}),
-      complete: function() {
-        }
+      }).done(function(data){
+        $("#reloadRating").text(data);
       });
 });
+});
+
 </script>
 </html>
