@@ -506,6 +506,49 @@ router.post('/test', function(req,res,next) {
  }
  //res.send(req.body.data);
  });
+ 
+ /* Put rating*/
+router.put('/updateRating', isLoggedIn, function (req, res) {
+  console.log(req.body);
+
+ Comic.findOne({'comic.comicName': req.body.comicName},function(err,comic){
+      var updated = 0;
+      var overallrating = 0;
+      var count = 0;
+      console.log(comic);
+        if (err) throw err;
+        var tempcomicratings = comic.comic.ratings;
+        for (var i in tempcomicratings) {
+          if (tempcomicratings[i].rater == req.user.local.username) {
+          tempcomicratings[i].rating = req.body.rating;
+          updated = 1;
+          }
+        }
+
+        console.log(updated);
+        if (updated == 0)
+          tempcomicratings.push({"rater": req.user.local.username,"rating": req.body.rating })
+        else{console.log("already in array")};
+
+          for (var i in tempcomicratings) {
+          if (tempcomicratings[i].rating != undefined) {
+            count += 1;
+            overallrating += tempcomicratings[i].rating; 
+            }          
+        } 
+        console.log(count);
+        overallrating = overallrating/count;
+        Comic.update(
+            {'comic.comicName': req.body.comicName},
+            {'comic.ratings':tempcomicratings,
+            'comic.rating':overallrating},
+            {safe:true},
+        function(err,raw){
+            if (err) throw err;
+          }
+      );
+  });
+});
 
 /* GET solo comic page 1. */
 router.get('/solocomic', isLoggedIn, function (req, res) {
