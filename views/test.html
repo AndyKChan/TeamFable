@@ -44,6 +44,18 @@
 <h1>Comic Name: {{comic.comic.comicName}}</h1>
 <p1>Author: {{comic.comic.author}}</p1>
 
+<h2>
+  Overall Rating: {{comic.comic.rating}} 
+  <span id="overall" class="glyphicon glyphicon-star" style="color:yellow"></span>! <br>
+  Your Rating: 
+  <span id="1" class="glyphicon glyphicon-star-empty"></span>
+  <span id="2" class="glyphicon glyphicon-star-empty"></span>
+  <span id="3" class="glyphicon glyphicon-star-empty"></span>
+  <span id="4" class="glyphicon glyphicon-star-empty"></span>
+  <span id="5" class="glyphicon glyphicon-star-empty"></span>
+  <input type="hidden" name="comicName" value="{{comic.comic.comicName}}">
+</h2>
+
 <center>
 <div>
 	<img id="picture" src="/images/{{comic.comic.coverpage}}">
@@ -89,4 +101,30 @@ $(document).ready(function(){
   });
 });
 </script>  
+<script>
+$(document).ready(function() {
+   $(".glyphicon-star-empty").click(function() {
+      for(i = 1; i < 6; i++ ){
+       $("#"+i.toString()).css("color","black");
+     }
+    id = parseInt($(this).attr('id'));
+      for(i = 1; i < id+1; i++ ){
+       $("#"+i.toString()).css("color","yellow");
+     }
+   
+   }); 
+});
+</script>
+<script>
+   $(".glyphicon-star-empty").click(function() {
+   $.ajax({
+      method: "PUT",
+      contentType: "application/json",
+      url: "/updateRating",
+      data:JSON.stringify({rating:$(this).attr("id"),comicName:"{{comic.comic.comicName}}"}),
+      complete: function() {
+        }
+      });
+});
+</script>
 </html>
