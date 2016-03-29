@@ -56,12 +56,12 @@
 
 </div>
 {{#each comic}}
-
 <form id="invite" class="form-horizontal"  action="/myworks" method="post">
-    <div style="display: inline-block;"> {{this.comic.comicName}} </div>
-    <div style="display: inline-block;"> <input type="text" name="invite" class="form-control" > </div>
+    <a href="/comic/{{this.comic.comicName}}">{{this.comic.comicName}}</a>
+    <div style="display: inline-block;"> <input type="text" name="invite" class="form-control" > </div> 
     <input type="hidden" name="comicName" value="{{this.comic.comicName}}">
-    <button type="submit" class="btn btn-primary">Invite</button>
+    <button type="submit" class="btn btn-primary">Invite</button><br>
+    collaborators: {{this.comic.worklist}}
 </form>
 <img id="picture" src="/images/{{this.comic.coverpage}}" style="width:480;height:360";>
 {{/each}}
