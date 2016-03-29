@@ -114,7 +114,7 @@ passport.use(new Strategy({
         newUser.facebook.name = profile.displayName;
         //newUser.facebook.email = profile.emails[0].value;
         newUser.local.username = profile.displayName;
-        newUser.local.picture = "https://graph.facebook.com/"+profile.username+"/picture"+"?width=200&height=200"+"&access_token="+accessToken;
+        newUser.local.picture = "https://graph.facebook.com/"+profile.id+"/picture"+"?width=200&height=200"+"&access_token="+accessToken;
         newUser.facebook.first = true;
 
         newUser.save(function(err){
