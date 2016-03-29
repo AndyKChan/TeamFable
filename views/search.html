@@ -66,7 +66,11 @@
 <script>
 $(document).ready(function(){
   $("#test").submit(function(){
-    $.ajax({
+    if($('#searchtype:checked').val() == null){
+      alert("please select one of Comic, Author or Genre");
+      
+    } else {
+      $.ajax({
       method: "POST",
       url: "/test",
       data:{data:$('#in').val(),type:$('#searchtype:checked').val()}
@@ -75,7 +79,7 @@ $(document).ready(function(){
       $('#re2').html('');
        if(data=="Not Found!"){
          alert("Not Found!");
-       }else{
+       } else {
         var da = data.split(" ");
         for (i=0;i<da.length-1;i++){
           if($('#searchtype:checked').val() =="author"){
@@ -86,12 +90,9 @@ $(document).ready(function(){
             $("#re2").append("<li><a href="+herf+">"+da[i]+"</li>");
           }
         }
-        }
-      //$("#result").html(data);
-      
-      //document.getElementById("result").innerHTML= data;
+      }
     });
-
+    }
     return false;
 
     });

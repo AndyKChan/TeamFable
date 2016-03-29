@@ -485,7 +485,10 @@ router.post('/myworks', function(req, res) {
       );
   });
 }); 
-  
+/*nav seatch*/
+router.post('/navsearch',function(req,res){
+
+});
 
 /* GET search page. */
 router.get('/search', isLoggedIn, function (req, res) {
