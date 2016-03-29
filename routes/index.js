@@ -360,7 +360,7 @@ router.post('/acceptInvite', function(req, res) {
         console.log(tempcomicworklist);
         Comic.update(
             {'comic.comicName': req.body.comicName},
-            {'comic.invites':tempcomicworklist},
+            {'comic.worklist':tempcomicworklist},
             {safe:true},
         function(err,raw){
             if(err) throw err;
