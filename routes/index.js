@@ -277,7 +277,12 @@ router.get('/auth/facebook',passport.authenticate('facebook'));
 router.get('/auth/facebook/callback',
   passport.authenticate('facebook',{failureRedirect:'/login'}),
   function(req,res){
-    res.redirect('/home');
+    if(req.user.facebook.first){
+      res.redirect('/fbtype');
+    }else{
+      res.redirect('/home');
+    }
+    
   });
 
 /*Get fbtype page*/
@@ -288,8 +293,18 @@ router.get('/fbtype',function(req,res){
 /* Post fbtype*/
 router.post('/fbtype',function(req,res){
   console.log(req.body);
-  User.findOne({});
-
+  console.log(req.user);
+  User.update(
+    {'facebook.id' : req.user.facebook.id},
+    {'local.contributor':req.body['fbtype']=="contributor",
+     'facebook.first':false},
+    {safe:true},
+    function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+    );
+  res.redirect('/home');
 });
 
 /* GET login page. */
