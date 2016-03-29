@@ -172,6 +172,8 @@ router.post('/createcomic', function(req, res) {
         "comic.cooperative": (req.body["comictype"]=='coop'),
         "comic.description": req.body["description"],
         "comic.favourite":[],
+        "comic.rating":0,
+        "comic.ratings":[],
         "comic.author": req.user.local.username,
         "comic.date": new Date(),
         "comic.coverpage": [],
