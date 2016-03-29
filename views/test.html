@@ -49,8 +49,9 @@
 	<img id="picture" src="/images/{{comic.comic.coverpage}}">
 </div>
 <center>
-<button type="button" class="btn btn-primary" onclick="lastpage1()">LastPage</button>
-<button type="button" class="btn btn-primary" onclick="nextpage()">NextPage</button>
+
+<!-- <button type="button" class="btn btn-primary" onclick="lastpage1()">LastPage</button> -->
+<button type="button" class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/{{comic.comic.pages}}">Read Comic</button>
 </div>
 <br>
 <br>
@@ -80,4 +81,5 @@ $(document).ready(function(){
   });
 });
 </script>  
+
 </html>

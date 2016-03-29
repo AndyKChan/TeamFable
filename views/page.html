@@ -18,8 +18,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 </head>
 <body>
-	<div class="uploadcomic">
-	<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="uploadcomic">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -50,22 +50,46 @@
     <br>
     <br>
     <center>
-    <h2>Upload Cover Page for {{comic.comic.comicName}}</h2>
+    <h2>{{comic.comic.comicName}}</h2>
     <br>
     <br>
     <form method="post"  enctype="multipart/form-data"  class="form-horizontal" action="/fileupload2">
       <!--input type="text" name="comicName" class="form-control" placeholder="put your comic name here"!-->
       <!--input id="titleBox" type="text" name="comicName" placeholder="Comic Name"!-->
       <input id="comicName" type="text" name="comicName" value="{{comic.comic.comicName}}" readonly class="hidden">
-      <input type= "text" name="stripid" value="cover" readonly class="hidden">
+      <br>
+      <input type= "text" name="stripid" placeholder="Page Number">
+      <br>
       <input type="file" name="filename" style="display: inline-block;">
       <button type="submit" class="btn btn-primary" >Submit</button>
     </form>
 
-  	<div id="result"></div>
-  	<ul id="image"></ul>
+    <div id="result"></div>
+    <ul id="image"></ul>
 
 </div>
 </body>
+<script>
+//imageinfo.append("comicName","{{comic.comic.comicName}}");
+
+// $(document).ready(function(){
+//  $("#uploadimage").submit(function(){
+//      var imageinfo = new FormData(document.forms.namedItem("uploadimage"));
+//      //alert(imageinfo);
+//      $.ajax({
+//          method:"POST",
+//          url:"/uploadc",
+//          data:imageinfo,
+//          processData: false,
+//          contentType: false
+//      })
+//      .done(function(data){
+//          alert(data);
+//      });
+//      return false;
+//  });
+// });
+
+</script>
 </html>
 
