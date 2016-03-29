@@ -22,6 +22,9 @@
         <lable class="checkbox-inline">
           <input type="radio" name="searchtype" id="searchtype" value="author">Author
         </lable>
+        <lable class="checkbox-inline">
+          <input type="radio" name="searchtype" id="searchtype" value="genre">Genre
+        </lable>
       </div>
   </form>
 
@@ -68,18 +71,22 @@ $(document).ready(function(){
       url: "/test",
       data:{data:$('#in').val(),type:$('#searchtype:checked').val()}
     }).done(function(data){
-      // alert("!!");
+      //alert("!!");
       $('#re2').html('');
-      var da = data.split(" ");
-      for (i=1;i<da.length;i++){
-         if($('#searchtype:checked').val() =="comic"){
-           var herf = "/comic/" + da[i];
-           $("#re2").append("<li><a href="+herf+">"+da[i]+"</li>");
-        } else {
-          var herf = "/profile/" + da[i];
-          $("#re2").append("<li><a href="+herf+">"+da[i]+"</li>");
+       if(data=="Not Found!"){
+         alert("Not Found!");
+       }else{
+        var da = data.split(" ");
+        for (i=0;i<da.length-1;i++){
+          if($('#searchtype:checked').val() =="author"){
+            var herf = "/profile/" + da[i];
+            $("#re2").append("<li><a href="+herf+">"+da[i]+"</li>");
+          } else {
+            var herf = "/comic/" + da[i];
+            $("#re2").append("<li><a href="+herf+">"+da[i]+"</li>");
+          }
         }
-      }
+        }
       //$("#result").html(data);
       
       //document.getElementById("result").innerHTML= data;

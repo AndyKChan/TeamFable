@@ -59,19 +59,16 @@
 
 {{#each comic}}
 <img id="picture" src="/images/{{this.comicstrip.fileName}}">    
-{{this.comicstrip.comicName}}
-eadasda
-{{/each}}
-
-hi there
-{{#each comic.comicstrip.pages}}
-    
-        <img id="picture" src="/images/{{this}}">    
-    {{/each}}
-
 
 </div>
-  <button type="button" id="next" class="btn btn-primary">Next Page</button>
+
+{{#compare next null operater="=="}}
+  <button type="button" class="btn btn-primary"><a href= "/comic/{{this.comicstrip.comicName}}/{{../next}}">Next Page </a></button>
+{{/compare}}
+
+
+{{/each}}
+
 <center>
 
     <div id="result"></div>

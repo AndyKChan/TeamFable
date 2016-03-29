@@ -38,14 +38,24 @@
     <br>
     <br>
       <label for="inputComicTitles3" class="col-sm-1 control-label">Name your comic: </label>
-
       <div class="col-sm-10">
         <input type="comicName" name="comicName" class="form-control" id="inputComicTitles3" placeholder="Comic Title">
         <br>
       <div class="form-group">
         <textarea name="description" class="form-control" rows="3" placeholder="Description here"></textarea>
       </div>
-      <div class="radio">
+      <div class="select">
+      <select class="form-control" id="genre" name="genre">
+        <option value="defult">Choose Genre for your comic</option>
+        <option value="horror">Horror comics</option>
+        <option value="romance">Romance comics</option>
+        <option value="crime">Crime comics</option>
+        <option value="science">Science fiction comics</option>
+        <option value="war">War comics</option>
+        <option value="defult">Not suitble</option>
+      </select>
+      </div>
+      <div class="radio"> 
         <lable class="checkbox-inline">
           <input type="radio" name="comictype" id="comictype" value="solo">Solo
         </lable>
@@ -53,7 +63,6 @@
           <input type="radio" name="comictype" id="comictype" value="coop">Cooperative
         </lable>
       </div>
-      
       <button type="submit" form="info" class="btn btn-primary">Create</button>
 
       </div>
@@ -68,7 +77,12 @@ $(document).ready(function(){
       url: "/createcomic",
       data: $('#info').serialize()
     }).done(function(data){
-      alert(data);
+      if(data.redirect){
+        //alert("here");
+        window.location.href= data.redirect;
+      } else {
+        alert(data);
+      }
     });
     return false;
   });

@@ -13,6 +13,10 @@ var comicSchema = mongoose.Schema({
    	 	description: String,
          genre: String,
    	 	favourite: [String],
+   	 	rating: Number,
+   	 	ratings: [
+        {rating: Number,
+         rater: String}],
    		author: String,
    		date: Date,
          worklist:[String],
