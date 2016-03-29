@@ -487,7 +487,7 @@ router.post('/myworks', function(req, res) {
 }); 
 /*nav seatch*/
 router.post('/navsearch',function(req,res){
-
+  
 });
 
 /* GET search page. */
@@ -499,7 +499,7 @@ router.get('/search', isLoggedIn, function (req, res) {
 /*search result*/
 router.post('/test', function(req,res,next) {
   console.log("POST REQ");
-  console.log(req.body.type);
+  console.log(req.body);
   var a ="";
   if(req.body.type == "comic"){
     Comic.find({'comic.comicName' : req.body.data},function(err,comics){

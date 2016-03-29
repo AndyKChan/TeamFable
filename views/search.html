@@ -13,7 +13,7 @@
   <center>
   <h1>Search For Comics Here!</h1>
 
-  <form class="form-horizontal" id="test" name="search" method="get" action="/search" >
+  <form class="form-horizontal" id="test" name="search">
       <input type="text" class="form-control" id="in" placeholder="Search...">
       <div class="radio">
         <lable class="checkbox-inline">
@@ -46,10 +46,8 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="/solo">Solo</a></li>
-            <li><a href="/cooperative">Cooperative</a></li>
             <li><a href="/profile">Profile</a></li>
-            <li><a href="/logout">Logout</a></li>
+            <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
           </ul>
         </div>
       </div>
@@ -68,7 +66,7 @@ $(document).ready(function(){
   $("#test").submit(function(){
     if($('#searchtype:checked').val() == null){
       alert("please select one of Comic, Author or Genre");
-      
+
     } else {
       $.ajax({
       method: "POST",
