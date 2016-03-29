@@ -7,7 +7,7 @@
     display: none;
   }
   </style>
-<title>Upload</title>
+<title>{{comic.comic.comicName}}</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="imagetoolbar" content="false">
 <meta http-equiv="imagetoolbar" content="no">
@@ -53,43 +53,52 @@
     <h2>{{comic.comic.comicName}}</h2>
     <br>
     <br>
-    <form method="post"  enctype="multipart/form-data"  class="form-horizontal" action="/fileupload2">
-      <!--input type="text" name="comicName" class="form-control" placeholder="put your comic name here"!-->
-      <!--input id="titleBox" type="text" name="comicName" placeholder="Comic Name"!-->
-      <input id="comicName" type="text" name="comicName" value="{{comic.comic.comicName}}" readonly class="hidden">
-      <br>
-      <input type= "text" name="stripid" placeholder="Page Number">
-      <br>
-      <input type="file" name="filename" style="display: inline-block;">
-      <button type="submit" class="btn btn-primary" >Submit</button>
-    </form>
+    <center>
+
+<div>
+
+{{#each comic}}
+<img id="picture" src="/images/{{this.comicstrip.fileName}}">    
+{{this.comicstrip.comicName}}
+eadasda
+{{/each}}
+
+hi there
+{{#each comic.comicstrip.pages}}
+    
+        <img id="picture" src="/images/{{this}}">    
+    {{/each}}
+
+
+</div>
+  <button type="button" id="next" class="btn btn-primary">Next Page</button>
+<center>
 
     <div id="result"></div>
     <ul id="image"></ul>
 
 </div>
-</body>
+
 <script>
-//imageinfo.append("comicName","{{comic.comic.comicName}}");
+$( "#next" ).each(
 
-// $(document).ready(function(){
-//  $("#uploadimage").submit(function(){
-//      var imageinfo = new FormData(document.forms.namedItem("uploadimage"));
-//      //alert(imageinfo);
-//      $.ajax({
-//          method:"POST",
-//          url:"/uploadc",
-//          data:imageinfo,
-//          processData: false,
-//          contentType: false
-//      })
-//      .done(function(data){
-//          alert(data);
-//      });
-//      return false;
-//  });
-// });
+    // For each page, run this code. The "indIndex" is the
+    // loop iteration index on the current element.
+    function( intIndex ){
 
+        // Bind the onclick event to simply alert the
+        // iteration index value.
+        $( this ).bind (
+            "click",
+            function(){
+                alert( "Hottie index: " + intIndex );
+            }
+            );
+
+    }
+
+    );
 </script>
+</body>
 </html>
 

@@ -56,11 +56,12 @@ router.post('/fileupload2', function(request, response) {
       if(err) throw err;
       console.log("finding");
       console.log(comic);
-  
+      var stripid = parseInt(request.body["stripid"]);
       var comicstripcoop = new Comicstrip({"comicstrip.comicName" : request.body["comicName"],
                                         "comicstrip.author": request.user.local.username,
                                         "comicstrip.date": new Date(),
-                                        "comicstrip.stripid": request.body["comicName"]+"-"+request.body["stripid"]});
+                                        "comicstrip.fileName": request.body["comicName"]+"-"+request.body["stripid"]+ "." +fileFormat[fileFormat.length - 1],
+                                        "comicstrip.stripid": stripid});
 
       comicstripcoop.save(function(err) {
         if(err) throw err;
@@ -71,7 +72,7 @@ router.post('/fileupload2', function(request, response) {
       a.push(request.file.filename);
       console.log(a);
       console.log(comicName);
-      if(request.body["stripid"] == "cover"){
+      if (stripid == 0){
         Comic.update(
           {'comic.comicName' : comicName},
           {'comic.coverpage' : request.file.filename},
@@ -158,21 +159,54 @@ router.get('/comic/:name/upload',isLoggedIn,function(req,res){
 });
 
 /* GET nextPage */
-router.get('/comic/:name/:pages', isLoggedIn, function(req,res){
+router.get('/comic/:name/:page', isLoggedIn, function(req,res){
   var comicName = req.params.name;
-  var pages = req.params.pages;
-  console.log(comicName);
-  console.log(pages);
-  Comic.findOne({"comic.comicName": comicName, "comic.pages": pages}, function(err, comic){
-    if(err) throw err;
-    console.log(comic);
-    if(comic){
-      res.render('page', {comic, user:req.user});
-    } else {
-      console.log("No such comic");
-      res.redirect('/home');
-    }
-  });
+  var page = req.params.page;
+  // var a ="";
+  // if(req.body.type == "comic"){
+  //   Comic.find({'comic.comicName' : req.body.data},function(err,comics){
+  //     console.log("SEARCHING");
+  //     console.log(comics);
+  //     if(err) throw err;
+  //     //console.log(req.body);
+  //     //console.log({comic: comics});
+      
+  //     if(comics.length!=0){
+  //       for(i=0;i<comics.length;i++){
+  //         a += " " + comics[i]["comic"]["comicName"];
+  //       }
+  //       //console.log(comics[0]);
+  //       //console.log(comics[0]["comic"]["author"]);
+  //     } else {
+  //       a = "Not Found!";
+  //     }
+  //     console.log(a);
+  //     res.send(a);
+  //   });
+  // }
+  // var pages = req.params.pages;
+ 
+   Comicstrip.find({"comicstrip.stripid" : 1 , "comicstrip.comicName" : comicName }, function(err,comic){
+        console.log(comic);
+        console.log(page);
+        console.log(comicName);
+        console.log("check");
+        res.render('page', {comic : comic , user:req.user});
+   });
+
+
+//   console.log(comicName);
+//   // console.log(pages);
+//   Comic.find({"comic.comicName": comicName, "comicstrip.stripid" : stripid }, function(err, comic){
+//     if(err) throw err;
+//     console.log(comic);
+//     if(comic){
+//       res.render('page', {comic, user:req.user});
+//     } else {
+//       console.log("No such comic");
+//       res.redirect('/home');
+//     }
+//   });
 });
 
 /* POST to cooperative comic */
@@ -265,23 +299,24 @@ router.post('/createcomic', function(req, res) {
 //                   filename: request.file.filename
 //               });
   
-  file.save(function(err) {
-      if (err) throw err;
-      console.log('File saved!');
-  });
 
-  File.find().limit(1).sort({$natural:-1}).exec(function(err, files) { 
-      if (err) throw err;
-  // object of all the users
-    console.log("FAF");
-    console.log(files);
-  //i'm pulling file names from the database in this for loop and sending it, 
-  //my problem is here where i should send back the whole file object
-          //send back the whole file object, look at the tutorial for user/email
-      response.redirect("/solo");   
-  })
-});
-});
+//   file.save(function(err) {
+//       if (err) throw err;
+//       console.log('File saved!');
+//   });
+
+//   File.find().limit(1).sort({$natural:-1}).exec(function(err, files) { 
+//       if (err) throw err;
+//   // object of all the users
+//     console.log("FAF");
+//     console.log(files);
+//   //i'm pulling file names from the database in this for loop and sending it, 
+//   //my problem is here where i should send back the whole file object
+//           //send back the whole file object, look at the tutorial for user/email
+//       response.redirect("/solo");   
+//   })
+// });
+// });
 
 router.get("/images/:id", function (request, response) {
     var path = imageDir + request.params.filename;

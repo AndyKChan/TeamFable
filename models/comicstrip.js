@@ -13,7 +13,8 @@ var stripSchema = mongoose.Schema({
    	 	//cooperative: Boolean,
    		author: String,
    		date: Date,
-        stripid: String
+        stripid: Number,
+        fileName: String
 	}
 });
 
