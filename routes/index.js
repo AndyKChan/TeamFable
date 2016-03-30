@@ -508,7 +508,7 @@ router.post('/myworks', function(req, res) {
             {safe:true},
         function(err,raw){
             if(err) throw err;
-            res.redirect("/profile");
+            res.redirect("/myworks");
           }
       );
   });
