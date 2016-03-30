@@ -573,6 +573,22 @@ router.post('/test', function(req,res,next) {
       });
   }
  });
+ /* GET your Rating*/
+router.post('/getRating', isLoggedIn, function (req, res) {
+  var yourRating = 0;
+    Comic.findOne({'comic.comicName': req.body.comicName},function(err,comic){
+      if (err) throw err;
+        var tempcomicratings = comic.comic.ratings;
+        for (var i in tempcomicratings) {
+          if (tempcomicratings[i].rater == req.user.local.username) {
+          yourRating = tempcomicratings[i].rating;
+          break;
+          }
+        }
+        yourRating = yourRating.toString();
+      res.send(yourRating);
+  });
+});  
  
  /* Put rating*/
 router.put('/updateRating', isLoggedIn, function (req, res) {
