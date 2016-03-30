@@ -527,7 +527,17 @@ if (err) throw err;
 router.post('/myworks', function(req, res) {
     User.findOne({"local.username":req.body["invite"]},function(err,user){
         if (err) throw err;
-        var tempuserinvites = user.local.invites;
+        if(user == null){
+          res.redirect("/error");
+          return false;
+        }
+        else{
+          if(user.local.contributor == false){
+          res.redirect("/error");
+          return false;
+          }
+        else{
+          var tempuserinvites = user.local.invites;
         if(tempuserinvites.indexOf(req.body["comicName"]) == -1){
           tempuserinvites.push(req.body["comicName"]);
         }
@@ -539,9 +549,10 @@ router.post('/myworks', function(req, res) {
         function(err,raw){
             if(err) throw err;
             res.redirect("/myworks");
+          });
           }
-      );
-  });
+  };
+});
 });
 
 /* GET search page. */
