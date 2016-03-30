@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
   <link rel="stylesheet" href="stylesheets/style.css">
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
 
 <div class="comment">
   <br>
@@ -36,7 +36,7 @@
     <br>
     <br>
     {{#each comment}}
-    <div id="reload">
+    <div id="{{this.comment.post}}1">
     <div id="container" style="white-space:nowrap">
       <br>
       <img src={{this.comment.picture}} style="width:160;height:160px";"display:inline";"white-space:nowrap">
@@ -44,30 +44,26 @@
      </div> 
       <a href="/profile/{{this.comment.commentor}}" class="links"> <font size= "5">{{this.comment.commentor}}</font> </a>
      <br>
-     <form class="deleteComment" name="{{@index}}">
      {{this.comment.date}}
      {{#compare ../user.local.username this.comment.commentor operator="=="}}
      <input type="hidden" id="post{{@index}}" value="{{this.comment.post}}">
      <input type="hidden" id="date{{@index}}" value="{{this.comment.date}}">
-     <button type="submit" class="btn btn-primary deleteComment" name ="{{@index}}">X</button>
+     <button type="button" class="btn btn-primary deleteComment" name ="{{@index}}">X</button>
      {{/compare}}
-     </form>
    </div>
     {{/each}} 
 </div>
 
 
 <script>
-  $(".deleteComment").submit(function(){
+  $(".deleteComment").on('click',function() {
     var index = $(this).attr("name");
     $.ajax({
+    type: 'DELETE',  
     url: '/deleteComment',
     data:{post:$('#post'+index).val(),date:$('#date'+index).val(),index:index},
-    type: 'DELETE',
-    complete: function() {
-        alert("deleted");
-    }
+    }).done(function(data){
+    document.getElementById(data).remove();
     });
-  });
-  $("#reload").load("/comment{{this.comment.comic}}" + " #reload");
-</script>
+});
+</script>  
