@@ -384,13 +384,14 @@ router.get('/home', isLoggedIn, function (req, res) {
 router.get('/profile/:username', isLoggedIn, function (req, res) {
   var u = req.user;
   var invite = u.local.invites;
+  var invite = u.local.bookmarks;
   console.log(req.params);
    User.findOne({'local.username':req.params.username}, function(err, user) {
       if (err) throw err;
       u = user;
   console.log(req.params);
     res.render('profile', {
-        user: req.user, otheruser: u, invite // get the user out of session and pass to template
+        user: req.user, otheruser: u, invite, bookmark // get the user out of session and pass to template
     });
 });
 });   
