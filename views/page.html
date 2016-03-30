@@ -100,7 +100,7 @@ $(document).ready(function(){
       data:{stripid:$('#stripid'+index).val(),fileName:$('#fileName'+index).val()},
     }).done(function(data){
       alert(data);
-    //  document.getElementById("div"+index.toString()).remove();
+    document.getElementById(data).remove();
     });
   });
 });
