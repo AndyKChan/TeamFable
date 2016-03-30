@@ -33,7 +33,7 @@
             <li><a href="/myworks">My Works</a></li>
             <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
           </ul>
-          <form class="navbar-form navbar-right" role="search" id="navsearch" action="/navsearch" method="post">
+          <form class="navbar-form navbar-right" role="search" id="navsearch" action="/navsearch" method="get">
           <div class="form-group">
             <input type="text" class="form-control" name="in" placeholder="Search...">
             <button type="submit" class="btn btn-default">Submit</button>
@@ -49,7 +49,8 @@
 <p1>Author: {{comic.comic.author}}</p1>
 
 <h2>
-  Overall Rating: {{comic.comic.rating}} 
+  Overall Rating: 
+  <span id="reloadRating"> {{comic.comic.rating}} </span> 
   <span id="overall" class="glyphicon glyphicon-star" style="color:yellow"></span>! <br>
   Your Rating: 
   <span id="1" class="glyphicon glyphicon-star-empty"></span>
@@ -75,14 +76,23 @@
 <center>
 
 <div>
-<a button class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/upload">Upload Comicstrip</a>
-<a button class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/uploadcover">Upload Coverpage</a>
+{{#if worklist}}
+<a button id="upcs" class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/upload">Upload Comicstrip</a>
+<a button id="upcp" class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/uploadcover">Upload Coverpage</a>
+{{/if}}
 </div>
 <br>
 <div>
 <a button class="btn btn-primary" href="/comment/{{comic.comic.comicName}}">Comments</a>
-<button type="button" id="addf" class="btn btn-primary">Add to Favourite</button>
+{{#if favourite}}  
 <button type="button" id="delf" class="btn btn-primary">Remove from Favourite</button>
+<button style="display: none;" type="button" id="addf" class="btn btn-primary">Add to Favourite</button>
+{{else }}
+<button type="button" id="addf" class="btn btn-primary">Add to Favourite</button>
+<button type="button" id="delf" class="btn btn-primary" style="display: none;">Remove from Favourite</button>
+{{/if}}
+<!--button type="button" id="delf" class="btn btn-primary">Remove from Favourite</button!-->
+
 <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count"></div>
 </div>
 <div id="fb-root"></div>
@@ -97,22 +107,22 @@
 </script>
 
 <script>
-$(document).ready(function(){
-  $.ajax({
-    method: "POST",
-    url: "/checkuser",
-    data:{data:"{{user.local.username}}",type:"favourite", comic:"{{comic.comic.comicName}}"}
-  }).done(function(data){
-    if(data =="notfavourited"){
-      $('#addf').show();
-      $('#delf').hide();
-    } else {
-      $('#delf').show();
-      $('#addf').hide();
-    }
-  });
-});
-</script>
+// $(document).ready(function(){
+//   $.ajax({
+//     method: "POST",
+//     url: "/checkuser",
+//     data:{data:"{{user.local.username}}",type:"comic", comic:"{{comic.comic.comicName}}"}
+//   }).done(function(data){
+//     if(data =="notwork"){
+//       $('#upcp').hide();
+//       $('#upcs').hide();
+//     } else {
+//       $('#upcp').show();
+//       $('#upcs').show();
+//     }
+//   });
+// });
+// </script>
 
 <script>
 $(document).ready(function(){
@@ -144,10 +154,23 @@ $(document).ready(function(){
   });
 });
 </script>  
-
 <script>
 $(document).ready(function() {
-   $(".glyphicon-star-empty").click(function() {
+  $.ajax({
+      type: "POST",
+      url: "/getRating",
+      data:{comicName:"{{comic.comic.comicName}}"}
+    }).done(function(data){
+      var yourRating = parseInt(data);
+        for(i = 1; i < yourRating+1; i++ ){
+       $("#"+i.toString()).css("color","yellow");
+     }
+    });
+  });
+</script>
+<script>
+$(document).ready(function() {
+   $(".glyphicon-star-empty").on('click',function() {
       for(i = 1; i < 6; i++ ){
        $("#"+i.toString()).css("color","black");
      }
@@ -160,15 +183,18 @@ $(document).ready(function() {
 });
 </script>
 <script>
-   $(".glyphicon-star-empty").click(function() {
+$(document).ready(function(){
+   $(".glyphicon-star-empty").on('click',function() {
    $.ajax({
       method: "PUT",
       contentType: "application/json",
       url: "/updateRating",
       data:JSON.stringify({rating:$(this).attr("id"),comicName:"{{comic.comic.comicName}}"}),
-      complete: function() {
-        }
+      }).done(function(data){
+        $("#reloadRating").text(data);
       });
 });
+});
+
 </script>
 </html>

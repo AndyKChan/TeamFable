@@ -117,6 +117,9 @@ router.get('/comic/:name/uploadcover',function(req,res){
   });
 });
 
+router.get('/navsearch',function(req,res){
+  console.log(req.body);
+});
 
 router.get("/images/:id", function (request, response) {
     var path = imageDir + request.params.filename;
@@ -576,6 +579,22 @@ router.post('/test', function(req,res,next) {
       });
   }
  });
+ /* GET your Rating*/
+router.post('/getRating', isLoggedIn, function (req, res) {
+  var yourRating = 0;
+    Comic.findOne({'comic.comicName': req.body.comicName},function(err,comic){
+      if (err) throw err;
+        var tempcomicratings = comic.comic.ratings;
+        for (var i in tempcomicratings) {
+          if (tempcomicratings[i].rater == req.user.local.username) {
+          yourRating = tempcomicratings[i].rating;
+          break;
+          }
+        }
+        yourRating = yourRating.toString();
+      res.send(yourRating);
+  });
+});  
  
  /* Put rating*/
 router.put('/updateRating', isLoggedIn, function (req, res) {
@@ -620,66 +639,6 @@ router.put('/updateRating', isLoggedIn, function (req, res) {
   });
 });
 
-// /* GET solo comic page 1. */
-// router.get('/solocomic', isLoggedIn, function (req, res) {
-//     res.render('solocomic', {
-//         user: req.user // get the user out of session and pass to template
-//     });
-// });
-// /* GET solo comic page 2. */
-// router.get('/solocomic2', isLoggedIn, function (req, res) {
-//     res.render('solocomic2', {
-//         user: req.user // get the user out of session and pass to template
-//     });
-// });
-
-// /* GET cooperative comic page 1. */
-// router.get('/cooperativecomic', isLoggedIn, function (req, res) {
-// Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
-//       if (err) throw err;
-//       File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
-//         res.render('cooperativecomic', {comic: comics, file: files , user: req.user});
-//       });
-//   });
-// });
-
-// /* POST to comic */
-// router.post('/cooperativecomic', function(req, res) {
-
-//   var comic = new Comic({
-//     "comic.comicName": req.body["comicName"],
-//     "comic.cooperative": true,
-//     "comic.description": req.body["description"],
-//     "comic.genre": req.body["genre"],
-//     "comic.favorite": false,
-//     "comic.author": req.user.local.username,
-//     "comic.date": new Date(),
-//     "comic.img": req.body["img"],
-//     "comic.page1": req.body["page1"],
-//     "comic.page2": req.body["page2"]
-//   });
-
-//   comic.save(function(err) {
-//       if (err) throw err;
-//       res.redirect('/cooperativecomic');
-//   });
-// });
-
-
-
-// /* GET cooperative comic page 2. */
-// router.get('/cooperativecomic2', isLoggedIn, function (req, res) {
-//     res.render('cooperativecomic2', {
-//         user: req.user // get the user out of session and pass to template
-//     });
-// });
-
-  // comic.save(function(err) {
-  //     if (err) throw err;
-  //     res.redirect('/cooperativecomic');
-  // });
-
-
 /*check user*/
 router.post('/checkuser',function(req,res){
   console.log(req.body.data);
@@ -693,8 +652,17 @@ router.post('/checkuser',function(req,res){
         res.send("favourited");
       }
     });
-  }
+  } else if (req.body.type=="comic"){
+    Comic.findOne({"comic.comicName":req.body.comic},function(err,comic){
+      if (err) throw err;
+      if(comic.comic.worklist.indexOf(username) == -1){
+        res.send("notwork");
 
+      } else{
+        res.send("work");
+      }
+    });
+  }
 });
 
 /*add favourite*/
@@ -797,9 +765,11 @@ router.get('/comic/:name', isLoggedIn, function(req, res){
   Comic.findOne({"comic.comicName" : comicName},function(err,comic){
     if(err) throw err;
     if(comic){
-      console.log(JSON.stringify(comic));
-      console.log(req.user);
-      res.render('test',{user: req.user, comic});
+      var fav = (comic.comic.favourite.indexOf(req.user.local.username) >= 0);
+      var work = (comic.comic.worklist.indexOf(req.user.local.username) >= 0);
+      console.log(comic);
+      console.log(comic.comic.worklist.indexOf(req.user.local.username));
+      res.render('test',{user: req.user,comic,favourite:fav,worklist:work});
     } else {
       console.log("No such comic");
       // still need to improve
@@ -808,19 +778,6 @@ router.get('/comic/:name', isLoggedIn, function(req, res){
     
   });
 
-});
-/* GET upload page. */
-router.get('/upload', isLoggedIn, function (req, res) {
-    res.render('upload', {
-        user: req.user // get the user out of session and pass to template
-    });
-});
-
-/* Edit view. */
-router.get('/editcomic', isLoggedIn, function (req, res) {
-    res.render('cooperativecomicmain', {
-        user: req.user // get the user out of session and pass to template
-    });
 });
 
 /* GET Userlist page. */
