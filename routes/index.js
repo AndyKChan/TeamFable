@@ -676,6 +676,36 @@ router.put('/updateRating', isLoggedIn, function (req, res) {
   });
 });
 
+/*PUT page to bookmarks*/
+router.put('/bookmarkpage', function(req, res) {
+  console.log(req.body);
+  var updated = 0;
+    User.findOne({"local.username":req.user.local.username},function(err,user){
+        if (err) throw err;
+        var tempbookmarks=user.local.bookmarks; 
+        for (var i in tempbookmarks) {
+          if (tempbookmarks[i].comicName == req.body.comicName) {
+          tempbookmarks[i].stripid = req.body.stripid;
+          }
+          updated = 1;
+        }
+        if (updated == 0)
+          tempbookmarks.push({"comicName": req.body.comicName,"stripid": req.body.stripid })
+        else{console.log("already in array")};
+
+        console.log(tempbookmarks);
+        Comic.update(
+            {'local.username': req.local.username},
+            {'user.bookmarks':tempbookmarks},
+            {safe:true},
+        function(err,raw){
+            if(err) throw err;
+          }
+      );
+  });
+    res.send("bookmark updated!");
+});
+
 /*check user*/
 router.post('/checkuser',function(req,res){
   console.log(req.body.data);
