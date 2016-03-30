@@ -58,13 +58,17 @@
 <div>
 
 {{#each comic}}
+<div id = "{{this.comicstrip.fileName}}1"> 
   {{#compare comic "" operator="!="}}
-
-<img id="picture" width="400" height="400" src="/images/{{this.comicstrip.fileName}}">  
-
+  <img id="picture" width="400" height="400" src="/images/{{this.comicstrip.fileName}}">  
+  <input type="hidden" id="stripid{{@index}}" value="{{this.comicstrip.stripid}}">
+  <input type="hidden" id="fileName{{@index}}" value="{{this.comicstrip.fileName}}">
+  <button type="button" id="delc{{@index}}" class="btn btn-primary delc" name = "{{@index}}">Delete Cell</button>
+  </div>
   {{/compare}}
 </div>
 {{/each}}
+
 
 {{#if comic}}
 <button type="button" class="btn btn-primary"><a href= "/comic/{{next}}"> Next Page </a></button>
@@ -86,25 +90,22 @@
 </div>
 
 <script>
-$( "#next" ).each(
+$(document).ready(function(){
+  $('.delc').on('click',function(){
+    //$('#delc').hide();
+     var index = $(this).attr("name");
+    $.ajax({
+      method: "DELETE",
+      url: "/delcell",
+      data:{stripid:$('#stripid'+index).val(),fileName:$('#fileName'+index).val()},
+    }).done(function(data){
+      alert(data);
+    //  document.getElementById("div"+index.toString()).remove();
+    });
+  });
+});
+</script>  
 
-    // For each page, run this code. The "indIndex" is the
-    // loop iteration index on the current element.
-    function( intIndex ){
-
-        // Bind the onclick event to simply alert the
-        // iteration index value.
-        $( this ).bind (
-            "click",
-            function(){
-                alert( "Hottie index: " + intIndex );
-            }
-            );
-
-    }
-
-    );
-</script>
 </body>
 </html>
 

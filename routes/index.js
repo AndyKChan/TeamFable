@@ -190,6 +190,28 @@ router.get('/comic/:name/:page', isLoggedIn, function(req,res){
    });
 });
 
+// router.post('/delcell',function(req,res){
+//   console.log(req.body);
+//   console.log(req.user);
+//   Comicstrip.update(
+//     {'comicstrip.fileName' : "deleted"},
+//     {safe:true},
+//     function(err,raw){
+//             if(err) throw err;
+//             console.log(raw);
+//           }
+//     );
+//   res.redirect('/home');
+// });
+/*DELETE comment*/
+router.delete('/delcell', function (req, res) {
+  console.log(req.body);
+    Comicstrip.find({"comicstrip.fileName":req.body.fileName,"comicstrip.stripid":req.body.stripid}).remove().exec();
+    res.send(req.body.fileName+"1");
+});
+
+
+
 /* POST to cooperative comic */
 router.post('/createcomic', function(req, res) {
   console.log(req.body);
