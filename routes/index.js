@@ -174,10 +174,16 @@ router.get('/comic/:name/:page', isLoggedIn, function(req,res){
         console.log("check");
         
         var next;
+        var prev;
+
         if(!comic){
            next = false;
-        } else { next = comicName + "/" + (iterator + 1)}
-        res.render('page', {comic : comic , user:req.user, next : next, comicName : comicName});
+        } 
+        else { 
+          next = comicName + "/" + (iterator + 1);
+          prev = comicName + "/" + (iterator - 1);
+        }
+        res.render('page', {comic : comic , user:req.user, next : next, prev : prev, comicName : comicName});
    });
 });
 
