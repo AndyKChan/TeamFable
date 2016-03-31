@@ -170,25 +170,28 @@ router.get('/comic/:name/:page', isLoggedIn, function(req,res){
   var page = req.params.page;
   var iterator = parseInt(page);
  
-   Comicstrip.find({"comicstrip.stripid" : page , "comicstrip.comicName" : comicName }, function(err,comic){
-        console.log(comic);
-        console.log(page);
-        console.log(comicName);
+   Comicstrip.find({"comicstrip.stripid" : page , "comicstrip.comicName" : comicName }, function(err,comicstrip){
+    
+      
+ 
         console.log("check");
         
         var next;
         var prev;
 
-        if(!comic){
+        if(!comicstrip){
            next = false;
         } 
         else { 
           next = comicName + "/" + (iterator + 1);
           prev = comicName + "/" + (iterator - 1);
         }
-        res.render('page', {comic : comic , user:req.user, next : next, prev : prev, comicName : comicName});
+        
+        res.render('page', {comic : comicstrip , user:req.user, next : next, prev : prev, comicName : comicName});
    });
-});
+   });
+  
+
 
 // router.post('/delcell',function(req,res){
 //   console.log(req.body);
@@ -686,6 +689,7 @@ router.post('/checkuser',function(req,res){
     });
   }
 });
+
 
 /*add favourite*/
 router.post('/addfavourite',function(req,res){
