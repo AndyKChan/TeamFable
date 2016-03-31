@@ -243,8 +243,16 @@ router.post('/updatdes',function(req,res){
 /*Delete comic */
 router.delete('/delecomic',function(req,res) {
   console.log(req.body.comic);
-  Comic.remove({"comic.comicName" : req.body.comic},function(err){
-    if (err) throw err;
+   Comic.remove({"comic.comicName" : req.body.comic},function(err){
+     if (err) throw err;
+    User.update(
+      {"local.favourite":req.body.comic},
+      {$pull:{"local.favourite":req.body.comic}},
+      {multi:true},
+      function(err,raw){
+        if (err) throw err;
+        console.log(raw);
+      });
   });
   res.send({redirect:'/home'});
 });
