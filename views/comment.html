@@ -6,11 +6,15 @@
 <div class="comment">
   <br>
   <br>
-  <h1>{{comic.comic.comicName}}'s Comments!</h1>
+
+  <h1 class="text-center">{{comic.comic.comicName}}'s Comments Page</h1>
   <form class="form-horizontal" name="comment" method="post" action="/comment" >
       <input type="hidden" name="comicName" value="{{comic.comic.comicName}}">
-      <textarea type="text" name="comment"class="form-control" placeholder="Write something..." rows="3" cols="30" ></textarea>
-      <button type="submit" class="btn btn-primary" style="display: inline-block;">Comment</button>
+      <textarea type="text" name="comment"class="form-control" placeholder="Write something about {{comic.comic.comicName}}..." rows="3" cols="30" ></textarea>
+      <br>
+      <center>
+      <button type="submit" class="btn btn-primary" style="display: inline-block;">Post It!</button>
+    </center>
   </form>
   <nav class="navbar navbar-inverse navbar-fixed-top">
       <div class="container-fluid">
@@ -22,13 +26,16 @@
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="/home">Home</a>
+          <a class="navbar-brand">{{user.local.username}}</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Dashboard</a></li>
-            <li><a href="#">Settings</a></li>
-            <li><a href="#">Profile</a></li>
-            <li><a href="/logout">Logout</a></li>
+            <li><a href='/search'>Search</a></li>
+            <li><a href="/profile">Profile</a></li>
+            {{#if user.local.contributor}}
+            <li><a href="/myworks">My Works</a></li>
+            {{/if}}
+            <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
           </ul>
         </div>
       </div>
@@ -39,10 +46,11 @@
     <div id="{{this.comment.post}}1">
     <div id="container" style="white-space:nowrap">
       <br>
-      <img src="{{comment.picture}}" style="width:160;height:160px";"display:inline";"white-space:nowrap">
+      <img src="{{comment.picture}}" style="width:90;height:90px";"display:inline";"white-space:nowrap">
+      <a href="/profile/{{this.comment.commentor}}" class="links"> <font size= "5">{{this.comment.commentor}}</font> </a>
        <font size= "5"> {{this.comment.post}} </font>
      </div> 
-      <a href="/profile/{{this.comment.commentor}}" class="links"> <font size= "5">{{this.comment.commentor}}</font> </a>
+      
      <br>
      {{this.comment.date}}
      {{#compare ../user.local.username this.comment.commentor operator="=="}}

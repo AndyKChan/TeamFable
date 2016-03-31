@@ -476,11 +476,6 @@ router.post('/updatePicture', function(request, response) {
     response.redirect("/profile");   
 });
 
-// to remove everything
-// Comment.remove({}, function (err) {
-//  if (err) return handleError(err);
-  // removed!
-//});
 router.get('/comment/:comic', isLoggedIn, function (req, res) {
   Comment.find({'comment.comic':req.params.comic}, function(err, comments) {
       if (err) throw err;
@@ -490,6 +485,7 @@ router.get('/comment/:comic', isLoggedIn, function (req, res) {
   });}
  });
 });
+
 /* POST to comments */
 router.post('/comment', function(req, res) {
 console.log(req.body);
@@ -575,6 +571,7 @@ router.post('/inviteWorklist', function(req, res) {
   };
 });
 });
+
 /*DELETE user from worklist*/
 router.delete('/removeWorklist', function (req, res) {
   console.log(req.body);
@@ -590,6 +587,7 @@ router.get('/search', isLoggedIn, function (req, res) {
         user: req.user // get the user out of session and pass to template
     });
 });
+
 /*search result*/
 router.post('/test', function(req,res,next) {
   console.log("POST REQ");

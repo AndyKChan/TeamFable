@@ -40,8 +40,7 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><a href="/search">Search</a></li>
-            <li><a href="/myworks">My Works</a></li>
-
+            <li><a href="/profile">Profile</a></li>
             <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
           </ul>
         </div>
@@ -68,10 +67,10 @@
 {{#compare ../user.local.username ../otheruser.local.username operator="=="}}
 {{#if this.comic.cooperative}}
 <input type="text" id="invite{{@index}}" name="{{@index}}" class="form-control" style="display: inline-block;">
-<button type="button" class="btn btn-primary invite" name="{{@index}}" >Invite</button>
+<button type="button" class="btn btn-primary invite" name="{{@index}}" >Invite Contributor</button>
 <input type="hidden" id="comicName{{@index}}" name="{{@index}}" value="{{this.comic.comicName}}" class="form-control">  
 <input type="text" id="remove{{@index}}" name="{{@index}}" class="form-control" >
-<button type="button" class="btn btn-primary remove" name="{{@index}}">Remove</button>
+<button type="button" class="btn btn-primary remove" name="{{@index}}">Remove Contributor</button>
 {{/if}}
 {{/compare}}
 </div>
@@ -89,7 +88,6 @@
     data:{invite:$('#invite'+index).val(),comicName:$('#comicName'+index).val()}
     }).done(function(data){
       alert("Awaiting user confirmation")
-
     });
 });
 </script>  
