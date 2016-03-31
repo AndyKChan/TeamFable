@@ -67,8 +67,18 @@
 </div>
 <center>
 
-<!-- <button type="button" class="btn btn-primary" onclick="lastpage1()">LastPage</button> -->
 <a button class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/page/1">Read Comic</a>
+
+{{#if aut}}
+  {{#if pub}}
+  <button type="button" id="upubc" class="btn btn-primary" >Unpublish Comic</button>
+  <button type="button" id="pubc" class="btn btn-primary"style="display: none;">Publish Comic</button>
+  {{else}}
+  <button type="button" id="pubc" class="btn btn-primary">Publish Comic</button>
+  <button type="button" id="upubc" class="btn btn-primary" style="display: none;">Unpublish Comic</button>
+  {{/if}}
+{{/if}}
+
 
 </div>
 <br>
@@ -91,7 +101,7 @@
 <button type="button" id="addf" class="btn btn-primary">Add to Favourite</button>
 <button type="button" id="delf" class="btn btn-primary" style="display: none;">Remove from Favourite</button>
 {{/if}}
-<!--button type="button" id="delf" class="btn btn-primary">Remove from Favourite</button!-->
+
 
 <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count"></div>
 </div>
@@ -105,7 +115,6 @@
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 </script>
-
 <script>
 $(document).ready(function(){
   $('#addf').on('click',function(){
@@ -120,6 +129,35 @@ $(document).ready(function(){
     });
   });
 });
+</script>
+<script>
+$(document).ready(function(){
+  $('#pubc').on('click',function(){
+    $('#pubc').hide();
+    $('#upubc').show();
+    $.ajax({
+      method: "POST",
+      url: "/publishcomic",
+      data:{comic:"{{comic.comic.comicName}}"}
+    }).done(function(data){
+      alert(data);
+    });
+  });
+});
+$(document).ready(function(){
+  $('#upubc').on('click',function(){
+    $('#upubc').hide();
+    $('#pubc').show();
+    $.ajax({
+      method: "POST",
+      url: "/unpublishcomic",
+      data:{comic:"{{comic.comic.comicName}}"}
+    }).done(function(data){
+      alert(data);
+    });
+  });
+});
+
 </script>
 <script>
 $(document).ready(function(){
