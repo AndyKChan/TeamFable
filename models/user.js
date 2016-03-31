@@ -21,7 +21,7 @@ var userSchema = mongoose.Schema({
         invites:[String],
         bookmarks: [
         		{comicName: String,
-         		stripid: String}],
+         		page: String}],
         },
     facebook: {
         id : String,
