@@ -705,7 +705,7 @@ router.delete('/delcell', function (req, res) {
     res.send(req.body.fileName+"1");
 });
 
-/*PUT page to bookmarks*/
+*PUT page to bookmarks*/
 router.put('/bookmarkpage', function(req, res) {
   console.log(req.body);
   var updated = 0;
@@ -719,14 +719,14 @@ router.put('/bookmarkpage', function(req, res) {
           updated = 1;
         }
         if (updated == 0)
-          tempbookmarks.push({"comicName": req.body.comicName,"stripid": req.body.stripid })
+          tempbookmarks.push({"comicName": req.body.comicName,"page": req.body.page })
         else{console.log("already in array")};
 
         console.log(tempbookmarks);
-        Comic.update(
-            {'local.username': req.local.username},
-            {'user.bookmarks':tempbookmarks},
-            {safe:true},
+        User.update(
+            {'local.username': req.user.local.username},
+            {'local.bookmarks':tempbookmarks},
+            {safe:true, upsert:true},
         function(err,raw){
             if(err) throw err;
           }
