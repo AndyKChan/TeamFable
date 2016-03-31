@@ -103,8 +103,9 @@
   <center>
   <div>
     <h2>Favourite Comic <span class="glyphicon glyphicon-heart-empty"></span></h2>
-    <table class="table"> 
-    </table>
+    {{#each favourite}}
+      <a href="/comic/{{this}}" class="links">{{this}}</a> <br>
+    {{/each}} 
   </div>
 {{#compare user.local.username otheruser.local.username operator="=="}}
   <div>
