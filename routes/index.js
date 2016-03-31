@@ -165,9 +165,11 @@ router.get('/comic/:name/upload',isLoggedIn,function(req,res){
         next = false;
       } else {
         next = comicName + "/page/" + (iterator + 1);
-        prev = comicName + "/page/" + (iterator - 1);
+        if(iterator > 0){
+          prev = comicName + "/page/" + (iterator - 1);
+        }
       }
-      res.render('page',{comic, comicstrip:comicstrips, user:req.user, next:next, prev:prev, work:work});
+      res.render('page',{comic, comicstrip:comicstrips, user:req.user, next:next, prev:prev, work:work, cpage : page - 1});
     });
   });
   //res.render('page', {comic : comicstrip , user:req.user, next : next, prev : prev, comicName : comicName});
@@ -452,7 +454,7 @@ console.log(comment);
 });
 
 /*DELETE comment*/
-router.delete('deleteomment', function (req, res) {
+router.delete('/deletecomment', function (req, res) {
     Comment.find({"comment.post":req.body.post,"comment.date":req.body.date}).remove().exec();
     console.log(req.body.post);
     res.send(req.body.post+"1");

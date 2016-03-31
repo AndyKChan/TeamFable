@@ -81,14 +81,20 @@
       
 
 {{#if comicstrip}}
+{{#compare cpage 0 operator="=="}}
+<button type="button" class="btn-btn-primary"><a href= "/comic/{{comic.comic.comicName}}"> Previous Page </a></button>
+{{/compare}}
+
+{{#compare cpage 0 operator="!="}}
+<button type="button" class="btn-btn-primary"><a href= "/comic/{{prev}}"> Previous Page </a></button>
+{{/compare}}
 <button class = "next" type="button" class="btn btn-primary"><a href= "/comic/{{next}}">Next Page</a></button>
-<div>
 {{/if}}
 
 {{#compare comicstrip "" operator="=="}}
 <h1> The End </h1>
 <br>
-  <button type="button" class="btn-btn-primary"><a href= "/comic/{{prev}}"> Previous Page </a></button>
+  <button type="button" class="btn-btn-primary"><a href= "/comic/{{comic.comic.comicName}}/page/{{cpage}}"> Previous Page </a></button>
   <button type="button" class="btn-btn-primary"><a href= "/comment/{{comic.comic.comicName}}"> Comments Page </a></button>
   <button type="button" class="btn-btn-primary"><a href= "/comic/{{comic.comic.comicName}}"> Return to Comic Main Page </a></button>
 {{/compare}}
