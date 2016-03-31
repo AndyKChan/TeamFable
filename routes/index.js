@@ -168,7 +168,7 @@ router.get('/comic/:name/upload',isLoggedIn,function(req,res){
         if(iterator > 0){
           prev = comicName + "/page/" + (iterator - 1);
         }
-      
+      }
       res.render('page',{comic, comicstrip:comicstrips, user:req.user, next:next, prev:prev, work:work, cpage : page - 1});
     });
   });
