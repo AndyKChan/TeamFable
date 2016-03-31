@@ -15,7 +15,7 @@ var comicSchema = mongoose.Schema({
    	 	favorite: [String],
    		author: String,
    		date: Date,
-         blocklist:[String],
+         worklist:[String],
    		coverpage: String,
          pages:[String]
    		//page1: [String],

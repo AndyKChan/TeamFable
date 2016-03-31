@@ -25,6 +25,7 @@ var Application = (function () {
         var app = express();
         // multer used to upload image
         var multer = require('multer');
+        // var layout =  require('./views/layouts/main.handlebars');
         //Setting up templating engine
         var exphbs = require('express-handlebars');
        var hbs = require('hbs');
