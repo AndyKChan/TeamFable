@@ -306,7 +306,6 @@ router.get('/profile', isLoggedIn, function (req, res) {
   var u = req.user;
   var invite = u.local.invites;
   var bookmark = u.local.bookmarks;
-  console.log(req);
     res.render('profile', {
         user: u, otheruser: u, invite, bookmark // get the user out of session and pass to template
     });
