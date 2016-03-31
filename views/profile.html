@@ -50,7 +50,9 @@
     </nav>
 
   <h1 class = "center">{{otheruser.local.username}}'s Profile Page</h1>
-  <div class="container" id="left" >
+  <div class="row">
+  <div class="container col-md-6" id="left">
+    <center>
   <img src="{{otheruser.local.picture}}" border="0" width="360" height="360" class="img-thumbnail">
   {{#compare user.local.username otheruser.local.username operator="=="}}
       <form method="post"  enctype="multipart/form-data"  class="form-horizontal" id="uploadpic" style="display: none;" action="/updatePicture">
@@ -96,36 +98,34 @@
   <button id="editProfile" type="button" class="btn btn-primary" style="display:inline-block;">Edit Profile</button>
   {{/compare}}
 </form>
-</div class="container" id="left" >
-
-<div class="container" id="right">
-<h2>Favourite Comic <span class="glyphicon glyphicon-heart-empty"></span></h2>
-
-  <table class="table">
-    
-  </table>
 </div>
-
+<div class="container col-md-6">
+  <center>
+  <div>
+    <h2>Favourite Comic <span class="glyphicon glyphicon-heart-empty"></span></h2>
+    <table class="table"> 
+    </table>
+  </div>
 {{#compare user.local.username otheruser.local.username operator="=="}}
-<div class="container" id="right">
-<h2>Bookmarks <span class="glyphicon glyphicon-book"></span></h2>
+  <div>
+    <h2>Bookmarks <span class="glyphicon glyphicon-book"></span></h2>
     {{#each bookmark}}
-      <a href="/cooperative/{{this.bookmark.comicName}}/{{this.bookmark.page}}" class="links"></a>
+    <a href="/cooperative/{{this.bookmark.comicName}}/{{this.bookmark.page}}" class="links"></a>
     {{/each}} 
-</div>
-
-<div class="container">
-<h2>Inbox <span class="glyphicon glyphicon-modal-window"></span></h2>
-     {{#each invite}}
+  </div>
+  <div>
+    <h2>Inbox <span class="glyphicon glyphicon-modal-window"></span></h2>
+    {{#each invite}}
     <div id="{{this}}1">
-    <a href="/comic/{{this}}" class="links">{{this}}</a><br>
-     <input type="hidden" id="comic{{@index}}" value="{{this}}">
-     <button type="submit" class="btn btn-primary acceptInvite" name="{{@index}}">✓</button>  
-     <button type="submit" class="btn btn-primary refuseInvite" name="{{@index}}">X</button>
+      <a href="/comic/{{this}}" class="links">{{this}}</a><br>
+      <input type="hidden" id="comic{{@index}}" value="{{this}}">
+      <button type="submit" class="btn btn-primary acceptInvite" name="{{@index}}">✓</button>  
+      <button type="submit" class="btn btn-primary refuseInvite" name="{{@index}}">X</button>
     </div>
     {{/each}}           
-</div>
+  </div>
 {{/compare}}
+</div>
 </div>
 </div>
 
