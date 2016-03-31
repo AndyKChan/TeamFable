@@ -165,9 +165,11 @@ router.get('/comic/:name/upload',isLoggedIn,function(req,res){
         next = false;
       } else {
         next = comicName + "/page/" + (iterator + 1);
-        prev = comicName + "/page/" + (iterator - 1);
-      }
-      res.render('page',{comic, comicstrip:comicstrips, user:req.user, next:next, prev:prev, work:work});
+        if(iterator > 0){
+          prev = comicName + "/page/" + (iterator - 1);
+        }
+      
+      res.render('page',{comic, comicstrip:comicstrips, user:req.user, next:next, prev:prev, work:work, cpage : page - 1});
     });
   });
   //res.render('page', {comic : comicstrip , user:req.user, next : next, prev : prev, comicName : comicName});
