@@ -44,10 +44,25 @@
 </nav>
 <br>
 <br>
+<br>
 <center>
-<h1>Comic Name: {{comic.comic.comicName}}</h1>
-<p1>Author: {{comic.comic.author}}</p1>
-
+  <div>
+<h2>Comic Name: {{comic.comic.comicName}}</h2>
+<h2>Author: {{comic.comic.author}}</h2>
+{{#if comic.comic.genre}}
+<h2>Genre: {{comic.comic.genre}} comic</h2>
+{{/if}}
+<div class="form-group">
+<textarea name="description" id="desc" rows="3" cols="40" placeholder="{{comic.comic.description}}"></textarea>
+<br>
+<button type="submit" id="desup" class="btn btn-primary">Save</button>
+</div>
+</div>
+<center>
+<div>
+  <img id="picture" src="/images/{{comic.comic.coverpage}}">
+</div>
+<center>
 <h2>
   Overall Rating: 
   <span id="reloadRating"> {{comic.comic.rating}} </span> 
@@ -60,15 +75,9 @@
   <span id="5" class="glyphicon glyphicon-star-empty"></span>
   <input type="hidden" name="comicName" value="{{comic.comic.comicName}}">
 </h2>
-
 <center>
-<div>
-	<img id="picture" src="/images/{{comic.comic.coverpage}}">
-</div>
-<center>
-
+  <div>
 <a button class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/page/1">Read Comic</a>
-
 {{#if aut}}
   {{#if pub}}
   <button type="button" id="upubc" class="btn btn-primary" >Unpublish Comic</button>
@@ -78,13 +87,9 @@
   <button type="button" id="upubc" class="btn btn-primary" style="display: none;">Unpublish Comic</button>
   {{/if}}
 {{/if}}
-
-
 </div>
 <br>
-<br>
 <center>
-
 <div>
 {{#if worklist}}
 <a button id="upcs" class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/upload">Upload Comicstrip</a>
@@ -101,8 +106,6 @@
 <button type="button" id="addf" class="btn btn-primary">Add to Favourite</button>
 <button type="button" id="delf" class="btn btn-primary" style="display: none;">Remove from Favourite</button>
 {{/if}}
-
-
 <div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count"></div>
 </div>
 <div id="fb-root"></div>
@@ -216,5 +219,19 @@ $(document).ready(function(){
 });
 });
 
+</script>
+<script>
+$(document).ready(function(){
+  $('#desup').on('click',function(){
+    $.ajax({
+      method: "POST",
+      url: "/updatdes",
+      data:{data:$('#desc').val(),comic:"{{comic.comic.comicName}}"}
+    }).done(function(data){
+      alert("saved!");
+      $('#desc').val(data);
+    });
+  });
+});
 </script>
 </html>

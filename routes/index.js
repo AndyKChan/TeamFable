@@ -226,6 +226,20 @@ router.post('/unpublishcomic',isLoggedIn,function(req,res){
   res.send("Unpublished");
 });
 
+/*update description*/
+router.post('/updatdes',function(req,res){
+  Comic.update(
+    {"comic.comicName":req.body.comic},
+    {"comic.description":req.body.data},
+    {safe:true},
+    function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+  );
+  res.send(req.body.data);
+});
+
 /*DELETE comment*/
 router.delete('/delcell', function (req, res) {
   console.log(req.body);
