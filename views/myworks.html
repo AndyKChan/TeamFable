@@ -79,7 +79,8 @@ collaborators: {{this.comic.worklist}}
     url: '/inviteWorklist',
     data:{invite:$('#invite'+index).val(),comicName:$('#comicName'+index).val()}
     }).done(function(data){
-      alert("added user to worklist")
+      alert("Awaiting user confirmation")
+
     });
 });
 </script>  
@@ -93,7 +94,8 @@ collaborators: {{this.comic.worklist}}
     url: '/removeWorklist',
     data:{remove:$('#remove'+index).val(),comicName:$('#comicName'+index).val()}
     }).done(function(data){
-      alert("user removed from worklist")
+      alert("user removed from worklist");
+      location.reload();
     });
 });
 </script>  
