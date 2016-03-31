@@ -419,7 +419,7 @@ router.post('/acceptInvite', function(req, res) {
       );
   });
 });
-/*PUT profile pic*/
+/*POST profile pic*/
 router.post('/updatePicture', function(request, response) {
   var username = request.user.local.username;
   console.log(username);
@@ -442,10 +442,28 @@ router.post('/updatePicture', function(request, response) {
           function(err,raw){
             if(err) throw err;
             console.log(raw);
-      }); 
+      });
+    Comment.find({'comment.commentor':username}, function(err, comments) {
+      if (err) throw err;
+      console.log(comments);
+      for (var i in comments){
+        comments[i].comment.picture = "/images/"+a;
+        comments[i].save(function(err) {
+    if (err) { return next(err); }
+  });
+      }
+    });
+
+    Comment.update(
+            {'comment.commentor':username},
+            {'comment.picture':"/images/"+a},
+            {safe:true, upsert: true},
+        function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          });
     });
     response.redirect("/profile");   
-  //});
 });
 
 // to remove everything
