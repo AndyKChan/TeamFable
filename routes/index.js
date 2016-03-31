@@ -347,13 +347,14 @@ router.get('/profile/:username', isLoggedIn, function (req, res) {
   var u = req.user;
   var invite = u.local.invites;
   var bookmark = u.local.bookmarks;
+  var favourite = u.local.favourite;
   console.log(req.params);
    User.findOne({'local.username':req.params.username}, function(err, user) {
       if (err) throw err;
       u = user;
   console.log(req.params);
     res.render('profile', {
-        user: req.user, otheruser: u, invite, bookmark // get the user out of session and pass to template
+        user: req.user, otheruser: u, invite, bookmark, favourite // get the user out of session and pass to template
     });
 });
 });   
@@ -361,8 +362,9 @@ router.get('/profile', isLoggedIn, function (req, res) {
   var u = req.user;
   var invite = u.local.invites;
   var bookmark = u.local.bookmarks;
+  var favourite = u.local.favourite;
     res.render('profile', {
-        user: u, otheruser: u, invite, bookmark // get the user out of session and pass to template
+        user: u, otheruser: u, invite, bookmark, favourite // get the user out of session and pass to template
     });
 });
 
@@ -715,8 +717,8 @@ router.put('/bookmarkpage', function(req, res) {
         for (var i in tempbookmarks) {
           if (tempbookmarks[i].comicName == req.body.comicName) {
           tempbookmarks[i].page = req.body.page;
-          }
           updated = 1;
+          }
         }
         if (updated == 0)
           tempbookmarks.push({"comicName": req.body.comicName,"page": req.body.page })
