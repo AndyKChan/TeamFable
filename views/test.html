@@ -49,8 +49,9 @@
 <p1>Author: {{comic.comic.author}}</p1>
 
 <h2>
-  Overall Rating: {{comic.comic.rating}} 
-  <span id="overall" class="glyphicon glyphicon-star" style="color:yellow"></span>! <br>
+  Overall Rating: 
+  <span id="reloadRating"> {{comic.comic.rating}} </span> 
+  <span id="overall" class="glyphicon glyphicon-star" style="color:#FFD700"></span>! <br>
   Your Rating: 
   <span id="1" class="glyphicon glyphicon-star-empty"></span>
   <span id="2" class="glyphicon glyphicon-star-empty"></span>
@@ -153,31 +154,47 @@ $(document).ready(function(){
   });
 });
 </script>  
-
 <script>
 $(document).ready(function() {
-   $(".glyphicon-star-empty").click(function() {
+  $.ajax({
+      type: "POST",
+      url: "/getRating",
+      data:{comicName:"{{comic.comic.comicName}}"}
+    }).done(function(data){
+      var yourRating = parseInt(data);
+        for(i = 1; i < yourRating+1; i++ ){
+       $("#"+i.toString()).css("color","#FFD700");
+     }
+    });
+  });
+</script>
+<script>
+$(document).ready(function() {
+   $(".glyphicon-star-empty").on('click',function() {
       for(i = 1; i < 6; i++ ){
        $("#"+i.toString()).css("color","black");
      }
     id = parseInt($(this).attr('id'));
       for(i = 1; i < id+1; i++ ){
-       $("#"+i.toString()).css("color","yellow");
+       $("#"+i.toString()).css("color","#FFD700");
      }
    
    }); 
 });
 </script>
 <script>
-   $(".glyphicon-star-empty").click(function() {
+$(document).ready(function(){
+   $(".glyphicon-star-empty").on('click',function() {
    $.ajax({
       method: "PUT",
       contentType: "application/json",
       url: "/updateRating",
       data:JSON.stringify({rating:$(this).attr("id"),comicName:"{{comic.comic.comicName}}"}),
-      complete: function() {
-        }
+      }).done(function(data){
+        $("#reloadRating").text(data);
       });
 });
+});
+
 </script>
 </html>

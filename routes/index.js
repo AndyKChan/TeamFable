@@ -170,19 +170,50 @@ router.get('/comic/:name/:page', isLoggedIn, function(req,res){
   var page = req.params.page;
   var iterator = parseInt(page);
  
-   Comicstrip.find({"comicstrip.stripid" : page , "comicstrip.comicName" : comicName }, function(err,comic){
-        console.log(comic);
-        console.log(page);
-        console.log(comicName);
+   Comicstrip.find({"comicstrip.stripid" : page , "comicstrip.comicName" : comicName }, function(err,comicstrip){
+    
+      
+ 
         console.log("check");
         
         var next;
-        if(!comic){
+        var prev;
+
+        if(!comicstrip){
            next = false;
-        } else { next = comicName + "/" + (iterator + 1)}
-        res.render('page', {comic : comic , user:req.user, next : next, comicName : comicName});
+        } 
+        else { 
+          next = comicName + "/" + (iterator + 1);
+          prev = comicName + "/" + (iterator - 1);
+        }
+        
+        res.render('page', {comic : comicstrip , user:req.user, next : next, prev : prev, comicName : comicName});
    });
+   });
+  
+
+
+// router.post('/delcell',function(req,res){
+//   console.log(req.body);
+//   console.log(req.user);
+//   Comicstrip.update(
+//     {'comicstrip.fileName' : "deleted"},
+//     {safe:true},
+//     function(err,raw){
+//             if(err) throw err;
+//             console.log(raw);
+//           }
+//     );
+//   res.redirect('/home');
+// });
+/*DELETE comment*/
+router.delete('/delcell', function (req, res) {
+  console.log(req.body);
+    Comicstrip.find({"comicstrip.fileName":req.body.fileName,"comicstrip.stripid":req.body.stripid}).remove().exec();
+    res.send(req.body.fileName+"1");
 });
+
+
 
 /* POST to cooperative comic */
 router.post('/createcomic', function(req, res) {
@@ -218,89 +249,6 @@ router.post('/createcomic', function(req, res) {
   
 });
 
-// /* GET solo comic main page. */
-// router.get('/solo', isLoggedIn, function (req, res) {
-//     //var soloURL = '/solo/';
-//    // var titleADDON = user.local.comictitle;
-//    // var url = soloURL.concat(titleADDON);
-//    res.render('solocomicmain', {
-
-//         user: req.user // get the user out of session and pass to template
-//     });
-// });
-
-// /* GET solo comic main page. */
-// router.get('/solo', isLoggedIn, function (req, res) {
-// Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
-//       if (err) throw err;
-//       File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
-//         res.render('solocomicmain/' + req.user.username, {comic: comics, file: files , user: req.user});
-//       });
-//   });
-// });
-
-// /* POST to solo comic */
-// router.post('/solo', function(req, res) {
-
-//   var comic = new Comic({
-//     "comic.comicName": req.body["comicName"],
-//     "comic.cooperative": false,
-//     "comic.description": req.body["description"],
-//     "comic.genre" : req.body["genre"],
-//     "comic.favorite": false,
-//     "comic.author": req.user.local.username,
-//     "comic.date": new Date(),
-//     "comic.img": req.body["img"],
-//     "comic.page1": req.body["page1"],
-//     "comic.page2": req.body["page2"]
-//   });
-
-//   comic.save(function(err) {
-//       if (err) throw err;
-//       res.redirect('/comicmainpage');
-//   });
-// });
-
-// /* Solo File Uploading Service */
-// router.post('/fileupload', function(request, response) {
-    
-//   upload(request, response, function(err) {
-//       if(err) {
-//         console.log('Error Occured');
-//         console.log(err);
-//         return;
-//       }
-//     console.log(request.file);
-//   // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
-
-//   var file = new File({
-//                   filename: request.file.filename
-//               });
-  
-
-//   file.save(function(err) {
-//       if (err) throw err;
-//       console.log('File saved!');
-//   });
-
-//   File.find().limit(1).sort({$natural:-1}).exec(function(err, files) { 
-//       if (err) throw err;
-//   // object of all the users
-//     console.log("FAF");
-//     console.log(files);
-//   //i'm pulling file names from the database in this for loop and sending it, 
-//   //my problem is here where i should send back the whole file object
-//           //send back the whole file object, look at the tutorial for user/email
-//       response.redirect("/solo");   
-//   })
-// });
-// });
-
-router.get("/images/:id", function (request, response) {
-    var path = imageDir + request.params.filename;
-    console.log("fetching image: ", path);
-    response.sendFile(path);
-});
 /*GET facebook login*/
 router.get('/auth/facebook',passport.authenticate('facebook'));
 
@@ -355,22 +303,25 @@ router.get('/home', isLoggedIn, function (req, res) {
 /* GET profile page. */
 router.get('/profile/:username', isLoggedIn, function (req, res) {
   var u = req.user;
+  var invite = u.local.invites;
+  var bookmark = u.local.bookmarks;
   console.log(req.params);
    User.findOne({'local.username':req.params.username}, function(err, user) {
       if (err) throw err;
       u = user;
   console.log(req.params);
     res.render('profile', {
-        user: req.user, otheruser: u // get the user out of session and pass to template
+        user: req.user, otheruser: u, invite, bookmark // get the user out of session and pass to template
     });
 });
 });   
 router.get('/profile', isLoggedIn, function (req, res) {
   var u = req.user;
   var invite = u.local.invites;
+  var bookmark = u.local.bookmarks;
   console.log(req);
     res.render('profile', {
-        user: u, otheruser: u, invite // get the user out of session and pass to template
+        user: u, otheruser: u, invite, bookmark // get the user out of session and pass to template
     });
 });
 
@@ -427,7 +378,34 @@ router.post('/acceptInvite', function(req, res) {
       );
   });
 });
+/*PUT profile pic*/
+router.post('/updatePicture', function(request, response) {
+  var username = request.user.local.username;
+  console.log(username);
+  upload(request, response, function(err) {
+      if(err) {
+        console.log('Error Occured');
+        console.log(err);
+        return;
+      }
+    console.log(request.body);
+    console.log("check here");
+    console.log(request.file);
 
+    a = request.file.filename;
+
+    User.update(
+          {'local.username':username},
+          {'local.picture':a},
+          {safe: true, upsert: true},
+          function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+      }); 
+    });
+    response.redirect("/profile");   
+  //});
+});
 
 // to remove everything
 // Comment.remove({}, function (err) {
@@ -464,6 +442,8 @@ console.log(comment);
 /*DELETE comment*/
 router.delete('/deleteComment', function (req, res) {
     Comment.find({"comment.post":req.body.post,"comment.date":req.body.date}).remove().exec();
+    console.log(req.body.post);
+    res.send(req.body.post+"1");
 });
 
 /* GET myworks page. */
@@ -494,24 +474,43 @@ if (err) throw err;
 });
 
 /* Post invite */
-router.post('/myworks', function(req, res) {
-    User.findOne({"local.username":req.body["invite"]},function(err,user){
+router.post('/inviteWorklist', function(req, res) {
+    User.findOne({"local.username":req.body.invite},function(err,user){
         if (err) throw err;
-        var tempuserinvites = user.local.invites;
-        if(tempuserinvites.indexOf(req.body["comicName"]) == -1){
-          tempuserinvites.push(req.body["comicName"]);
+        if(user == null){
+          res.redirect("/error");
+          return false;
+        }
+        else{
+          if(user.local.contributor == false){
+          res.redirect("/error");
+          return false;
+          }
+        else{
+          var tempuserinvites = user.local.invites;
+        if(tempuserinvites.indexOf(req.body.comicName) == -1){
+          tempuserinvites.push(req.body.comicName);
         }
         console.log(tempuserinvites);
         User.update(
-            {'local.username': req.body["invite"]},
+            {'local.username': req.body.invite},
             {'local.invites':tempuserinvites},
             {safe:true},
         function(err,raw){
             if(err) throw err;
-            res.redirect("/profile");
+            res.redirect("/myworks");
+          });
           }
-      );
-  });
+  };
+});
+});
+/*DELETE user from worklist*/
+router.delete('/removeWorklist', function (req, res) {
+  console.log(req.body);
+    Comic.update({"comic.comicName":req.body.comicName},{$pull: {"comic.worklist": req.body.remove}},
+      { safe: true },
+      function () {
+      });
 });
 
 /* GET search page. */
@@ -573,6 +572,22 @@ router.post('/test', function(req,res,next) {
       });
   }
  });
+ /* GET your Rating*/
+router.post('/getRating', isLoggedIn, function (req, res) {
+  var yourRating = 0;
+    Comic.findOne({'comic.comicName': req.body.comicName},function(err,comic){
+      if (err) throw err;
+        var tempcomicratings = comic.comic.ratings;
+        for (var i in tempcomicratings) {
+          if (tempcomicratings[i].rater == req.user.local.username) {
+          yourRating = tempcomicratings[i].rating;
+          break;
+          }
+        }
+        yourRating = yourRating.toString();
+      res.send(yourRating);
+  });
+});  
  
  /* Put rating*/
 router.put('/updateRating', isLoggedIn, function (req, res) {
@@ -623,31 +638,36 @@ router.delete('/delcell', function (req, res) {
     Comicstrip.find({"comicstrip.fileName":req.body.fileName,"comicstrip.stripid":req.body.stripid}).remove().exec();
     res.send(req.body.fileName+"1");
 });
-// /*check user*/
-// router.post('/checkuser',function(req,res){
-//   console.log(req.body.data);
-//   var username = req.body.data;
-//   if(req.body.type=="favourite"){
-//     User.findOne({"local.username":username},function(err,user){
-//       if (err) throw err;
-//       if (user.local.favourite.indexOf(req.body.comic) == -1){
-//         res.send("notfavourite");
-//       } else {
-//         res.send("favourited");
-//       }
-//     });
-//   } else if (req.body.type=="comic"){
-//     Comic.findOne({"comic.comicName":req.body.comic},function(err,comic){
-//       if (err) throw err;
-//       if(comic.comic.worklist.indexOf(username) == -1){
-//         res.send("notwork");
 
-//       } else{
-//         res.send("work");
-//       }
-//     });
-//   }
-// });
+/*PUT page to bookmarks*/
+router.put('/bookmarkpage', function(req, res) {
+  console.log(req.body);
+  var updated = 0;
+    User.findOne({"local.username":req.user.local.username},function(err,user){
+        if (err) throw err;
+        var tempbookmarks=user.local.bookmarks; 
+        for (var i in tempbookmarks) {
+          if (tempbookmarks[i].comicName == req.body.comicName) {
+          tempbookmarks[i].stripid = req.body.stripid;
+          }
+          updated = 1;
+        }
+        if (updated == 0)
+          tempbookmarks.push({"comicName": req.body.comicName,"stripid": req.body.stripid })
+        else{console.log("already in array")};
+
+        console.log(tempbookmarks);
+        Comic.update(
+            {'local.username': req.local.username},
+            {'user.bookmarks':tempbookmarks},
+            {safe:true},
+        function(err,raw){
+            if(err) throw err;
+          }
+      );
+  });
+    res.send("bookmark updated!");
+});
 
 /*add favourite*/
 router.post('/addfavourite',function(req,res){
