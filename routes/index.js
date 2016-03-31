@@ -186,7 +186,11 @@ router.get('/comic/:name', isLoggedIn, function(req, res){
       var work = (comic.comic.worklist.indexOf(req.user.local.username) >= 0);
       var aut = (comic.comic.author == req.user.local.username);
       var pub = comic.comic.publish;
-      res.render('test',{user: req.user,comic,favourite:fav,worklist:work,aut:aut,pub:pub});
+      if(work){
+        res.render('test',{user: req.user,comic,favourite:fav,worklist:work,aut:aut,pub:pub});
+      } else if(!pub) {
+        res.render('unpublishcomic',{user: req.user});
+      }
     } else {
       console.log("No such comic");
       // still need to improve
@@ -547,12 +551,17 @@ router.post('/test', function(req,res,next) {
       //console.log({comic: comics});
       if(comics.length!=0){
         for(i=0;i<comics.length;i++){
-          a += comics[i]["comic"]["comicName"]+" ";
+          if(comics[i]["comic"]["publish"]){
+            a += comics[i]["comic"]["comicName"]+" ";
+          }
         }
         console.log(a);
         //console.log(comics[0]["comic"]["author"]);
       } else {
         a = "Not Found!";
+      }
+      if(a==""){
+        a = "Not Found!"
       }
       res.send(a);
     });
