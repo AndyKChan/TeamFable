@@ -41,8 +41,9 @@
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li><a href='/search'>Search</a></li>
+            {{#if user.local.contributor}}
             <li><a href="/myworks">My Works</a></li>
-            
+            {{/if}}
             <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
           </ul>
         </div>
@@ -88,7 +89,7 @@
   </div>
 
     <p class="pp">
-      {{#if user.local.contributor}}
+      {{#if otheruser.local.contributor}}
       <div class="pp">You are a contributor</div>
       {{else}}
       <div class="pp">You are a viewer</div>
@@ -125,6 +126,12 @@
     </div>
     {{/each}}           
   </div>
+{{/compare}}
+
+{{#compare user.local.username otheruser.local.username operator="!="}}
+{{#if ../otheruser.local.contributor}}
+<a href="/mywork/{{otheruser.local.username}}">View the Work of This Contributor</a>
+{{/if}}
 {{/compare}}
 </div>
 </div>
