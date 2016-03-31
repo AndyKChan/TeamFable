@@ -457,7 +457,34 @@ router.post('/acceptInvite', function(req, res) {
       );
   });
 });
+/*PUT profile pic*/
+router.post('/updatePicture', function(request, response) {
+  var username = request.user.local.username;
+  console.log(username);
+  upload(request, response, function(err) {
+      if(err) {
+        console.log('Error Occured');
+        console.log(err);
+        return;
+      }
+    console.log(request.body);
+    console.log("check here");
+    console.log(request.file);
 
+    a = request.file.filename;
+
+    User.update(
+          {'local.username':username},
+          {'local.picture':a},
+          {safe: true, upsert: true},
+          function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+      }); 
+    });
+    response.redirect("/profile");   
+  //});
+});
 
 // to remove everything
 // Comment.remove({}, function (err) {
