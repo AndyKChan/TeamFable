@@ -60,7 +60,10 @@
 {{#each comic}}
 <div id = "{{this.comicstrip.fileName}}1"> 
   {{#compare comic "" operator="!="}}
-  <img id="picture" width="400" height="400" src="/images/{{this.comicstrip.fileName}}">  
+  <!-- <div id="MainImages"> -->
+  <img onclick="large(this)" onmouseout="normal(this)" width="400" height="400" src="/images/{{this.comicstrip.fileName}}" alt="" class="myImg">
+  <!-- </div> -->
+
   <input type="hidden" id="stripid{{@index}}" value="{{this.comicstrip.stripid}}">
   <input type="hidden" id="fileName{{@index}}" value="{{this.comicstrip.fileName}}">
   
@@ -75,10 +78,16 @@
   {{/compare}}
 </div>
 {{/each}}
+<!--   <div id="Fullscreen">
+    <img src="" alt=""/>
+  </div> 
 
-
+ -->
 {{#if comic}}
-<button type="button" class="btn btn-primary"><a href= "/comic/{{next}}"> Next Page </a></button>
+<center>
+<br>
+<button class="next" type="button" class="btn btn-primary"><a href= "/comic/{{next}}"> Next Page </a></button>
+</center>
 {{/if}}
 
 {{#compare comic "" operator="=="}}
@@ -95,6 +104,38 @@
     <ul id="image"></ul>
 
 </div>
+<script>
+function large(x) 
+{
+      x.style.height = "900px";
+      x.style.width = "677px";
+}
+
+function normal(x) 
+{
+    x.style.height = "400px";
+    x.style.width = "400px";
+}
+</script>
+
+<script>
+    $('#Fullscreen').css('height', $(document).outerWidth() + 'px');
+    //for when you click on an image
+    $('.myImg').click(function () {
+        var src = $(this).attr('src'); //get the source attribute of the clicked image
+        $('#Fullscreen img').attr('src', src); //assign it to the tag for your fullscreen div
+        $('#Fullscreen').fadeIn();
+       // $('.myImg').hide();
+    });
+    $('#Fullscreen').click(function () {
+        $(this).hide(); //this will hide the fullscreen div if you click away from the image. 
+      //  $('.myImg').click(function () {
+      //    $(this).fadeIn();
+      //  });
+        
+    });
+</script>
+
 
 <script>
 $(document).ready(function(){
