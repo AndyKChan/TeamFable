@@ -22,7 +22,17 @@ filename: function (request, file, callback) {
     callback(null, request.body["comicName"]+"-"+request.body["stripid"]+ "." +fileFormat[fileFormat.length - 1]);
 }
 });
+var storage2 = multer.diskStorage({
+  destination: function(req,file,cb){
+    cb(null,'./public/images');
+  },
+  filename: function(req,file,cb){
+    console.log(file);
+    cb(null, file.fieldname + '-' + Date.now());
+  }
+});
 var upload = multer({storage: storage}).single('filename');
+var upload2 = multer({storage: storage2}).single('filename');
 /**
  * Middleware
  */
@@ -296,7 +306,6 @@ router.get('/profile', isLoggedIn, function (req, res) {
   var u = req.user;
   var invite = u.local.invites;
   var bookmark = u.local.bookmarks;
-  console.log(req);
     res.render('profile', {
         user: u, otheruser: u, invite, bookmark // get the user out of session and pass to template
     });
@@ -359,7 +368,7 @@ router.post('/acceptInvite', function(req, res) {
 router.post('/updatePicture', function(request, response) {
   var username = request.user.local.username;
   console.log(username);
-  upload(request, response, function(err) {
+  upload2(request, response, function(err) {
       if(err) {
         console.log('Error Occured');
         console.log(err);
@@ -373,7 +382,7 @@ router.post('/updatePicture', function(request, response) {
 
     User.update(
           {'local.username':username},
-          {'local.picture':a},
+          {'local.picture':"/images/"+a},
           {safe: true, upsert: true},
           function(err,raw){
             if(err) throw err;
@@ -417,7 +426,7 @@ console.log(comment);
 });
 
 /*DELETE comment*/
-router.delete('/deleteComment', function (req, res) {
+router.delete('deleteomment', function (req, res) {
     Comment.find({"comment.post":req.body.post,"comment.date":req.body.date}).remove().exec();
     console.log(req.body.post);
     res.send(req.body.post+"1");
