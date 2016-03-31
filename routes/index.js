@@ -249,89 +249,6 @@ router.post('/createcomic', function(req, res) {
   
 });
 
-// /* GET solo comic main page. */
-// router.get('/solo', isLoggedIn, function (req, res) {
-//     //var soloURL = '/solo/';
-//    // var titleADDON = user.local.comictitle;
-//    // var url = soloURL.concat(titleADDON);
-//    res.render('solocomicmain', {
-
-//         user: req.user // get the user out of session and pass to template
-//     });
-// });
-
-// /* GET solo comic main page. */
-// router.get('/solo', isLoggedIn, function (req, res) {
-// Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
-//       if (err) throw err;
-//       File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
-//         res.render('solocomicmain/' + req.user.username, {comic: comics, file: files , user: req.user});
-//       });
-//   });
-// });
-
-// /* POST to solo comic */
-// router.post('/solo', function(req, res) {
-
-//   var comic = new Comic({
-//     "comic.comicName": req.body["comicName"],
-//     "comic.cooperative": false,
-//     "comic.description": req.body["description"],
-//     "comic.genre" : req.body["genre"],
-//     "comic.favorite": false,
-//     "comic.author": req.user.local.username,
-//     "comic.date": new Date(),
-//     "comic.img": req.body["img"],
-//     "comic.page1": req.body["page1"],
-//     "comic.page2": req.body["page2"]
-//   });
-
-//   comic.save(function(err) {
-//       if (err) throw err;
-//       res.redirect('/comicmainpage');
-//   });
-// });
-
-// /* Solo File Uploading Service */
-// router.post('/fileupload', function(request, response) {
-    
-//   upload(request, response, function(err) {
-//       if(err) {
-//         console.log('Error Occured');
-//         console.log(err);
-//         return;
-//       }
-//     console.log(request.file);
-//   // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
-
-//   var file = new File({
-//                   filename: request.file.filename
-//               });
-  
-
-//   file.save(function(err) {
-//       if (err) throw err;
-//       console.log('File saved!');
-//   });
-
-//   File.find().limit(1).sort({$natural:-1}).exec(function(err, files) { 
-//       if (err) throw err;
-//   // object of all the users
-//     console.log("FAF");
-//     console.log(files);
-//   //i'm pulling file names from the database in this for loop and sending it, 
-//   //my problem is here where i should send back the whole file object
-//           //send back the whole file object, look at the tutorial for user/email
-//       response.redirect("/solo");   
-//   })
-// });
-// });
-
-router.get("/images/:id", function (request, response) {
-    var path = imageDir + request.params.filename;
-    console.log("fetching image: ", path);
-    response.sendFile(path);
-});
 /*GET facebook login*/
 router.get('/auth/facebook',passport.authenticate('facebook'));
 
@@ -715,6 +632,13 @@ router.put('/updateRating', isLoggedIn, function (req, res) {
   });
 });
 
+/*DELETE comment*/
+router.delete('/delcell', function (req, res) {
+  console.log(req.body);
+    Comicstrip.find({"comicstrip.fileName":req.body.fileName,"comicstrip.stripid":req.body.stripid}).remove().exec();
+    res.send(req.body.fileName+"1");
+});
+
 /*PUT page to bookmarks*/
 router.put('/bookmarkpage', function(req, res) {
   console.log(req.body);
@@ -744,33 +668,6 @@ router.put('/bookmarkpage', function(req, res) {
   });
     res.send("bookmark updated!");
 });
-
-/*check user*/
-router.post('/checkuser',function(req,res){
-  console.log(req.body.data);
-  var username = req.body.data;
-  if(req.body.type=="favourite"){
-    User.findOne({"local.username":username},function(err,user){
-      if (err) throw err;
-      if (user.local.favourite.indexOf(req.body.comic) == -1){
-        res.send("notfavourite");
-      } else {
-        res.send("favourited");
-      }
-    });
-  } else if (req.body.type=="comic"){
-    Comic.findOne({"comic.comicName":req.body.comic},function(err,comic){
-      if (err) throw err;
-      if(comic.comic.worklist.indexOf(username) == -1){
-        res.send("notwork");
-
-      } else{
-        res.send("work");
-      }
-    });
-  }
-});
-
 
 /*add favourite*/
 router.post('/addfavourite',function(req,res){
