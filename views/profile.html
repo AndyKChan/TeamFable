@@ -22,7 +22,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
   <link rel="stylesheet" href="stylesheets/style.css">
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script> 
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> 
 
 <div class="profile">
 
@@ -56,7 +56,13 @@
 
   <h1 class = "center">{{otheruser.local.username}}'s Profile Page</h1>
   <div class="container" id="left" >
-  <a href="#" target=><img src='{{otheruser.local.picture}}' border="0" width="144" height="144" class="img-thumbnail"></a>
+  <a href="#" target=><img src="/images/{{otheruser.local.picture}}" border="0" width="360" height="360" class="img-thumbnail"></a>
+  {{#compare user.local.username otheruser.local.username operator="=="}}
+      <form method="post"  enctype="multipart/form-data"  class="form-horizontal" action="/updatePicture">
+        <input type="file" name="filename" style="display: inline-block;">
+        <button type="submit" class="btn btn-primary" >Change Picture</button>
+      </form>
+  {{/compare}}
   <br>
   <p class="pp">General information</p>
 
@@ -102,7 +108,7 @@
   </table>
 </div>
 
-
+{{#compare user.local.username otheruser.local.username operator="=="}}
 <div class="container" id="right">
 <h2>Bookmarks <span class="glyphicon glyphicon-book"></span></h2>
     {{#each bookmark}}
@@ -113,20 +119,15 @@
 <div class="container">
 <h2>Inbox <span class="glyphicon glyphicon-modal-window"></span></h2>
      {{#each invite}}
-    <form class="acceptInvite" name="{{@index}}">
-    <div id="reloadInvites">
+    <div id="{{this}}1">
     <a href="/comic/{{this}}" class="links">{{this}}</a><br>
      <input type="hidden" id="comic{{@index}}" value="{{this}}">
-     <button type="submit" class="btn btn-primary deleteInvite" name="{{@index}}">✓</button>
-     
-     </div>
-   </form>
-   <form class="refuseInvite" name="{{@index}}">
-      <button type="submit" class="btn btn-primary deleteInvite" name="{{@index}}">X</button>
-   </form>
+     <button type="submit" class="btn btn-primary acceptInvite" name="{{@index}}">✓</button>  
+     <button type="submit" class="btn btn-primary refuseInvite" name="{{@index}}">X</button>
+    </div>
     {{/each}}           
 </div>
-
+{{/compare}}
 </div>
 </div>
 
@@ -148,29 +149,26 @@ $("#reload").load("/profile" + " #reload");
 </script>
 
 <script>
-  $(".refuseInvite , .acceptInvite").submit(function(){
+  $(".refuseInvite , .acceptInvite").on('click',function(){
   var index = $(this).attr("name");
     $.ajax({
+    type: "DELETE",
     url: '/deleteInvite',
-    data:{comicName:$('#comic'+index).val()},
-    type: 'DELETE',
-    complete: function() {
-    }
-    });
+    data:{comicName:$('#comic'+index).val()},})
+    .done(function(data){
+    document.getElementById(data).remove();
   });
-  //$("#reloadInvites").load("/profile" + " #reloadInvites");
-  
-</script>
+});
+</script>  
 
 <script>
-  $(".acceptInvite").submit(function(){
+  $(".acceptInvite").on('click',function(){
   var index = $(this).attr("name");
     $.ajax({
+    type: "POST",
     url: '/acceptInvite',
-    data:{comicName:$('#comic'+index).val()},
-    type: 'POST',
-    complete: function() {
-    }
-    });
+    data:{comicName:$('#comic'+index).val()},})
+    .done(function(data){
   });
-</script>
+});
+</script>  

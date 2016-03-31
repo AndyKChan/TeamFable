@@ -386,22 +386,25 @@ router.get('/home', isLoggedIn, function (req, res) {
 /* GET profile page. */
 router.get('/profile/:username', isLoggedIn, function (req, res) {
   var u = req.user;
+  var invite = u.local.invites;
+  var bookmark = u.local.bookmarks;
   console.log(req.params);
    User.findOne({'local.username':req.params.username}, function(err, user) {
       if (err) throw err;
       u = user;
   console.log(req.params);
     res.render('profile', {
-        user: req.user, otheruser: u // get the user out of session and pass to template
+        user: req.user, otheruser: u, invite, bookmark // get the user out of session and pass to template
     });
 });
 });   
 router.get('/profile', isLoggedIn, function (req, res) {
   var u = req.user;
   var invite = u.local.invites;
+  var bookmark = u.local.bookmarks;
   console.log(req);
     res.render('profile', {
-        user: u, otheruser: u, invite // get the user out of session and pass to template
+        user: u, otheruser: u, invite, bookmark // get the user out of session and pass to template
     });
 });
 
@@ -458,7 +461,34 @@ router.post('/acceptInvite', function(req, res) {
       );
   });
 });
+/*PUT profile pic*/
+router.post('/updatePicture', function(request, response) {
+  var username = request.user.local.username;
+  console.log(username);
+  upload(request, response, function(err) {
+      if(err) {
+        console.log('Error Occured');
+        console.log(err);
+        return;
+      }
+    console.log(request.body);
+    console.log("check here");
+    console.log(request.file);
 
+    a = request.file.filename;
+
+    User.update(
+          {'local.username':username},
+          {'local.picture':a},
+          {safe: true, upsert: true},
+          function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+      }); 
+    });
+    response.redirect("/profile");   
+  //});
+});
 
 // to remove everything
 // Comment.remove({}, function (err) {
@@ -495,6 +525,8 @@ console.log(comment);
 /*DELETE comment*/
 router.delete('/deleteComment', function (req, res) {
     Comment.find({"comment.post":req.body.post,"comment.date":req.body.date}).remove().exec();
+    console.log(req.body.post);
+    res.send(req.body.post+"1");
 });
 
 /* GET myworks page. */
@@ -525,24 +557,43 @@ if (err) throw err;
 });
 
 /* Post invite */
-router.post('/myworks', function(req, res) {
-    User.findOne({"local.username":req.body["invite"]},function(err,user){
+router.post('/inviteWorklist', function(req, res) {
+    User.findOne({"local.username":req.body.invite},function(err,user){
         if (err) throw err;
-        var tempuserinvites = user.local.invites;
-        if(tempuserinvites.indexOf(req.body["comicName"]) == -1){
-          tempuserinvites.push(req.body["comicName"]);
+        if(user == null){
+          res.redirect("/error");
+          return false;
+        }
+        else{
+          if(user.local.contributor == false){
+          res.redirect("/error");
+          return false;
+          }
+        else{
+          var tempuserinvites = user.local.invites;
+        if(tempuserinvites.indexOf(req.body.comicName) == -1){
+          tempuserinvites.push(req.body.comicName);
         }
         console.log(tempuserinvites);
         User.update(
-            {'local.username': req.body["invite"]},
+            {'local.username': req.body.invite},
             {'local.invites':tempuserinvites},
             {safe:true},
         function(err,raw){
             if(err) throw err;
             res.redirect("/myworks");
+          });
           }
-      );
-  });
+  };
+});
+});
+/*DELETE user from worklist*/
+router.delete('/removeWorklist', function (req, res) {
+  console.log(req.body);
+    Comic.update({"comic.comicName":req.body.comicName},{$pull: {"comic.worklist": req.body.remove}},
+      { safe: true },
+      function () {
+      });
 });
 
 /* GET search page. */
@@ -662,6 +713,36 @@ router.put('/updateRating', isLoggedIn, function (req, res) {
           }
       );
   });
+});
+
+/*PUT page to bookmarks*/
+router.put('/bookmarkpage', function(req, res) {
+  console.log(req.body);
+  var updated = 0;
+    User.findOne({"local.username":req.user.local.username},function(err,user){
+        if (err) throw err;
+        var tempbookmarks=user.local.bookmarks; 
+        for (var i in tempbookmarks) {
+          if (tempbookmarks[i].comicName == req.body.comicName) {
+          tempbookmarks[i].stripid = req.body.stripid;
+          }
+          updated = 1;
+        }
+        if (updated == 0)
+          tempbookmarks.push({"comicName": req.body.comicName,"stripid": req.body.stripid })
+        else{console.log("already in array")};
+
+        console.log(tempbookmarks);
+        Comic.update(
+            {'local.username': req.local.username},
+            {'user.bookmarks':tempbookmarks},
+            {safe:true},
+        function(err,raw){
+            if(err) throw err;
+          }
+      );
+  });
+    res.send("bookmark updated!");
 });
 
 /*check user*/

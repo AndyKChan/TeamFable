@@ -51,7 +51,7 @@
 <h2>
   Overall Rating: 
   <span id="reloadRating"> {{comic.comic.rating}} </span> 
-  <span id="overall" class="glyphicon glyphicon-star" style="color:yellow"></span>! <br>
+  <span id="overall" class="glyphicon glyphicon-star" style="color:#FFD700"></span>! <br>
   Your Rating: 
   <span id="1" class="glyphicon glyphicon-star-empty"></span>
   <span id="2" class="glyphicon glyphicon-star-empty"></span>
@@ -163,7 +163,7 @@ $(document).ready(function() {
     }).done(function(data){
       var yourRating = parseInt(data);
         for(i = 1; i < yourRating+1; i++ ){
-       $("#"+i.toString()).css("color","yellow");
+       $("#"+i.toString()).css("color","#FFD700");
      }
     });
   });
@@ -176,7 +176,7 @@ $(document).ready(function() {
      }
     id = parseInt($(this).attr('id'));
       for(i = 1; i < id+1; i++ ){
-       $("#"+i.toString()).css("color","yellow");
+       $("#"+i.toString()).css("color","#FFD700");
      }
    
    }); 
