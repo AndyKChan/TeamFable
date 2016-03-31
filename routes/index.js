@@ -629,6 +629,8 @@ router.put('/updateRating', isLoggedIn, function (req, res) {
             if (err) throw err;
           }
       );
+         var data = overallrating.toString();
+         res.send(data);
   });
 });
 
