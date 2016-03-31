@@ -56,7 +56,13 @@
 
   <h1 class = "center">{{otheruser.local.username}}'s Profile Page</h1>
   <div class="container" id="left" >
-  <a href="#" target=><img src='{{otheruser.local.picture}}' border="0" width="144" height="144" class="img-thumbnail"></a>
+  <a href="#" target=><img src="/images/{{otheruser.local.picture}}" border="0" width="360" height="360" class="img-thumbnail"></a>
+  {{#compare user.local.username otheruser.local.username operator="=="}}
+      <form method="post"  enctype="multipart/form-data"  class="form-horizontal" action="/updatePicture">
+        <input type="file" name="filename" style="display: inline-block;">
+        <button type="submit" class="btn btn-primary" >Change Picture</button>
+      </form>
+  {{/compare}}
   <br>
   <p class="pp">General information</p>
 
