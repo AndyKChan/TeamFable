@@ -102,7 +102,7 @@ router.post('/fileupload2', function(request, response) {
 });
 });
 
-router.get('/comic/:name/uploadcover',function(req,res){
+router.get('/comic/:name/uploadcover',isLoggedIn,function(req,res){
   var comicName = req.params.name;
   console.log(comicName);
   Comic.findOne({"comic.comicName" : comicName},function(err,comic){
@@ -120,32 +120,6 @@ router.get('/comic/:name/uploadcover',function(req,res){
 router.get('/navsearch',function(req,res){
   console.log(req.body);
 });
-
-router.get("/images/:id", function (request, response) {
-    var path = imageDir + request.params.filename;
-    console.log("fetching image: ", path);
-    response.sendFile(path);
-});
-
-// /* GET comic main page. */
-// router.get('/comicmainpage', isLoggedIn, function (req, res) {
-// Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
-//       if (err) throw err;
-//       File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
-//         res.render('comicmainpage', {comic: comics, file: files , user: req.user});
-//       });
-//   });
-// });
-
-//  GET cooperative comic main page. 
-// router.get('/cooperative', isLoggedIn, function (req, res) {
-// Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
-//       if (err) throw err;
-//       File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
-//         res.render('cooperativecomicmain', {comic: comics, file: files , user: req.user});
-//       });
-//   });
-// });
 
 /* GET comic upload page*/
 router.get('/comic/:name/upload',isLoggedIn,function(req,res){
@@ -165,55 +139,58 @@ router.get('/comic/:name/upload',isLoggedIn,function(req,res){
 });
 
 /* GET nextPage */
-router.get('/comic/:name/:page', isLoggedIn, function(req,res){
+ router.get('/comic/:name/page/:page', isLoggedIn, function(req,res){
   var comicName = req.params.name;
   var page = req.params.page;
   var iterator = parseInt(page);
- 
-   Comicstrip.find({"comicstrip.stripid" : page , "comicstrip.comicName" : comicName }, function(err,comicstrip){
-    
-      
- 
-        console.log("check");
-        
-        var next;
-        var prev;
+  console.log(comicName,page,iterator);
+  Comicstrip.find({"comicstrip.stripid" :page, "comicstrip.comicName" : comicName},function(err,comicstrips){
+    console.log(comicstrips);
+    Comic.findOne({"comic.comicName":comicName}, function(err,comic){
+      var work = (comic.comic.worklist.indexOf(req.user.local.username) >= 0);
+      console.log(work);
+      var next;
+      var prev;
+      if(!comicstrips){
+        next = false;
+      } else {
+        next = comicName + "/page/" + (iterator + 1);
+        prev = comicName + "/page/" + (iterator - 1);
+      }
+      res.render('page',{comic, comicstrip:comicstrips, user:req.user, next:next, prev:prev, work:work});
+    });
+  });
+  //res.render('page', {comic : comicstrip , user:req.user, next : next, prev : prev, comicName : comicName});
+});
 
-        if(!comicstrip){
-           next = false;
-        } 
-        else { 
-          next = comicName + "/" + (iterator + 1);
-          prev = comicName + "/" + (iterator - 1);
-        }
-        
-        res.render('page', {comic : comicstrip , user:req.user, next : next, prev : prev, comicName : comicName});
-   });
-   });
-  
+/*Get comic mainpage with cover page and Comicname*/
+router.get('/comic/:name', isLoggedIn, function(req, res){
+  var comicName = req.params.name;
+  console.log(comicName);
+  Comic.findOne({"comic.comicName" : comicName},function(err,comic){
+    if(err) throw err;
+    if(comic){
+      var fav = (comic.comic.favourite.indexOf(req.user.local.username) >= 0);
+      var work = (comic.comic.worklist.indexOf(req.user.local.username) >= 0);
+      console.log(comic);
+      console.log(comic.comic.worklist.indexOf(req.user.local.username));
+      res.render('test',{user: req.user,comic,favourite:fav,worklist:work});
+    } else {
+      console.log("No such comic");
+      // still need to improve
+      res.redirect('/home');
+    }
+  });
+});
 
 
-// router.post('/delcell',function(req,res){
-//   console.log(req.body);
-//   console.log(req.user);
-//   Comicstrip.update(
-//     {'comicstrip.fileName' : "deleted"},
-//     {safe:true},
-//     function(err,raw){
-//             if(err) throw err;
-//             console.log(raw);
-//           }
-//     );
-//   res.redirect('/home');
-// });
+
 /*DELETE comment*/
 router.delete('/delcell', function (req, res) {
   console.log(req.body);
     Comicstrip.find({"comicstrip.fileName":req.body.fileName,"comicstrip.stripid":req.body.stripid}).remove().exec();
     res.send(req.body.fileName+"1");
 });
-
-
 
 /* POST to cooperative comic */
 router.post('/createcomic', function(req, res) {
@@ -760,28 +737,6 @@ router.post('/delfavourite',function(req,res){
   );
   });
   res.send("Delete Successfully!");
-});
-
-/*Get comic mainpage with cover page and Comicname*/
-router.get('/comic/:name', isLoggedIn, function(req, res){
-  var comicName = req.params.name;
-  console.log(comicName);
-  Comic.findOne({"comic.comicName" : comicName},function(err,comic){
-    if(err) throw err;
-    if(comic){
-      var fav = (comic.comic.favourite.indexOf(req.user.local.username) >= 0);
-      var work = (comic.comic.worklist.indexOf(req.user.local.username) >= 0);
-      console.log(comic);
-      console.log(comic.comic.worklist.indexOf(req.user.local.username));
-      res.render('test',{user: req.user,comic,favourite:fav,worklist:work});
-    } else {
-      console.log("No such comic");
-      // still need to improve
-      res.redirect('/home');
-    }
-    
-  });
-
 });
 
 /* GET Userlist page. */
