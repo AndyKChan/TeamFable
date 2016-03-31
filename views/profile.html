@@ -110,9 +110,9 @@
   <div>
     <h2>Bookmarks <span class="glyphicon glyphicon-book"></span></h2>
     {{#each bookmark}}
-    <a href="/cooperative/{{this.bookmark.comicName}}/{{this.bookmark.page}}" class="links"></a>
+      <a href="/comic/{{this.comicName}}/page/{{this.page}}" class="links">{{this.comicName}}/{{this.page}}</a>
     {{/each}} 
-  </div>
+</div>
   <div>
     <h2>Inbox <span class="glyphicon glyphicon-modal-window"></span></h2>
     {{#each invite}}
