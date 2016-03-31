@@ -186,7 +186,11 @@ router.get('/comic/:name', isLoggedIn, function(req, res){
       var work = (comic.comic.worklist.indexOf(req.user.local.username) >= 0);
       var aut = (comic.comic.author == req.user.local.username);
       var pub = comic.comic.publish;
-      res.render('test',{user: req.user,comic,favourite:fav,worklist:work,aut:aut,pub:pub});
+      if(work){
+        res.render('test',{user: req.user,comic,favourite:fav,worklist:work,aut:aut,pub:pub});
+      } else if(!pub) {
+        res.render('unpublishcomic',{user: req.user});
+      }
     } else {
       console.log("No such comic");
       // still need to improve
