@@ -23,7 +23,7 @@
             <li><a href="/search">Search</a></li>
             <li><a href="/profile">Profile</a></li>
             <!--li><a href="/solo">Solo</a></li-->
-            <li><a href="/comicmainpage">My Works</a></li>
+            <li><a href="/myworks">My Works</a></li>
             <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
           </ul>
           <form class="navbar-form navbar-right" role="search" id="navsearch" name="box" action="/navsearch" method="get">
@@ -40,6 +40,7 @@
     <form id="info" >
     <br>
     <br>
+    {{#if user.local.contributor}}
       <label for="inputComicTitles3" class="col-sm-1 control-label">Name your comic: </label>
       <div class="col-sm-10">
         <input type="comicName" name="comicName" class="form-control" id="inputComicTitles3" placeholder="Comic Title">
@@ -70,6 +71,7 @@
 
       </div>
     </form>
+    {{/if}}
 
 </div>
 <script>
