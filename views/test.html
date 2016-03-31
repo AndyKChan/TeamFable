@@ -82,7 +82,7 @@
   <div>
 <a button class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/page/1">Read Comic</a>
 {{#if aut}}
-<button type="button" id="delec" class="btn btn-primary" >Delete Comic</button>
+<button type="button" id="delecomic" class="btn btn-primary" >Delete Comic</button>
   {{#if pub}}
   <button type="button" id="upubc" class="btn btn-primary" >Unpublish Comic</button>
   <button type="button" id="pubc" class="btn btn-primary"style="display: none;">Publish Comic</button>
@@ -177,6 +177,23 @@ $(document).ready(function(){
     }).done(function(data){
       alert(data);
     });
+  });
+});
+
+$(document).ready(function(){
+  $('#delecomic').on('click',function(){
+    var x;
+    if(confirm("You are going to delete this comic!\nAre you Sure?") == true){
+      $.ajax({
+      method: "DELETE",
+      url: "/delecomic",
+      data:{comic:"{{comic.comic.comicName}}"}
+    }).done(function(data){
+      if(data.redirect){
+        window.location.href= data.redirect;
+      }
+    });
+    }
   });
 });
 

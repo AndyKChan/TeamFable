@@ -240,6 +240,15 @@ router.post('/updatdes',function(req,res){
   res.send(req.body.data);
 });
 
+/*Delete comic */
+router.delete('/delecomic',function(req,res) {
+  console.log(req.body.comic);
+  Comic.remove({"comic.comicName" : req.body.comic},function(err){
+    if (err) throw err;
+  });
+  res.send({redirect:'/home'});
+});
+
 /*DELETE comment*/
 router.delete('/delcell', function (req, res) {
   console.log(req.body);
