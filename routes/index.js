@@ -554,8 +554,8 @@ if (err) throw err;
 });
 
 /* Post invite */
-router.post('/myworks', function(req, res) {
-    User.findOne({"local.username":req.body["invite"]},function(err,user){
+router.post('/inviteWorklist', function(req, res) {
+    User.findOne({"local.username":req.body.invite},function(err,user){
         if (err) throw err;
         if(user == null){
           res.redirect("/error");
@@ -568,12 +568,12 @@ router.post('/myworks', function(req, res) {
           }
         else{
           var tempuserinvites = user.local.invites;
-        if(tempuserinvites.indexOf(req.body["comicName"]) == -1){
-          tempuserinvites.push(req.body["comicName"]);
+        if(tempuserinvites.indexOf(req.body.comicName) == -1){
+          tempuserinvites.push(req.body.comicName);
         }
         console.log(tempuserinvites);
         User.update(
-            {'local.username': req.body["invite"]},
+            {'local.username': req.body.invite},
             {'local.invites':tempuserinvites},
             {safe:true},
         function(err,raw){
@@ -583,6 +583,14 @@ router.post('/myworks', function(req, res) {
           }
   };
 });
+});
+/*DELETE user from worklist*/
+router.delete('/removeWorklist', function (req, res) {
+  console.log(req.body);
+    Comic.update({"comic.comicName":req.body.comicName},{$pull: {"comic.worklist": req.body.remove}},
+      { safe: true },
+      function () {
+      });
 });
 
 /* GET search page. */
