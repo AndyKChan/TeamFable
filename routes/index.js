@@ -533,6 +533,8 @@ User.findOne({'local.username':req.params.username}, function(err, user) {
 if (err) throw err;
    {Comic.find({"comic.author" : user.local.username}, function(err, comics){
        if (err) throw err;
+       console.log(user);
+       console.log(req.user);
       res.render('myworks', {
          comic: comics,
          otheruser: user,

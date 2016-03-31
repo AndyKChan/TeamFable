@@ -52,20 +52,33 @@
   <h1 class = "center">{{otheruser.local.username}}'s Comics</h1>
 
 </div>
+<center>
+<div>
 {{#each comic}}
 <br>
 <div style="display: inline-block;">
-<a href="/comic/{{this.comic.comicName}}">{{this.comic.comicName}}</a>
-collaborators: {{this.comic.worklist}}
+<p style="font-size:35px">Comic Name: <a style="font-size:45px" href="/comic/{{this.comic.comicName}}">{{this.comic.comicName}}</a></p>
+{{#if this.comic.cooperative}}
+<p style="font-size:25px">Comic Type: Cooperative</p>
+{{else}}
+<p style="font-size:25px">Comic Type: Solo</p>
+{{/if}}
+<p style="font-size:25px">Collaborators: {{this.comic.worklist}}</p>
+
+{{#compare ../user.local.username ../otheruser.local.username operator="=="}}
+{{#if this.comic.cooperative}}
 <input type="text" id="invite{{@index}}" name="{{@index}}" class="form-control" style="display: inline-block;">
 <button type="button" class="btn btn-primary invite" name="{{@index}}" >Invite</button>
 <input type="hidden" id="comicName{{@index}}" name="{{@index}}" value="{{this.comic.comicName}}" class="form-control">  
 <input type="text" id="remove{{@index}}" name="{{@index}}" class="form-control" >
 <button type="button" class="btn btn-primary remove" name="{{@index}}">Remove</button>
+{{/if}}
+{{/compare}}
 </div>
 <br>
 <img id="picture" src="/images/{{this.comic.coverpage}}" style="width:480;height:360";>
 {{/each}}
+</div>
 
 <script>
   $(".invite").on('click',function() {
