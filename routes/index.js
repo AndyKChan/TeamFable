@@ -426,7 +426,7 @@ console.log(comment);
 });
 
 /*DELETE comment*/
-router.delete('deleteomment', function (req, res) {
+router.delete('/deletecomment', function (req, res) {
     Comment.find({"comment.post":req.body.post,"comment.date":req.body.date}).remove().exec();
     console.log(req.body.post);
     res.send(req.body.post+"1");
