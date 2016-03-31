@@ -617,31 +617,37 @@ router.put('/updateRating', isLoggedIn, function (req, res) {
   });
 });
 
-/*check user*/
-router.post('/checkuser',function(req,res){
-  console.log(req.body.data);
-  var username = req.body.data;
-  if(req.body.type=="favourite"){
-    User.findOne({"local.username":username},function(err,user){
-      if (err) throw err;
-      if (user.local.favourite.indexOf(req.body.comic) == -1){
-        res.send("notfavourite");
-      } else {
-        res.send("favourited");
-      }
-    });
-  } else if (req.body.type=="comic"){
-    Comic.findOne({"comic.comicName":req.body.comic},function(err,comic){
-      if (err) throw err;
-      if(comic.comic.worklist.indexOf(username) == -1){
-        res.send("notwork");
-
-      } else{
-        res.send("work");
-      }
-    });
-  }
+/*DELETE comment*/
+router.delete('/delcell', function (req, res) {
+  console.log(req.body);
+    Comicstrip.find({"comicstrip.fileName":req.body.fileName,"comicstrip.stripid":req.body.stripid}).remove().exec();
+    res.send(req.body.fileName+"1");
 });
+// /*check user*/
+// router.post('/checkuser',function(req,res){
+//   console.log(req.body.data);
+//   var username = req.body.data;
+//   if(req.body.type=="favourite"){
+//     User.findOne({"local.username":username},function(err,user){
+//       if (err) throw err;
+//       if (user.local.favourite.indexOf(req.body.comic) == -1){
+//         res.send("notfavourite");
+//       } else {
+//         res.send("favourited");
+//       }
+//     });
+//   } else if (req.body.type=="comic"){
+//     Comic.findOne({"comic.comicName":req.body.comic},function(err,comic){
+//       if (err) throw err;
+//       if(comic.comic.worklist.indexOf(username) == -1){
+//         res.send("notwork");
+
+//       } else{
+//         res.send("work");
+//       }
+//     });
+//   }
+// });
 
 /*add favourite*/
 router.post('/addfavourite',function(req,res){
