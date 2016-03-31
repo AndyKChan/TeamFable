@@ -551,12 +551,17 @@ router.post('/test', function(req,res,next) {
       //console.log({comic: comics});
       if(comics.length!=0){
         for(i=0;i<comics.length;i++){
-          a += comics[i]["comic"]["comicName"]+" ";
+          if(comics[i]["comic"]["publish"]){
+            a += comics[i]["comic"]["comicName"]+" ";
+          }
         }
         console.log(a);
         //console.log(comics[0]["comic"]["author"]);
       } else {
         a = "Not Found!";
+      }
+      if(a==""){
+        a = "Not Found!"
       }
       res.send(a);
     });
