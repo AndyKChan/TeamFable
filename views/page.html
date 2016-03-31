@@ -64,21 +64,24 @@
           <input type="hidden" id="stripid{{@index}}" value="{{this.comicstrip.stripid}}">
           <input type="hidden" id="fileName{{@index}}" value="{{this.comicstrip.fileName}}">
           {{#if ../work}}
+          
           <div id = contributorview{{@index}}>
             <button type="button" id="delc{{@index}}" class="btn btn-primary delc" name = "{{@index}}">Delete Cell</button>
             <button type="button" id="viewc"  class="btn btn-primary viewc" name = "{{@index}}">View as User</button>
-            <div id = returnview{{@index}}>
+          </div>
+
+          <div id = returnview{{@index}}>
               <button style = "visibility: hidden" type="button" id="return" class="btn btn-primary return" name = "{{@index}}">Exit User View</button>
-            </div>
           </div>
           {{/if}}
+          </div>
           {{/compare}}
         </div>
           {{/each}}
-      </div>
+      
 
 {{#if comicstrip}}
-<button type="button" class="btn btn-primary"><a href= "/comic/{{next}}">Next Page</a></button>
+<button class = "next" type="button" class="btn btn-primary"><a href= "/comic/{{next}}">Next Page</a></button>
 <div>
 {{/if}}
 
@@ -96,36 +99,6 @@
     <ul id="image"></ul>
 
 </div>
-<script>
-function large(x) 
-{
-      x.style.height = "900px";
-      x.style.width = "677px";
-}
-function normal(x) 
-{
-    x.style.height = "400px";
-    x.style.width = "400px";
-}
-</script>
-
-<script>
-    $('#Fullscreen').css('height', $(document).outerWidth() + 'px');
-    //for when you click on an image
-    $('.myImg').click(function () {
-        var src = $(this).attr('src'); //get the source attribute of the clicked image
-        $('#Fullscreen img').attr('src', src); //assign it to the tag for your fullscreen div
-        $('#Fullscreen').fadeIn();
-       // $('.myImg').hide();
-    });
-    $('#Fullscreen').click(function () {
-        $(this).hide(); //this will hide the fullscreen div if you click away from the image. 
-      //  $('.myImg').click(function () {
-      //    $(this).fadeIn();
-      //  });
-        
-    });
-</script>
 
 <script>
 var ret = document.getElementById("return");
@@ -133,59 +106,6 @@ var viewc = document.getElementById("viewc");
 viewc.onclick = function() {
   ret.style.visibility = "visible";
 }
-ret.onclick = function() {
-  ret.style.visibility = "hidden";
-}
-</script>
-
-<script>
-$(document).ready(function(){
-  $('.return').on('click',function(){
-    var index = $(this).attr("name");
-      $('#contributorview'+index).show();
-  });
-});
-</script>
-
-<script>
-function large(x) 
-{
-      x.style.height = "900px";
-      x.style.width = "677px";
-}
-
-function normal(x) 
-{
-    x.style.height = "400px";
-    x.style.width = "400px";
-}
-</script>
-
-<script>
-    $('#Fullscreen').css('height', $(document).outerWidth() + 'px');
-    //for when you click on an image
-    $('.myImg').click(function () {
-        var src = $(this).attr('src'); //get the source attribute of the clicked image
-        $('#Fullscreen img').attr('src', src); //assign it to the tag for your fullscreen div
-        $('#Fullscreen').fadeIn();
-       // $('.myImg').hide();
-    });
-    $('#Fullscreen').click(function () {
-        $(this).hide(); //this will hide the fullscreen div if you click away from the image. 
-      //  $('.myImg').click(function () {
-      //    $(this).fadeIn();
-      //  });
-        
-    });
-</script>
-
-<script>
-var ret = document.getElementById("return");
-var viewc = document.getElementById("viewc");
-viewc.onclick = function() {
-  ret.style.visibility = "visible";
-}
-
 ret.onclick = function() {
   ret.style.visibility = "hidden";
 }
@@ -208,6 +128,19 @@ $(document).ready(function(){
       // document.getElementById("return").style.display = vis;
   });
 });
+</script>
+
+<script>
+function large(x) 
+{
+      x.style.height = "900px";
+      x.style.width = "677px";
+}
+function normal(x) 
+{
+    x.style.height = "400px";
+    x.style.width = "400px";
+}
 </script>
 
 <script>
