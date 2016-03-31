@@ -78,6 +78,7 @@
         </div>
           {{/each}}
 <br>
+<center>
 {{#if comicstrip}}
 {{#compare cpage 0 operator="=="}}
 <button type="button" class="btn-btn-primary"><a href= "/comic/{{comic.comic.comicName}}"> Previous Page </a></button>
@@ -97,7 +98,7 @@
   <button type="button" class="btn-btn-primary"><a href= "/comic/{{comic.comic.comicName}}"> Return to Comic Main Page </a></button>
 {{/compare}}
 
-
+{{#compare comicstrip "" operator="!="}}
 {{#if work}}
 <br>
 <br>
@@ -106,6 +107,7 @@
  <button style = "visibility: hidden" type="button" id="return" class="btn btn-primary return" name = "{{@index}}" onclick = "exit()">Exit User View</button>
     
 {{/if}}
+{{/compare}}
 
 
 <center>
