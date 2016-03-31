@@ -71,6 +71,7 @@
     <center>
     <h1>Comic Name: {{comic.comic.comicName}}</h1>
     <p1>Author: {{comic.comic.author}}</p1>
+    <button type="button" id="bookmarkPage" class="btn btn-primary">Bookmark</button>
     <br>
     <br>
     <center>
@@ -188,6 +189,20 @@ $(document).ready(function(){
   });
 });
 </script>  
+<script> 
+$(document).ready(function(){
+   $("#bookmarkPage").on('click',function() {
+   $.ajax({
+      method: "PUT",
+      contentType: "application/json",
+      url: "/bookmarkPage",
+      data:JSON.stringify({page:{{page}},comicName:"{{comic.comic.comicName}}"}),
+      }).done(function(data){
+        alert("bookmark for this comic updated!");
+      });
+});
+});
+</script>
 
 </body>
 
