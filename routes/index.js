@@ -182,9 +182,9 @@ router.get('/comic/:name', isLoggedIn, function(req, res){
     if(comic){
       var fav = (comic.comic.favourite.indexOf(req.user.local.username) >= 0);
       var work = (comic.comic.worklist.indexOf(req.user.local.username) >= 0);
-      console.log(comic);
-      console.log(comic.comic.worklist.indexOf(req.user.local.username));
-      res.render('test',{user: req.user,comic,favourite:fav,worklist:work});
+      var aut = (comic.comic.author == req.user.local.username);
+      var pub = comic.comic.publish;
+      res.render('test',{user: req.user,comic,favourite:fav,worklist:work,aut:aut,pub:pub});
     } else {
       console.log("No such comic");
       // still need to improve
@@ -193,7 +193,32 @@ router.get('/comic/:name', isLoggedIn, function(req, res){
   });
 });
 
+/*publish comic and unpublish comic*/
+router.post('/publishcomic',isLoggedIn, function(req,res){
+  Comic.update(
+    {"comic.comicName":req.body.comic},
+    {"comic.publish":true},
+    {safe:true},
+    function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+    );
+  res.send("Published");
+});
 
+router.post('/unpublishcomic',isLoggedIn,function(req,res){
+  Comic.update(
+    {"comic.comicName":req.body.comic},
+    {"comic.publish":false},
+    {safe:true},
+    function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+    );
+  res.send("Unpublished");
+});
 
 /*DELETE comment*/
 router.delete('/delcell', function (req, res) {
@@ -224,6 +249,7 @@ router.post('/createcomic', function(req, res) {
         "comic.date": new Date(),
         "comic.coverpage": [],
         "comic.pages": [],
+        "comic.publish":false,
         "comic.worklist":[req.user.local.username,]
       });
       comic.save(function(err) {
