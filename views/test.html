@@ -2,6 +2,14 @@
 
 <html>
 <head>
+<div class = "test">
+<style>
+.test{
+    background-image: url("http://images7.alphacoders.com/359/359582.jpg");
+    background-repeat: no-repeat ; background-size: 100% 100%;
+
+}
+</style>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="imagetoolbar" content="false">
 <meta http-equiv="imagetoolbar" content="no">
@@ -29,17 +37,12 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
+          <li><a href="/search">Search</a></li>
             <li><a href="/profile">Profile</a></li>
             <li><a href="/myworks">My Works</a></li>
             <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
           </ul>
-          <form class="navbar-form navbar-right" role="search" id="navsearch" action="/navsearch" method="get">
-          <div class="form-group">
-            <input type="text" class="form-control" name="in" placeholder="Search...">
-            <button type="submit" class="btn btn-default">Submit</button>
-          </div>
-          </form>
-        </div>
+                 </div>
       </div>
 </nav>
 <br>
@@ -87,7 +90,9 @@
   <button type="button" id="upubc" class="btn btn-primary" style="display: none;">Unpublish Comic</button>
   {{/if}}
 {{/if}}
+
 </div>
+
 <br>
 <center>
 <div>
@@ -227,4 +232,7 @@ $(document).ready(function(){
 });
 
 </script>
+
 </html>
+
+
