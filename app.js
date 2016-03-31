@@ -28,7 +28,7 @@ var Application = (function () {
         // var layout =  require('./views/layouts/main.handlebars');
         //Setting up templating engine
         var exphbs = require('express-handlebars');
-       var hbs = require('hbs');
+        var hbs = require('hbs');
 
         hbs.registerHelper('compare', function(lvalue, rvalue, options) {
 
@@ -60,6 +60,7 @@ var Application = (function () {
         }
         
     });
+
 //external style sheet css html
 
     app.set('views', path.join(__dirname, 'views'));
@@ -92,7 +93,8 @@ var Application = (function () {
             resave: false,
             saveUninitialized: false,
             store: new mongoStore({ mongooseConnection: db })
-        })); // session secret
+        })); 
+        // session secret
         app.use(passport.initialize());
         app.use(passport.session()); // persistent login sessions
         app.use(flash()); // use connect-flash for flash messages stored in session

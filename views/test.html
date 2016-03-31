@@ -2,12 +2,25 @@
 
 <html>
 <head>
+<div class = "test">
+<style>
+.test{
+    background-image: url("http://images7.alphacoders.com/359/359582.jpg");
+    background-repeat: no-repeat ; background-size: 100% 100%;
+
+}
+</style>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="imagetoolbar" content="false">
 <meta http-equiv="imagetoolbar" content="no">
-<link rel="stylesheet" type="text/css" href="css/default.css">
-<script type="text/javascript" src="uploader.js"></script>
-<title>{{comic.comic.comicName}}</title>
+<title>{{comic.comic.comicName}}'s Main Page</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="../stylesheets/style.css">
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<style>
+</style>
 </head>
 
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -24,31 +37,228 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
+          <li><a href="/search">Search</a></li>
             <li><a href="/profile">Profile</a></li>
             <li><a href="/myworks">My Works</a></li>
-            <li><a href="/logout">Logout</a></li>
+            <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
           </ul>
-          <form class="navbar-form navbar-right">
-            <input type="text" class="form-control" placeholder="Search...">
-          </form>
-        </div>
+                 </div>
       </div>
 </nav>
 <br>
 <br>
+<br>
 <center>
-<h1>Comic Name: {{comic.comic.comicName}}</h1>
-<p1>Author: {{comic.comic.author}}</p1>
-</center>
-
-<div>
-	<img id="picture">
+  <div>
+<h2>Comic Name: {{comic.comic.comicName}}</h2>
+<h2>Author: {{comic.comic.author}}</h2>
+<h2>Contributors: {{comic.comic.worklist}}</h2>
+{{#if comic.comic.genre}}
+<h2>Genre: {{comic.comic.genre}} comic</h2>
+{{/if}}
+<div class="form-group">
+<textarea class="text-center" name="description" id="desc" rows="3" cols="40" placeholder="{{comic.comic.description}}"></textarea>
+<br>
+<button type="submit" id="desup" class="btn btn-primary">Save</button>
+</div>
 </div>
 <center>
-<button type="button" class="btn btn-primary" onclick="lastpage()">LastPage</button>
-<button type="button" class="btn btn-primary" onclick="nextpage()">NextPage</button>
+<div>
+  <img id="picture" src="/images/{{comic.comic.coverpage}}">
+</div>
+<center>
+<h2>
+  Overall Rating: 
+  <span id="reloadRating"> {{comic.comic.rating}} </span> 
+  <span id="overall" class="glyphicon glyphicon-star" style="color:#FFD700"></span>! <br>
+  Your Rating: 
+  <span id="1" class="glyphicon glyphicon-star-empty"></span>
+  <span id="2" class="glyphicon glyphicon-star-empty"></span>
+  <span id="3" class="glyphicon glyphicon-star-empty"></span>
+  <span id="4" class="glyphicon glyphicon-star-empty"></span>
+  <span id="5" class="glyphicon glyphicon-star-empty"></span>
+  <input type="hidden" name="comicName" value="{{comic.comic.comicName}}">
+</h2>
+<center>
+  <div>
+<a button class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/page/1">Read Comic</a>
+{{#if aut}}
+<button type="button" id="delecomic" class="btn btn-primary" >Delete Comic</button>
+  {{#if pub}}
+  <button type="button" id="upubc" class="btn btn-primary" >Unpublish Comic</button>
+  <button type="button" id="pubc" class="btn btn-primary"style="display: none;">Publish Comic</button>
+  {{else}}
+  <button type="button" id="pubc" class="btn btn-primary">Publish Comic</button>
+  <button type="button" id="upubc" class="btn btn-primary" style="display: none;">Unpublish Comic</button>
+  {{/if}}
+{{/if}}
 
-<scrip>
-</scrip>
+</div>
 
+<br>
+<center>
+<div>
+{{#if worklist}}
+<a button id="upcs" class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/upload">Upload Comicstrip</a>
+<a button id="upcp" class="btn btn-primary" href="/comic/{{comic.comic.comicName}}/uploadcover">Upload Coverpage</a>
+{{/if}}
+</div>
+<br>
+<div>
+<a button class="btn btn-primary" href="/comment/{{comic.comic.comicName}}">Comments</a>
+{{#if favourite}}  
+<button type="button" id="delf" class="btn btn-primary">Remove from Favourite</button>
+<button style="display: none;" type="button" id="addf" class="btn btn-primary">Add to Favourite</button>
+{{else }}
+<button type="button" id="addf" class="btn btn-primary">Add to Favourite</button>
+<button type="button" id="delf" class="btn btn-primary" style="display: none;">Remove from Favourite</button>
+{{/if}}
+<div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-layout="button_count"></div>
+
+
+<div id="fb-root"></div>
+
+<script>
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5&appId=952898294826486";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+$(document).ready(function(){
+  $('#addf').on('click',function(){
+    $('#addf').hide();
+    $('#delf').show();
+    $.ajax({
+      method: "POST",
+      url: "/addfavourite",
+      data:{data:"{{user.local.username}}",comic:"{{comic.comic.comicName}}"}
+    }).done(function(data){
+      alert(data);
+    });
+  });
+});
+
+$(document).ready(function(){
+  $('#pubc').on('click',function(){
+    $('#pubc').hide();
+    $('#upubc').show();
+    $.ajax({
+      method: "POST",
+      url: "/publishcomic",
+      data:{comic:"{{comic.comic.comicName}}"}
+    }).done(function(data){
+      alert(data);
+    });
+  });
+});
+$(document).ready(function(){
+  $('#upubc').on('click',function(){
+    $('#upubc').hide();
+    $('#pubc').show();
+    $.ajax({
+      method: "POST",
+      url: "/unpublishcomic",
+      data:{comic:"{{comic.comic.comicName}}"}
+    }).done(function(data){
+      alert(data);
+    });
+  });
+});
+
+$(document).ready(function(){
+  $('#delf').on('click',function(){
+    $('#delf').hide();
+    $('#addf').show();
+    $.ajax({
+      method: "POST",
+      url: "/delfavourite",
+      data:{data:"{{user.local.username}}",comic:"{{comic.comic.comicName}}"}
+    }).done(function(data){
+      alert(data);
+    });
+  });
+});
+
+$(document).ready(function(){
+  $('#delecomic').on('click',function(){
+    var x;
+    if(confirm("You are going to delete this comic!\nAre you Sure?") == true){
+      $.ajax({
+      method: "DELETE",
+      url: "/delecomic",
+      data:{comic:"{{comic.comic.comicName}}"}
+    }).done(function(data){
+      if(data.redirect){
+        window.location.href= data.redirect;
+      }
+    });
+    }
+  });
+});
+
+$(document).ready(function() {
+  $.ajax({
+      type: "POST",
+      url: "/getRating",
+      data:{comicName:"{{comic.comic.comicName}}"}
+    }).done(function(data){
+      var yourRating = parseInt(data);
+        for(i = 1; i < yourRating+1; i++ ){
+       $("#"+i.toString()).css("color","#FFD700");
+     }
+    });
+  });
+
+$(document).ready(function() {
+   $(".glyphicon-star-empty").on('click',function() {
+      for(i = 1; i < 6; i++ ){
+       $("#"+i.toString()).css("color","black");
+     }
+    id = parseInt($(this).attr('id'));
+      for(i = 1; i < id+1; i++ ){
+       $("#"+i.toString()).css("color","#FFD700");
+     }
+   
+   }); 
+});
+
+$(document).ready(function(){
+   $(".glyphicon-star-empty").on('click',function() {
+   $.ajax({
+      method: "PUT",
+      contentType: "application/json",
+      url: "/updateRating",
+      data:JSON.stringify({rating:$(this).attr("id"),comicName:"{{comic.comic.comicName}}"}),
+      }).done(function(data){
+        $("#reloadRating").text(data);
+      });
+});
+});
+
+$(document).ready(function(){
+  $('#desup').on('click',function(){
+    $.ajax({
+      method: "POST",
+      url: "/updatdes",
+      data:{data:$('#desc').val(),comic:"{{comic.comic.comicName}}"}
+    }).done(function(data){
+      alert("saved!");
+      $('#desc').val(data);
+    });
+  });
+});
+
+</script>
+<br>
+<br>
+
+<br>
+<br>
+<br>
+</div>
 </html>
+
+

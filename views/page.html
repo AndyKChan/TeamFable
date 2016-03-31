@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <style>
+  input.hidden{
+    display: none;
+  }
+
+.test{
+    background-image: url("http://images7.alphacoders.com/359/359582.jpg");
+    background-repeat: no-repeat ; background-size: 100% 100%;
+
+}
+
+  </style>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="stylesheets/style.css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+<title>{{comic.comic.comicName}}</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta http-equiv="imagetoolbar" content="false">
+<meta http-equiv="imagetoolbar" content="no">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" href="../stylesheets/style.css">
+<script src="http://code.jquery.com/jquery-2.0.0.js"></script>
+<script src="http://code.jquery.com/jquery-migrate-1.1.1.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+</head>
+
+<body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+
+    <!-- Latest compiled and minified JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<div class="home">
+    <div class="uploadcomic">
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="/home">Home</a>
+          <a class="navbar-brand">{{user.local.username}}</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+             
+            <li><a href="/search">Search</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <!--li><a href="/solo">Solo</a></li-->
+            <li><a href="/myworks">My Works</a></li>
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+          <form class="navbar-form navbar-right" name="search" action="/search" method="get">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <br>
+    <br>
+    <br>
+    <center>
+    <h1>Comic Name: {{comic.comic.comicName}}</h1>
+    <p1>Author: {{comic.comic.author}}</p1>
+    <button type="button" id="bookmarkPage" class="btn btn-primary">Bookmark</button>
+    <br>
+    <br>
+    <center>
+      <div>
+        {{#each comicstrip}}
+        <center>
+        <div id = "{{this.comicstrip.fileName}}1">
+          {{#compare comicstrip "" operator="!="}}
+          <img onclick="large(this)" onmouseout="normal(this)" width="400" height="400" src="/images/{{this.comicstrip.fileName}}" alt="" class="myImg">
+          <input type="hidden" id="stripid{{@index}}" value="{{this.comicstrip.stripid}}">
+          <input type="hidden" id="fileName{{@index}}" value="{{this.comicstrip.fileName}}">
+          {{#if ../work}}
+          
+          <div id = contributorview{{@index}}>
+            <button type="button" id="delc{{@index}}" class="btn btn-primary delc disappear" name = "{{@index}}">Delete Cell</button>
+            
+          </div>
+          
+       
+          {{/if}}
+          </div>
+          {{/compare}}
+        </div>
+          {{/each}}
+<br>
+<center>
+{{#if comicstrip}}
+{{#compare cpage 0 operator="=="}}
+<button type="button" class="btn-btn-primary"><a href= "/comic/{{comic.comic.comicName}}"> Previous Page </a></button>
+{{/compare}}
+
+{{#compare cpage 0 operator="!="}}
+<button type="button" class="btn-btn-primary"><a href= "/comic/{{prev}}"> Previous Page </a></button>
+{{/compare}}
+<button class = "next" type="button" class="btn btn-primary"><a href= "/comic/{{next}}">Next Page</a></button>
+{{/if}}
+
+{{#compare comicstrip "" operator="=="}}
+<h1> The End </h1>
+<br>
+  <button type="button" class="btn-btn-primary"><a href= "/comic/{{comic.comic.comicName}}/page/{{cpage}}"> Previous Page </a></button>
+  <button type="button" class="btn-btn-primary"><a href= "/comment/{{comic.comic.comicName}}"> Comments Page </a></button>
+  <button type="button" class="btn-btn-primary"><a href= "/comic/{{comic.comic.comicName}}"> Return to Comic Main Page </a></button>
+{{/compare}}
+
+{{#compare comicstrip "" operator="!="}}
+{{#if work}}
+<br>
+<br>
+ <button type="button" id="viewc"  class="btn btn-primary viewc" name = "{{@index}}" onclick = "viewAsUser()">View as User</button>
+ <br>
+ <button style = "visibility: hidden" type="button" id="return" class="btn btn-primary return" name = "{{@index}}" onclick = "exit()">Exit User View</button>
+    
+{{/if}}
+{{/compare}}
+
+
+<center>
+
+    <div id="result"></div>
+    <ul id="image"></ul>
+
+</div>
+
+<script type = text/javascript>
+var ret = document.getElementById("return");
+var del = document.getElementById("delc");
+var viewc = document.getElementById("viewc");
+var disappear = document.getElementsByClassName("disappear");
+function viewAsUser()
+{
+  viewc.style.visibility = "hidden";
+  ret.style.visibility = "visible";
+  for(var i = 0; i < disappear.length; i++){
+   disappear[i].style.visibility = "hidden";
+  }
+}
+function exit()
+{
+  viewc.style.visibility = "visible";
+  ret.style.visibility = "hidden";
+  for(var i = 0; i < disappear.length; i++){
+   disappear[i].style.visibility = "visible";
+  }
+}
+</script>
+
+
+<script>
+function large(x) 
+{
+      x.style.height = "900px";
+      x.style.width = "677px";
+}
+function normal(x) 
+{
+    x.style.height = "400px";
+    x.style.width = "400px";
+}
+</script>
+
+<script>
+$(document).ready(function(){
+  $('.delc').on('click',function(){
+    //$('#delc').hide();
+     var index = $(this).attr("name");
+    $.ajax({
+      method: "DELETE",
+      url: "/delcell",
+      data:{stripid:$('#stripid'+index).val(),fileName:$('#fileName'+index).val()},
+    }).done(function(data){
+      alert(data);
+    document.getElementById(data).remove();
+    });
+  });
+});
+</script>  
+<script> 
+$(document).ready(function(){
+   $("#bookmarkPage").on('click',function() {
+   $.ajax({
+      method: "PUT",
+      contentType: "application/json",
+      url: "/bookmarkPage",
+      data:JSON.stringify({page:"{{page}}",comicName:"{{comic.comic.comicName}}"}),
+      }).done(function(data){
+        alert("bookmark for this comic updated!");
+      });
+});
+});
+</script>
+
+</body>
+
+</html>

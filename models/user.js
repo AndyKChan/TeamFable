@@ -12,11 +12,23 @@ var userSchema = mongoose.Schema({
         username: String,
         password: String,
         birthdate: String,
-        gender: String,
+        hobbies: String,
         location: String,
         contributor: Boolean,
         picture: String,
         comictitles: [String],
+        favourite:[String],
+        invites:[String],
+        bookmarks: [
+        		{comicName: String,
+         		page: String}],
+        },
+    facebook: {
+        id : String,
+        token: String,
+        email: String,
+        name : String,
+        first:Boolean,
     }
 });
 

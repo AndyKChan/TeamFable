@@ -30,16 +30,20 @@
   z-index: 2;
 }
 </style>
-</head>
 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="stylesheets/style.css">
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.1/jquery.min.js"></script>
+</head>
+<body>
 <div class="login">
   <!-- show any messages that come back with authentication -->
    {{#if message}}
    <div class="alert alert-danger">{{message}}</div>
    {{/if}}
-
+   <center>
   <form class="form-horizontal" name="login" action="/login" method="post">
-
   <div class="form-group">
       <div class="col-sm-10">
         <h2 class="form-signin-heading">Please sign in</h2>
@@ -47,14 +51,17 @@
         <input type="password" name="password" class="form-control" id="inputPassword3" placeholder="Password">
         <br>
       <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
+      <div class="col-sm-offset-1 col-sm-10">
         <div class= "links">
           <a href="/signup" style="display: inline-block;">Not a User?</a>
         <button type="submit" class="btn btn-primary" style="display: inline-block;">Sign In</button>        
       </div>
       </div>
+      <a href='/auth/facebook'>Sign In with Facebook</a>
       </div>
       </div>
     </div>
   </form>
-</div>
+
+</body>
+

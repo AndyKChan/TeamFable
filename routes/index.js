@@ -22,7 +22,17 @@ filename: function (request, file, callback) {
     callback(null, request.body["comicName"]+"-"+request.body["stripid"]+ "." +fileFormat[fileFormat.length - 1]);
 }
 });
+var storage2 = multer.diskStorage({
+  destination: function(req,file,cb){
+    cb(null,'./public/images');
+  },
+  filename: function(req,file,cb){
+    console.log(file);
+    cb(null, file.fieldname + '-' + Date.now());
+  }
+});
 var upload = multer({storage: storage}).single('filename');
+var upload2 = multer({storage: storage2}).single('filename');
 /**
  * Middleware
  */
@@ -40,151 +50,8 @@ router.get('/', function (req, res, next) {
 });
 
 
-/* Cooperative File Uploading Service */
+/* file upload  */
 router.post('/fileupload2', function(request, response) {
-  Comic.findOne({"comic.comicName" : request.body["comicName"]},function(err,comic){
-    if(err) throw err;
-    console.log("find");
-    console.log(comic);
-
-    if(comic){
-      upload(request, response, function(err) {
-        if(err) {
-          console.log('Error Occured');
-          console.log(err);
-          return;
-        }
-  // Create a comicstrip including all necessary inofrmation for one specific picture
-    var comicstripcoop = new Comicstrip({"comicstrip.comicName" : request.body["comicName"],
-                                        "comicstrip.author": request.user.local.username,
-                                        "comicstrip.date": new Date(),
-                                        "comicstrip.stripid": request.body["comicName"]+"-"+request.body["stripid"]});
-  //upload the comicstrip to the database
-    comicstripcoop.save(function(err) {
-      if(err) throw err;
-      console.log("comicstrip");
-    });
-      console.log(JSON.stringify(comicstripcoop));
-  //i'm pulling file names from the database in this for loop and sending it, 
-  //my problem is here where i should send back the whole file object
-          //send back the whole file object, look at the tutorial for user/email
-      response.redirect("/cooperative");   
-  //})
-    });
-  } else {
-    console.log("No such comic");
-    res.redirect('/cooperative');
-  } 
-});
-});
-
-router.get("/images/:id", function (request, response) {
-    var path = imageDir + request.params.filename;
-    console.log("fetching image: ", path);
-    response.sendFile(path);
-});
-
-/* GET comic main page. */
-router.get('/comicmainpage', isLoggedIn, function (req, res) {
-Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
-      if (err) throw err;
-      File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
-        res.render('comicmainpage', {comic: comics, file: files , user: req.user});
-      });
-  });
-});
-
-//old
-// /* GET cooperative comic main page. */
-// router.get('/cooperative', isLoggedIn, function (req, res) {
-// Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
-//       if (err) throw err;
-//       File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
-//         res.render('cooperativecomicmain', {comic: comics, file: files , user: req.user});
-//       });
-//   });
-// });
-
-/* GET cooperative comic main page. */
-router.get('/cooperative', isLoggedIn, function (req, res) {
-Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
-      if (err) throw err;
-      File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
-        res.render('cooperativecomicmain', {comic: comics, file: files , user: req.user});
-      });
-  });
-});
-
-/* POST to cooperative comic */
-router.post('/createcomic', function(req, res) {
-  console.log(req.body);
-  //console.log("here");
-
-  var comic = new Comic({
-    "comic.comicName": req.body["comicName"],
-    "comic.cooperative": (req.body["comictype"]=='coop'),
-    "comic.description": req.body["description"],
-    "comic.favorite":[],
-    "comic.author": req.user.local.username,
-    "comic.date": new Date(),
-    "comic.coverpage": [],
-    "comic.pages": []
-    //"comic.page1": req.body["page1"],
-    //"comic.page2": req.body["page2"]
-  });
-  console.log("there");
-
-  comic.save(function(err) {
-      if (err) throw err;
-      res.redirect('/comic/'+req.body["comicName"]);
-  });
-});
-
-// /* GET solo comic main page. */
-// router.get('/solo', isLoggedIn, function (req, res) {
-//     //var soloURL = '/solo/';
-//    // var titleADDON = user.local.comictitle;
-//    // var url = soloURL.concat(titleADDON);
-//    res.render('solocomicmain', {
-
-//         user: req.user // get the user out of session and pass to template
-//     });
-// });
-
-/* GET solo comic main page. */
-router.get('/solo', isLoggedIn, function (req, res) {
-Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
-      if (err) throw err;
-      File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
-        res.render('solocomicmain/' + req.user.username, {comic: comics, file: files , user: req.user});
-      });
-  });
-});
-
-/* POST to solo comic */
-router.post('/solo', function(req, res) {
-
-  var comic = new Comic({
-    "comic.comicName": req.body["comicName"],
-    "comic.cooperative": false,
-    "comic.description": req.body["description"],
-    "comic.genre" : req.body["genre"],
-    "comic.favorite": false,
-    "comic.author": req.user.local.username,
-    "comic.date": new Date(),
-    "comic.img": req.body["img"],
-    "comic.page1": req.body["page1"],
-    "comic.page2": req.body["page2"]
-  });
-
-  comic.save(function(err) {
-      if (err) throw err;
-      res.redirect('/comicmainpage');
-  });
-});
-
-/* Solo File Uploading Service */
-router.post('/fileupload', function(request, response) {
     
   upload(request, response, function(err) {
       if(err) {
@@ -192,37 +59,282 @@ router.post('/fileupload', function(request, response) {
         console.log(err);
         return;
       }
+    console.log(request.body);
+    console.log("check here");
     console.log(request.file);
-  // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
+    var comicName= request.body["comicName"];
+    var fileExtension = (request.file.originalname).split(".");
 
-  var file = new File({
-                  filename: request.file.filename
-              });
+    Comic.findOne({"comic.comicName" : comicName},function(err,comic){
+      if(err) throw err;
+      console.log("finding");
+      console.log(comic);
+      var stripid = parseInt(request.body["stripid"]);
+      var comicstripcoop = new Comicstrip({"comicstrip.comicName" : request.body["comicName"],
+                                        "comicstrip.author": request.user.local.username,
+                                        "comicstrip.date": new Date(),
+                                        "comicstrip.fileName": request.body["comicName"]+"-"+request.body["stripid"]+ "." +fileExtension[fileExtension.length - 1],
+                                        "comicstrip.stripid": stripid});
+
+      comicstripcoop.save(function(err) {
+        if(err) throw err;
+        console.log("comicstrip created");
+      });
+
+      var a = comic.comic.pages;
+      a.push(request.file.filename);
+      console.log(a);
+      console.log(comicName);
+      if (stripid == 0){
+        Comic.update(
+          {'comic.comicName' : comicName},
+          {'comic.coverpage' : request.file.filename},
+          {safe: true},
+          function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+        );
+      } else{
+        Comic.update(
+          {'comic.comicName':comicName},
+          {'comic.pages':a},
+          {safe: true},
+          function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+        );
+      } 
+    });
+    response.redirect("/comic/"+comicName);   
+  //});
+});
+});
+
+router.get('/comic/:name/uploadcover',isLoggedIn,function(req,res){
+  var comicName = req.params.name;
+  console.log(comicName);
+  Comic.findOne({"comic.comicName" : comicName},function(err,comic){
+    if(err) throw err;
+    console.log(comic);
+    if(comic){
+      res.render('uploadcover',{comic,user:req.user});
+    } else {
+      console.log("No such comic!");
+      res.redirect('/home');
+    }
+  });
+});
+
+router.get('/navsearch',function(req,res){
+  console.log(req.body);
+});
+
+/* GET comic upload page*/
+router.get('/comic/:name/upload',isLoggedIn,function(req,res){
+  var comicName = req.params.name;
+  console.log(comicName);
+  Comic.findOne({"comic.comicName" : comicName},function(err,comic){
+    if(err) throw err;
+    console.log(comic);
+    if(comic){
+      res.render('uploadcomic',{comic,user:req.user});
+    } else {
+      console.log("No such comic");
+      // still need to improve
+      res.redirect('/home');
+    }
+  });
+});
+
+/* GET nextPage */
+ router.get('/comic/:name/page/:page', isLoggedIn, function(req,res){
+  var comicName = req.params.name;
+  var page = req.params.page;
+  var iterator = parseInt(page);
+  console.log(comicName,page,iterator);
+  Comicstrip.find({"comicstrip.stripid" :page, "comicstrip.comicName" : comicName},function(err,comicstrips){
+    console.log(comicstrips);
+    Comic.findOne({"comic.comicName":comicName}, function(err,comic){
+      var work = (comic.comic.worklist.indexOf(req.user.local.username) >= 0);
+      console.log(work);
+      var next;
+      var prev;
+      if(!comicstrips){
+        next = false;
+      } else {
+        next = comicName + "/page/" + (iterator + 1);
+        if(iterator > 0){
+          prev = comicName + "/page/" + (iterator - 1);
+        }
+      }
+      res.render('page',{comic, comicstrip:comicstrips, user:req.user, next:next, prev:prev, work:work, cpage : page - 1, page : iterator});
+    });
+  });
+  //res.render('page', {comic : comicstrip , user:req.user, next : next, prev : prev, comicName : comicName});
+});
+
+/*Get comic mainpage with cover page and Comicname*/
+router.get('/comic/:name', isLoggedIn, function(req, res){
+  var comicName = req.params.name;
+  console.log(comicName);
+  Comic.findOne({"comic.comicName" : comicName},function(err,comic){
+    if(err) throw err;
+    if(comic){
+      var fav = (comic.comic.favourite.indexOf(req.user.local.username) >= 0);
+      var work = (comic.comic.worklist.indexOf(req.user.local.username) >= 0);
+      var aut = (comic.comic.author == req.user.local.username);
+      var pub = comic.comic.publish;
+      if(work){
+        res.render('test',{user: req.user,comic,favourite:fav,worklist:work,aut:aut,pub:pub});
+      } else if(!pub) {
+        res.render('unpublishcomic',{user: req.user});
+      }
+    } else {
+      console.log("No such comic");
+      // still need to improve
+      res.redirect('/home');
+    }
+  });
+});
+
+/*publish comic and unpublish comic*/
+router.post('/publishcomic',isLoggedIn, function(req,res){
+  Comic.update(
+    {"comic.comicName":req.body.comic},
+    {"comic.publish":true},
+    {safe:true},
+    function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+    );
+  res.send("Published");
+});
+
+router.post('/unpublishcomic',isLoggedIn,function(req,res){
+  Comic.update(
+    {"comic.comicName":req.body.comic},
+    {"comic.publish":false},
+    {safe:true},
+    function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+    );
+  res.send("Unpublished");
+});
+
+/*update description*/
+router.post('/updatdes',function(req,res){
+  Comic.update(
+    {"comic.comicName":req.body.comic},
+    {"comic.description":req.body.data},
+    {safe:true},
+    function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+  );
+  res.send(req.body.data);
+});
+
+/*Delete comic */
+router.delete('/delecomic',function(req,res) {
+  console.log(req.body.comic);
+   Comic.remove({"comic.comicName" : req.body.comic},function(err){
+     if (err) throw err;
+    User.update(
+      {"local.favourite":req.body.comic},
+      {$pull:{"local.favourite":req.body.comic}},
+      {multi:true},
+      function(err,raw){
+        if (err) throw err;
+        console.log(raw);
+      });
+  });
+  res.send({redirect:'/home'});
+});
+
+/*DELETE comment*/
+router.delete('/delcell', function (req, res) {
+  console.log(req.body);
+    Comicstrip.find({"comicstrip.fileName":req.body.fileName,"comicstrip.stripid":req.body.stripid}).remove().exec();
+    res.send(req.body.fileName+"1");
+});
+
+/* POST to cooperative comic */
+router.post('/createcomic', function(req, res) {
+  console.log(req.body);
+  Comic.findOne({"comic.comicName" : req.body["comicName"]}, function(err, comic){
+    if(err) throw err;
+    console.log("finding");
+    if(comic){
+      console.log("show home");
+      res.send("Comic Already Exist. Please use another name");
+    } else{
+      var comic = new Comic({
+        "comic.comicName": req.body["comicName"],
+        "comic.cooperative": (req.body["comictype"]=='coop'),
+        "comic.description": req.body["description"],
+        "comic.favourite":[],
+        "comic.genre": req.body["genre"],
+        "comic.rating":0,
+        "comic.ratings":[],
+        "comic.author": req.user.local.username,
+        "comic.date": new Date(),
+        "comic.coverpage": [],
+        "comic.pages": [],
+        "comic.publish":false,
+        "comic.worklist":[req.user.local.username,]
+      });
+      comic.save(function(err) {
+        if (err) throw err;
+        res.send({redirect:'/comic/'+req.body["comicName"]});
+      });
+    }
+
+  });
   
-  file.save(function(err) {
-      if (err) throw err;
-      console.log('File saved!');
+});
+
+/*GET facebook login*/
+router.get('/auth/facebook',passport.authenticate('facebook'));
+
+/*call back from facebook login*/
+router.get('/auth/facebook/callback',
+  passport.authenticate('facebook',{failureRedirect:'/login'}),
+  function(req,res){
+    if(req.user.facebook.first){
+      res.redirect('/fbtype');
+    }else{
+      res.redirect('/home');
+    }
+    
   });
 
-  File.find().limit(1).sort({$natural:-1}).exec(function(err, files) { 
-      if (err) throw err;
-  // object of all the users
-    console.log("FAF");
-    console.log(files);
-  //i'm pulling file names from the database in this for loop and sending it, 
-  //my problem is here where i should send back the whole file object
-          //send back the whole file object, look at the tutorial for user/email
-      response.redirect("/solo");   
-  })
-});
+/*Get fbtype page*/
+router.get('/fbtype',function(req,res){
+  res.render('fbtype',{user:req.user});
 });
 
-router.get("/images/:id", function (request, response) {
-    var path = imageDir + request.params.filename;
-    console.log("fetching image: ", path);
-    response.sendFile(path);
+/* Post fbtype*/
+router.post('/fbtype',function(req,res){
+  console.log(req.body);
+  console.log(req.user);
+  User.update(
+    {'facebook.id' : req.user.facebook.id},
+    {'local.contributor':req.body['fbtype']=="contributor",
+     'facebook.first':false},
+    {safe:true},
+    function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+    );
+  res.redirect('/home');
 });
-
 
 /* GET login page. */
 router.get('/login', function (req, res) {
@@ -241,88 +353,236 @@ router.get('/home', isLoggedIn, function (req, res) {
 /* GET profile page. */
 router.get('/profile/:username', isLoggedIn, function (req, res) {
   var u = req.user;
+  var invite = u.local.invites;
+  var bookmark = u.local.bookmarks;
+  var favourite = u.local.favourite;
   console.log(req.params);
    User.findOne({'local.username':req.params.username}, function(err, user) {
       if (err) throw err;
       u = user;
   console.log(req.params);
     res.render('profile', {
-        user: req.user, otheruser: u // get the user out of session and pass to template
+        user: req.user, otheruser: u, invite, bookmark, favourite // get the user out of session and pass to template
     });
 });
 });   
 router.get('/profile', isLoggedIn, function (req, res) {
   var u = req.user;
-  console.log(req);
+  var invite = u.local.invites;
+  var bookmark = u.local.bookmarks;
+  var favourite = u.local.favourite;
     res.render('profile', {
-        user: u, otheruser: u // get the user out of session and pass to template
+        user: u, otheruser: u, invite, bookmark, favourite // get the user out of session and pass to template
     });
 });
 
-router.post('/profile', function (req, res) {
+router.put('/updateProfile', function (req, res) {
+  console.log(req.body);
 var username = req.user.local.username;
 var birthdate = req.user.local.birthdate;
-var gender = req.user.local.gender;
+var hobbies = req.user.local.hobbies;
 var location = req.user.local.location;
 
-if (req.body["birthdate"] == "") {
-  req.body["birthdate"] = birthdate;
+if (req.body.birthdate == "") {
+  req.body.birthdate = birthdate;
 }
-if (req.body["location"] == "") {
-  req.body["location"] = location;
+if (req.body.location == "") {
+  req.body.location = location;
 }
-if (req.body["gender"] == "") {
-  req.body["gender"] = gender;
+if (req.body.hobbies == "") {
+  req.body.hobbies = hobbies;
 }
+
 User.update({'local.username': username},
-    {'local.birthdate':req.body["birthdate"], 
-    'local.gender':req.body["gender"], 
-    'local.location':req.body["location"]
-    }, {multi:true},function(err, raw){
-      res.redirect("/profile");
+    {'local.birthdate':req.body.birthdate, 
+    'local.hobbies':req.body.hobbies, 
+    'local.location':req.body.location,
+    }, {multi:true},function(err, data){
 });
+});
+/*delete invitations*/
+router.delete('/deleteInvite', function (req, res) {
+    User.update({"local.username":req.user.local.username},{$pull: {"local.invites": req.body.comicName}},
+      { safe: true },
+      function () {
+      });
 });
 
+/*POST user to worklist*/
+router.post('/acceptInvite', function(req, res) {
+  console.log(req.body);
+    Comic.findOne({"comic.comicName":req.body.comicName},function(err,comic){
+        if (err) throw err;
+        var tempcomicworklist = comic.comic.worklist;
+        if(tempcomicworklist.indexOf(req.user.local.username) == -1){
+          tempcomicworklist.push(req.user.local.username);
+        }
+        console.log(tempcomicworklist);
+        Comic.update(
+            {'comic.comicName': req.body.comicName},
+            {'comic.worklist':tempcomicworklist},
+            {safe:true},
+        function(err,raw){
+            if(err) throw err;
+            res.redirect("/comic/"+req.body.comicName);
+          }
+      );
+  });
+});
+/*POST profile pic*/
+router.post('/updatePicture', function(request, response) {
+  var username = request.user.local.username;
+  console.log(username);
+  upload2(request, response, function(err) {
+      if(err) {
+        console.log('Error Occured');
+        console.log(err);
+        return;
+      }
+    console.log(request.body);
+    console.log("check here");
+    console.log(request.file);
+
+    a = request.file.filename;
+
+    User.update(
+          {'local.username':username},
+          {'local.picture':"/images/"+a},
+          {safe: true, upsert: true},
+          function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+      });
+    Comment.find({'comment.commentor':username}, function(err, comments) {
+      if (err) throw err;
+      console.log(comments);
+      for (var i in comments){
+        comments[i].comment.picture = "/images/"+a;
+        comments[i].save(function(err) {
+    if (err) { return next(err); }
+  });
+      }
+    });
+
+    Comment.update(
+            {'comment.commentor':username},
+            {'comment.picture':"/images/"+a},
+            {safe:true, upsert: true},
+        function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          });
+    });
+    response.redirect("/profile");   
+});
 
 // to remove everything
 // Comment.remove({}, function (err) {
 //  if (err) return handleError(err);
   // removed!
 //});
-router.get('/comment', isLoggedIn, function (req, res) {
-  Comment.find({}, function(err, comments) {
+router.get('/comment/:comic', isLoggedIn, function (req, res) {
+  Comment.find({'comment.comic':req.params.comic}, function(err, comments) {
       if (err) throw err;
-    res.render('comment', {comment: comments , user: req.user});
-  });
+      {Comic.findOne({'comic.comicName':req.params.comic}, function(err, comic) {
+      if (err) throw err;
+    res.render('comment', {comment: comments , user: req.user, comic: comic});
+  });}
+ });
 });
 /* POST to comments */
 router.post('/comment', function(req, res) {
+console.log(req.body);
 var comment = new Comment({
     "comment.post": req.body["comment"],
     "comment.commentor": req.user.local.username,
     "comment.picture": req.user.local.picture,
     "comment.date": new Date(),
+    "comment.comic": req.body["comicName"],
 });
+console.log(comment);
   comment.save(function(err) {
       if (err) throw err;
-      res.redirect('/comment');
+      res.redirect('/comment/'+comment.comment.comic);
       console.log('comment posted!');
   });
 });
 
-
+/*DELETE comment*/
+router.delete('/deletecomment', function (req, res) {
+    Comment.find({"comment.post":req.body.post,"comment.date":req.body.date}).remove().exec();
+    console.log(req.body.post);
+    res.send(req.body.post+"1");
+});
 
 /* GET myworks page. */
 router.get('/myworks', isLoggedIn, function(req, res){
-   Comic.find({author : req.user.local.username}, function(err, comics){
+   Comic.find({"comic.author" : req.user.local.username}, function(err, comics){
        if (err) throw err;
       res.render('myworks', {
          comic: comics,
+         otheruser: req.user,
          user: req.user // get the user out of session and pass to template
       });
     });
 });
-  
+
+/* GET myworks page. */
+router.get('/myworks/:username', isLoggedIn, function(req, res){
+User.findOne({'local.username':req.params.username}, function(err, user) {
+if (err) throw err;
+   {Comic.find({"comic.author" : user.local.username}, function(err, comics){
+       if (err) throw err;
+       console.log(user);
+       console.log(req.user);
+      res.render('myworks', {
+         comic: comics,
+         otheruser: user,
+         user: req.user // get the user out of session and pass to template
+      });
+    });}
+});
+});
+
+/* Post invite */
+router.post('/inviteWorklist', function(req, res) {
+    User.findOne({"local.username":req.body.invite},function(err,user){
+        if (err) throw err;
+        if(user == null){
+          res.redirect("/error");
+          return false;
+        }
+        else{
+          if(user.local.contributor == false){
+          res.redirect("/error");
+          return false;
+          }
+        else{
+          var tempuserinvites = user.local.invites;
+        if(tempuserinvites.indexOf(req.body.comicName) == -1){
+          tempuserinvites.push(req.body.comicName);
+        }
+        console.log(tempuserinvites);
+        User.update(
+            {'local.username': req.body.invite},
+            {'local.invites':tempuserinvites},
+            {safe:true},
+        function(err,raw){
+            if(err) throw err;
+            res.redirect("/myworks");
+          });
+          }
+  };
+});
+});
+/*DELETE user from worklist*/
+router.delete('/removeWorklist', function (req, res) {
+  console.log(req.body);
+    Comic.update({"comic.comicName":req.body.comicName},{$pull: {"comic.worklist": req.body.remove}},
+      { safe: true },
+      function () {
+      });
+});
 
 /* GET search page. */
 router.get('/search', isLoggedIn, function (req, res) {
@@ -333,7 +593,7 @@ router.get('/search', isLoggedIn, function (req, res) {
 /*search result*/
 router.post('/test', function(req,res,next) {
   console.log("POST REQ");
-  console.log(req.body.type);
+  console.log(req.body);
   var a ="";
   if(req.body.type == "comic"){
     Comic.find({'comic.comicName' : req.body.data},function(err,comics){
@@ -342,198 +602,242 @@ router.post('/test', function(req,res,next) {
       if(err) throw err;
       //console.log(req.body);
       //console.log({comic: comics});
-      
       if(comics.length!=0){
         for(i=0;i<comics.length;i++){
-          a += " " + comics[i]["comic"]["comicName"];
+          if(comics[i]["comic"]["publish"]){
+            a += comics[i]["comic"]["comicName"]+" ";
+          }
         }
-        //console.log(comics[0]);
+        console.log(a);
         //console.log(comics[0]["comic"]["author"]);
       } else {
         a = "Not Found!";
       }
-      console.log(a);
+      if(a==""){
+        a = "Not Found!"
+      }
       res.send(a);
     });
-  } else {
+  } else if(req.body.type == "author"){
     User.find({'local.username' : req.body.data},function(err,users){
       console.log("SEARCHING");
       console.log(users);
       if(err) throw err;
       if(users.length!=0){
         for(i=0;i<users.length;i++){
-          a += " " + users[i]["local"]["username"];
-        }
+          a += users[i]["local"]["username"]+" ";
+         }
       } else {
         a = "Not Found!";
       }
-      console.log(a);
       res.send(a);
     });
- }
- //res.send(req.body.data);
- });
-
-/* GET solo comic page 1. */
-router.get('/solocomic', isLoggedIn, function (req, res) {
-    res.render('solocomic', {
-        user: req.user // get the user out of session and pass to template
-    });
-});
-/* GET solo comic page 2. */
-router.get('/solocomic2', isLoggedIn, function (req, res) {
-    res.render('solocomic2', {
-        user: req.user // get the user out of session and pass to template
-    });
-});
-
-/* GET cooperative comic page 1. */
-router.get('/cooperativecomic', isLoggedIn, function (req, res) {
-Comic.find().limit(1).sort({$natural:-1}).exec(function(err, comics) { 
+  } else {
+    Comic.find({'comic.genre':req.body.data}, function(err,comics){
+      console.log("SEARCHING");
+      console.log(comics);
       if (err) throw err;
-      File.find().limit(1).sort({$natural:-1}).exec(function(err,files){
-        res.render('cooperativecomic', {comic: comics, file: files , user: req.user});
+      if(comics.length != 0){
+        for(i=0;i<comics.length;i++){
+          a +=comics[i]["comic"]["comicName"]+" ";
+        }
+      } else {
+        a = "Not Found!"
+      }
+      res.send(a);
       });
-  });
-});
-
-/* POST to comic */
-router.post('/cooperativecomic', function(req, res) {
-
-  var comic = new Comic({
-    "comic.comicName": req.body["comicName"],
-    "comic.cooperative": true,
-    "comic.description": req.body["description"],
-    "comic.genre": req.body["genre"],
-    "comic.favorite": false,
-    "comic.author": req.user.local.username,
-    "comic.date": new Date(),
-    "comic.img": req.body["img"],
-    "comic.page1": req.body["page1"],
-    "comic.page2": req.body["page2"]
-  });
-
-  comic.save(function(err) {
+  }
+ });
+ /* GET your Rating*/
+router.post('/getRating', isLoggedIn, function (req, res) {
+  var yourRating = 0;
+    Comic.findOne({'comic.comicName': req.body.comicName},function(err,comic){
       if (err) throw err;
-      res.redirect('/cooperativecomic');
+        var tempcomicratings = comic.comic.ratings;
+        for (var i in tempcomicratings) {
+          if (tempcomicratings[i].rater == req.user.local.username) {
+          yourRating = tempcomicratings[i].rating;
+          break;
+          }
+        }
+        yourRating = yourRating.toString();
+      res.send(yourRating);
+  });
+});  
+ 
+ /* Put rating*/
+router.put('/updateRating', isLoggedIn, function (req, res) {
+  console.log(req.body);
+
+ Comic.findOne({'comic.comicName': req.body.comicName},function(err,comic){
+      var updated = 0;
+      var overallrating = 0;
+      var count = 0;
+      console.log(comic);
+        if (err) throw err;
+        var tempcomicratings = comic.comic.ratings;
+        for (var i in tempcomicratings) {
+          if (tempcomicratings[i].rater == req.user.local.username) {
+          tempcomicratings[i].rating = req.body.rating;
+          updated = 1;
+          }
+        }
+
+        console.log(updated);
+        if (updated == 0)
+          tempcomicratings.push({"rater": req.user.local.username,"rating": req.body.rating })
+        else{console.log("already in array")};
+
+          for (var i in tempcomicratings) {
+          if (tempcomicratings[i].rating != undefined) {
+            count += 1;
+            overallrating += tempcomicratings[i].rating; 
+            }          
+        } 
+        console.log(count);
+        overallrating = overallrating/count;
+        Comic.update(
+            {'comic.comicName': req.body.comicName},
+            {'comic.ratings':tempcomicratings,
+            'comic.rating':overallrating},
+            {safe:true},
+        function(err,raw){
+            if (err) throw err;
+          }
+      );
+         var data = overallrating.toString();
+         res.send(data);
   });
 });
 
-// /* Cooperative comic page 2 File Uploading Service */
-// router.post('/fileuploadpage1', function(request, response) {
-    
-//   upload(request, response, function(err) {
-//       if(err) {
-//         console.log('Error Occured');
-//         console.log(err);
-//         return;
-//       }
-//     console.log(request.file);
-//   // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
-
-//   var file2 = new File({
-//                   filename: request.file.filename
-//               });
-  
-//   file2.save(function(err) {
-//       if (err) throw err;
-//       console.log('File saved!');
-//   });
-
-//   File.find().limit(1).sort({$natural:-1}).exec(function(err, files) { 
-//       if (err) throw err;
-//   // object of all the users
-//     console.log("FAF");
-//     console.log(files);
-//   //i'm pulling file names from the database in this for loop and sending it, 
-//   //my problem is here where i should send back the whole file object
-//           //send back the whole file object, look at the tutorial for user/email
-//       response.redirect("/cooperativecomic");   
-//   })
-// });
-// });
-
-
-/* comic page Uploading Service */
-router.post('/fileuploadpage1', function(request, response) {
-    var filename_arr2 = [];
-  upload(request, response, function(err) {
-      if(err) {
-        console.log('Error Occured');
-        console.log(err);
-        return;
-    }
-    console.log(request.file);
-  // STORE FILENAME INTO MONGODO- FILENAME FIELD IS IN request.file.filename
-
-  var file2 = new File({
-    filename: request.file.filename
+/*DELETE comment*/
+router.delete('/delcell', function (req, res) {
+  console.log(req.body);
+    Comicstrip.find({"comicstrip.fileName":req.body.fileName,"comicstrip.stripid":req.body.stripid}).remove().exec();
+    res.send(req.body.fileName+"1");
 });
-  file2.save(function(err) {
-      if (err) throw err;
-      console.log('File saved!');
+
+/*PUT page to bookmarks*/
+router.put('/bookmarkpage', function(req, res) {
+  console.log(req.body);
+  var updated = 0;
+    User.findOne({"local.username":req.user.local.username},function(err,user){
+        if (err) throw err;
+        var tempbookmarks=user.local.bookmarks; 
+        for (var i in tempbookmarks) {
+          if (tempbookmarks[i].comicName == req.body.comicName) {
+          tempbookmarks[i].page = req.body.page;
+          updated = 1;
+          }
+        }
+        if (updated == 0)
+          tempbookmarks.push({"comicName": req.body.comicName,"page": req.body.page })
+        else{console.log("already in array")};
+
+        console.log(tempbookmarks);
+        User.update(
+            {'local.username': req.user.local.username},
+            {'local.bookmarks':tempbookmarks},
+            {safe:true, upsert:true},
+        function(err,raw){
+            if(err) throw err;
+          }
+      );
   });
-  File.find({}, function(err, files) {
-      if (err) throw err;
-
-  // object of all the users
-  
-  console.log("FAF");
-  console.log(files);
-  //i'm pulling file names from the database in this for loop and sending it, 
-  //my problem is here where i should send back the whole file object
-  for(i=0;i <files.length; i++){
-    console.log(files[i].filename);
-    filename_arr2.push(files[i].filename);
-    if (i == (files.length -1)){
-        //send back the whole file object, look at the tutorial for user/email
-        response.render('fileuploadpage1', {filenames: filename_arr2});   
-    }
-};
-
-});
-  
-})
+    res.send("bookmark updated!");
 });
 
-/*Get comic mainpage with cover page and Comicname*/
-router.get('/comic/:name', isLoggedIn, function(req, res){
-  var comicName = req.params.name;
+/*add favourite*/
+router.post('/addfavourite',function(req,res){
+  console.log("here");
+  console.log(req.body);
+  var comicName = req.body.comic;
+  var username = req.body.data;
   console.log(comicName);
+  console.log(username);
+
   Comic.findOne({"comic.comicName" : comicName},function(err,comic){
     if(err) throw err;
-    if(comic){
-      console.log(JSON.stringify(comic));
-      console.log(req.user);
-      res.render('test',{user: req.user, comic});
-    } else {
-      console.log("No such comic");
-      // still need to improve
-      res.redirect('/home');
+
+    var tempcomicfavour = comic.comic.favourite;
+    console.log(tempcomicfavour);
+    if(tempcomicfavour.indexOf(username) == -1){
+      tempcomicfavour.push(username); 
     }
-    
+    Comic.update(
+          {'comic.comicName' : comicName},
+          {'comic.favourite' : tempcomicfavour},
+          {safe: true},
+          function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+        );
   });
 
+  User.findOne({"local.username" : username},function(err,user){
+    if (err) throw err;
+    var tempuserfavourite = user.local.favourite;
+    if(tempuserfavourite.indexOf(comicName) == -1){
+      tempuserfavourite.push(comicName);
+    }
+    console.log(tempuserfavourite);
+    User.update(
+    {'local.username': username},
+    {'local.favourite':tempuserfavourite},
+    {safe:true},
+    function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+  );
+  }); 
+  console.log("comicsucc");
+  res.send("Added Successfully!");
 });
+/*delete favourite*/
+router.post('/delfavourite',function(req,res){
 
-/* GET cooperative comic page 2. */
-router.get('/cooperativecomic2', isLoggedIn, function (req, res) {
-    res.render('cooperativecomic2', {
-        user: req.user // get the user out of session and pass to template
-    });
-});
-/* GET upload page. */
-router.get('/upload', isLoggedIn, function (req, res) {
-    res.render('upload', {
-        user: req.user // get the user out of session and pass to template
-    });
-});
+  var comicName = req.body.comic;
+  var username = req.body.data;
 
-/* Edit view. */
-router.get('/editcomic', isLoggedIn, function (req, res) {
-    res.render('cooperativecomicmain', {
-        user: req.user // get the user out of session and pass to template
-    });
+  Comic.findOne({"comic.comicName" : comicName},function(err,comic){
+    if(err) throw err;
+
+    var tempcomicfavour = comic.comic.favourite;
+    var index = tempcomicfavour.indexOf(username);
+    if(index > -1){
+      tempcomicfavour.splice(index,1); 
+    }
+    Comic.update(
+          {'comic.comicName' : comicName},
+          {'comic.favourite' : tempcomicfavour},
+          {safe: true},
+          function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+        );
+  });
+
+  User.findOne({"local.username" : username},function(err,user){
+    if (err) throw err;
+    var tempuserfavourite = user.local.favourite;
+    var comicindex = tempuserfavourite.indexOf(comicName);
+    if(comicindex > -1){
+      tempuserfavourite.splice(comicindex,1);
+    }
+    User.update(
+    {'local.username': username},
+    {'local.favourite':tempuserfavourite},
+    {safe:true},
+    function(err,raw){
+            if(err) throw err;
+            console.log(raw);
+          }
+  );
+  });
+  res.send("Delete Successfully!");
 });
 
 /* GET Userlist page. */
