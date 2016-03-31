@@ -196,7 +196,7 @@ $(document).ready(function(){
       method: "PUT",
       contentType: "application/json",
       url: "/bookmarkPage",
-      data:JSON.stringify({page:{{page}},comicName:"{{comic.comic.comicName}}"}),
+      data:JSON.stringify({page:"{{page}}",comicName:"{{comic.comic.comicName}}"}),
       }).done(function(data){
         alert("bookmark for this comic updated!");
       });
