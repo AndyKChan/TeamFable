@@ -705,7 +705,7 @@ router.delete('/delcell', function (req, res) {
     res.send(req.body.fileName+"1");
 });
 
-*PUT page to bookmarks*/
+/*PUT page to bookmarks*/
 router.put('/bookmarkpage', function(req, res) {
   console.log(req.body);
   var updated = 0;
@@ -714,7 +714,7 @@ router.put('/bookmarkpage', function(req, res) {
         var tempbookmarks=user.local.bookmarks; 
         for (var i in tempbookmarks) {
           if (tempbookmarks[i].comicName == req.body.comicName) {
-          tempbookmarks[i].stripid = req.body.stripid;
+          tempbookmarks[i].page = req.body.page;
           }
           updated = 1;
         }
