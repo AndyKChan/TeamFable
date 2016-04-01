@@ -11,6 +11,9 @@ var Application = (function () {
         var cookieParser = require('cookie-parser');
         var bodyParser = require('body-parser');
         //Mongoose
+        //= require jquery
+//= require jquery_ujs
+//= require jquery-ui
         var mongoose = require('mongoose');
         //Passport
         var passport = require('passport');
